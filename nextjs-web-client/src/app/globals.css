@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  /* background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb)); */
+  background-color: #fff;
+}
+
+/* ========= User defined ========= */
+
+/* Scroll bar custom */
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e2e2e2;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #be9667;
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #bb874c;
+}
+
+/* Form Control Bootstrap */
+.form-control:focus {
+  border-color: #ffdf86;
+  box-shadow: 0 0 0.35rem 0.25rem rgb(129 110 17 / 25%);
+}
+
+/* Responsive */
+@media only screen and (min-width: 1636px) {
+  .main-container {
+    padding: 0 24rem;
+  }
+  .overflow-row {
+    margin-left: calc(-50px - 9rem - 12rem);
+    margin-right: calc(-50px - 9rem - 12rem);
+    padding-left: calc(50px + 9rem + 12rem);
+    padding-right: calc(50px + 9rem + 12rem);
+  }
+}
+
+@import "~bootstrap/dist/css/bootstrap.min.css";

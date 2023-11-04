@@ -1,0 +1,20 @@
+.scale {
+  transition: all 0.3s ease-in-out;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+/* Scale background */
+.scale-background:hover {
+  background-size: 105% 105%;
+}
+
+/* Scale all in */
+.scale-all-in:hover {
+  transform: scale(95%);
+}
+
+/* Scale all out */
+.scale-all-out:hover {
+  transform: scale(105%);
+}
