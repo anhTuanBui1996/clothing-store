@@ -81,7 +81,7 @@ export default function MiniDrawer({
   return (
     <>
       <TopHeaderBar isDrawerOpened={open} handleDrawerOpen={handleDrawerOpen} />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} sx={{ flex: "1 1" }}>
         <DrawerHeader>
           <Link href={"/"} style={{ display: "flex", alignItems: "center" }}>
             <Image
@@ -106,7 +106,7 @@ export default function MiniDrawer({
         <Divider />
         <Routes isDrawerOpened={open} />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main">
         <DrawerHeader />
         {children}
       </Box>

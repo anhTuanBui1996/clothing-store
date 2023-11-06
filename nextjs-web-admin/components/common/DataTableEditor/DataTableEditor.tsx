@@ -91,7 +91,7 @@ export default function DataTableEditor({
         slotProps={{
           toolbar: { setRows, setRowModesModel },
         }}
-        sx={{ backgroundColor: "Background" }}
+        sx={{ backgroundColor: "Background", overflowX: "auto" }}
       />
     </Box>
   );

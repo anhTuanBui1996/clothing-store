@@ -4,6 +4,7 @@ import { GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import DataTableEditor from "@/components/common/DataTableEditor/DataTableEditor";
 import Typography from "@mui/material/Typography";
 import { randomId } from "@mui/x-data-grid-generator";
+import { Box } from "@mui/material";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", width: 180, editable: true },
@@ -18,6 +19,62 @@ const columns: GridColDef[] = [
   },
   {
     field: "joinDate",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate1",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate2",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate3",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate4",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate5",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate6",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate7",
+    headerName: "Join date",
+    type: "dateTime",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "joinDate8",
     headerName: "Join date",
     type: "dateTime",
     width: 180,
@@ -50,11 +107,11 @@ const rows: GridRowsProp = [
 
 export default function Page() {
   return (
-    <React.Fragment>
+    <Box sx={{ flex: "1 1" }}>
       <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>
         Product
       </Typography>
       <DataTableEditor columns={columns} initialRows={rows} />
-    </React.Fragment>
+    </Box>
   );
 }
