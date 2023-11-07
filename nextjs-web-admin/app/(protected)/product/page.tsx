@@ -5,10 +5,9 @@ import DataTableEditor from "@/components/common/DataTableEditor/DataTableEditor
 import Typography from "@mui/material/Typography";
 import { randomId } from "@mui/x-data-grid-generator";
 import { Box } from "@mui/material";
-import sqlExecute from "@/data/source/MSSQL/connection"
 
 const columns: GridColDef[] = [
-  { field: "name", headerName: "Name", width: 180, editable: true },
+  { field: "name", headerName: "Name", width: 180, editable: true, type: "string" },
   {
     field: "age",
     headerName: "Age",
@@ -58,7 +57,6 @@ const rows: GridRowsProp = [
 ];
 
 export default function Page() {
-  console.log(sqlExecute("select * from Category"))
   return (
     <Box>
       <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>

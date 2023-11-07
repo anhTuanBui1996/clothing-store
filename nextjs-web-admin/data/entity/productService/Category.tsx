@@ -1,4 +1,4 @@
-import BaseEntity from "@/api/base/baseEntity";
+import BaseEntity from "@/data/core/baseEntity";
 import { GridRowId } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 
@@ -8,6 +8,7 @@ export default class Category implements BaseEntity {
   createdBy?: string;
   lastModifiedDate?: Date;
   lastModifiedBy?: string;
+
   constructor(
     id: GridRowId = randomId(),
     createdDate: Date = new Date(),
