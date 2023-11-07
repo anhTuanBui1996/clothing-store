@@ -10,7 +10,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Image from "next/image";
 import Routes from "@/components/routes/Routes";
 import TopHeaderBar from "../TopHeaderBar/TopHeaderBar";
-import { Typography } from "@mui/material";
+import { CssBaseline, Typography } from "@mui/material";
 import Link from "next/link";
 
 const drawerWidth = 240;
@@ -80,8 +80,9 @@ export default function MiniDrawer({
 
   return (
     <>
+      <CssBaseline />
       <TopHeaderBar isDrawerOpened={open} handleDrawerOpen={handleDrawerOpen} />
-      <Drawer variant="permanent" open={open} sx={{ flex: "1 1" }}>
+      <Drawer variant="permanent" open={open} sx={{ flexGrow: 1 }}>
         <DrawerHeader>
           <Link href={"/"} style={{ display: "flex", alignItems: "center" }}>
             <Image
@@ -106,7 +107,7 @@ export default function MiniDrawer({
         <Divider />
         <Routes isDrawerOpened={open} />
       </Drawer>
-      <Box component="main">
+      <Box component="main" sx={{ minWidth: "1px", flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {children}
       </Box>

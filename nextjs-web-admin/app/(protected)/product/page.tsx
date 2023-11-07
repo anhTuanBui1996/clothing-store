@@ -107,7 +107,7 @@ const rows: GridRowsProp = [
 
 export default function Page() {
   return (
-    <Box sx={{ flex: "1 1" }}>
+    <Box>
       <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>
         Product
       </Typography>

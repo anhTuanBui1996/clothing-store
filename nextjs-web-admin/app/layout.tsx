@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <CustomThemeProvider>
-          <Box sx={{ display: "flex", width: "100vw" }}>
+          <Box sx={{ display: "flex", width: "100vw", minWidth: "100%" }}>
             <LeftSideMenu>{children}</LeftSideMenu>
           </Box>
         </CustomThemeProvider>

@@ -2,6 +2,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -10,10 +12,16 @@ import {
   GridColDef,
   GridToolbarContainer,
   GridRowModel,
+  GridValidRowModel,
+  GridCallbackDetails,
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
+import { GridInputRowSelectionModel } from "@mui/x-data-grid";
+import { GridRowSelectionModel } from "@mui/x-data-grid";
 
 interface EditToolbarProps {
+  rows: GridValidRowModel[];
+  rowsSelection: GridInputRowSelectionModel;
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
@@ -21,8 +29,8 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-
+  const { rows, rowsSelection, setRows, setRowModesModel } = props;
+  console.log(rowsSelection);
   const handleClick = () => {
     const id = randomId();
     setRows((oldRows) => [
@@ -40,6 +48,12 @@ function EditToolbar(props: EditToolbarProps) {
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
         Add record
       </Button>
+      <Button color="primary" startIcon={<SaveIcon />} onClick={handleClick}>
+        Save changes
+      </Button>
+      <Button color="primary" startIcon={<DeleteIcon />} onClick={handleClick}>
+        Delete records
+      </Button>
     </GridToolbarContainer>
   );
 }
@@ -55,6 +69,8 @@ export default function DataTableEditor({
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
+  const [rowSelectionModel, setRowSelectionModel] =
+    React.useState<GridInputRowSelectionModel>([]);
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -64,6 +80,13 @@ export default function DataTableEditor({
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
+  };
+
+  const handleRowSelectionModelChange = (
+    rowSelectionModel: GridRowSelectionModel,
+    details: GridCallbackDetails<any>
+  ) => {
+    setRowSelectionModel(rowSelectionModel);
   };
 
   return (
@@ -84,12 +107,19 @@ export default function DataTableEditor({
         onRowModesModelChange={handleRowModesModelChange}
         processRowUpdate={processRowUpdate}
         checkboxSelection
+        rowSelectionModel={rowSelectionModel}
+        onRowSelectionModelChange={handleRowSelectionModelChange}
         disableRowSelectionOnClick
         slots={{
           toolbar: EditToolbar,
         }}
         slotProps={{
-          toolbar: { setRows, setRowModesModel },
+          toolbar: {
+            rows,
+            rowsSelection: rowSelectionModel,
+            setRows,
+            setRowModesModel,
+          },
         }}
         sx={{ backgroundColor: "Background", overflowX: "auto" }}
       />
