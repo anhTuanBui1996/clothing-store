@@ -5,6 +5,7 @@ import DataTableEditor from "@/components/common/DataTableEditor/DataTableEditor
 import Typography from "@mui/material/Typography";
 import { randomId } from "@mui/x-data-grid-generator";
 import { Box } from "@mui/material";
+import sqlExecute from "@/data/source/MSSQL/connection"
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", width: 180, editable: true },
@@ -25,62 +26,6 @@ const columns: GridColDef[] = [
     editable: true,
   },
   {
-    field: "joinDate1",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate2",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate3",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate4",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate5",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate6",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate7",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "joinDate8",
-    headerName: "Join date",
-    type: "dateTime",
-    width: 180,
-    editable: true,
-  },
-  {
     field: "role",
     headerName: "Department",
     width: 220,
@@ -90,7 +35,7 @@ const columns: GridColDef[] = [
       "Market",
       "Finance",
       "Development",
-      { value: null, label: "" },
+      { value: null, label: "NULL" },
     ],
   },
 ];
@@ -103,9 +48,17 @@ const rows: GridRowsProp = [
     age: 12,
     role: "Finance",
   },
+  {
+    id: randomId(),
+    name: "Test2",
+    joinDate: new Date(),
+    age: 12,
+    role: "Finance",
+  },
 ];
 
 export default function Page() {
+  console.log(sqlExecute("select * from Category"))
   return (
     <Box>
       <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>

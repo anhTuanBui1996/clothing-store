@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -18,6 +18,7 @@ import {
 import { randomId } from "@mui/x-data-grid-generator";
 import { GridInputRowSelectionModel } from "@mui/x-data-grid";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
+import { Tooltip } from "@mui/material";
 
 interface EditToolbarProps {
   rows: GridValidRowModel[];
@@ -30,12 +31,14 @@ interface EditToolbarProps {
 
 function EditToolbar(props: EditToolbarProps) {
   const { rows, rowsSelection, setRows, setRowModesModel } = props;
-  console.log(rowsSelection);
-  const handleClick = () => {
+
+  const selectedRows = rowsSelection as string[];
+
+  const handleAddRecord = () => {
     const id = randomId();
     setRows((oldRows) => [
       ...oldRows,
-      { id, name: "", age: "", role: "", isNew: true },
+      { id, name: "", age: "", role: "", isNew: true, isAddedFromUi: true },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -43,17 +46,31 @@ function EditToolbar(props: EditToolbarProps) {
     }));
   };
 
+  const handleSaveChanges = () => {};
+
+  const handleDeleteRecords = () => {
+    console.log(rows);
+  };
+
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
-      <Button color="primary" startIcon={<SaveIcon />} onClick={handleClick}>
-        Save changes
-      </Button>
-      <Button color="primary" startIcon={<DeleteIcon />} onClick={handleClick}>
-        Delete records
-      </Button>
+      <Tooltip title="Add record">
+        <Button color="info" onClick={handleAddRecord}>
+          <AddBoxIcon />
+        </Button>
+      </Tooltip>
+      <Tooltip title="Save changes">
+        <Button color="primary" onClick={handleSaveChanges}>
+          <SaveIcon />
+        </Button>
+      </Tooltip>
+      {selectedRows.length > 0 && (
+        <Tooltip title="Delete records">
+          <Button color="error" onClick={handleDeleteRecords}>
+            <DeleteIcon />
+          </Button>
+        </Tooltip>
+      )}
     </GridToolbarContainer>
   );
 }

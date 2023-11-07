@@ -59,8 +59,8 @@ export default function TopHeaderBar({
             <Image
               alt="logo"
               src={`/images/retina-logo.png`}
-              width={40}
-              height={40}
+              width={250}
+              height={256}
               style={{ width: "40px", height: "40px" }}
             />
             <Typography variant="h6" noWrap component="div" marginLeft={2}>

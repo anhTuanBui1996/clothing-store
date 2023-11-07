@@ -82,14 +82,14 @@ export default function MiniDrawer({
     <>
       <CssBaseline />
       <TopHeaderBar isDrawerOpened={open} handleDrawerOpen={handleDrawerOpen} />
-      <Drawer variant="permanent" open={open} sx={{ flexGrow: 1 }}>
+      <Drawer variant="permanent" open={open} sx={{ flexGrow: 0 }}>
         <DrawerHeader>
           <Link href={"/"} style={{ display: "flex", alignItems: "center" }}>
             <Image
               alt="logo"
-              src={`/favicon.ico`}
-              width={40}
-              height={40}
+              src={`/images/retina-logo1.png`}
+              width={250}
+              height={256}
               style={{ width: "40px", height: "40px" }}
             />{" "}
             <Typography variant="h6" noWrap component="div" marginLeft={2}>
