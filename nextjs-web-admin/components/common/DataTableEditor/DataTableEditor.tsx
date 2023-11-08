@@ -29,6 +29,8 @@ import {
   Snackbar,
   Alert,
   AlertColor,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 
 interface ConfirmDialogProps {
@@ -68,6 +70,24 @@ function ConfirmDialog(props: ConfirmDialogProps) {
   );
 }
 
+interface GridBackdropProps {
+  open: boolean;
+  handleClose: () => void;
+}
+
+function GridBackdrop(props: GridBackdropProps) {
+  const { open, handleClose } = props;
+  return (
+    <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={open}
+      onClick={handleClose}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  );
+}
+
 interface EditToolbarProps {
   rows: GridRowsProp;
   rowsSelection: GridInputRowSelectionModel;
@@ -77,6 +97,11 @@ interface EditToolbarProps {
   ) => void;
 }
 
+interface DialogContentType {
+  title: string;
+  content: string;
+}
+
 interface SnackbarContentType {
   type?: AlertColor;
   content?: string;
@@ -84,10 +109,19 @@ interface SnackbarContentType {
 
 function EditToolbar(props: EditToolbarProps) {
   const { rows, rowsSelection, setRows, setRowModesModel } = props;
+  const [deletedRows, setDeletedRows] = React.useState(new Set<string>());
+
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [dialogContent, setDialogContent] = React.useState<DialogContentType>({
+    title: "",
+    content: "",
+  });
+
   const [openSnackBar, setOpenSnackBar] = React.useState(false);
   const [snackbarContent, setSnackbarContent] =
     React.useState<SnackbarContentType>({});
+
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const selectedRows = rowsSelection as string[];
 
@@ -116,6 +150,10 @@ function EditToolbar(props: EditToolbarProps) {
       }
     }
     if (isFoundOriginalRow) {
+      setDialogContent({
+        title: "Do you really want to delete these rows?",
+        content: "There are some row from the origin table... Continue?",
+      });
       setOpenDialog(true);
     } else {
       setRows((oldRows) =>
@@ -126,9 +164,15 @@ function EditToolbar(props: EditToolbarProps) {
 
   const handleDeleteRecordsConfirmation = (isConfirm: boolean) => {
     if (isConfirm) {
+      setOpenBackdrop(true);
       setRows((oldRows) =>
         oldRows.filter((row) => !selectedRows.includes(row.id))
       );
+      selectedRows.forEach((id) => {
+        if (!rows.find((row) => row.id === id)?.isAdded) {
+          setDeletedRows(deletedRows.add(id));
+        }
+      });
       setSnackbarContent({
         type: "info",
         content: `${selectedRows.length} rows deleted!`,
@@ -136,10 +180,15 @@ function EditToolbar(props: EditToolbarProps) {
       setOpenSnackBar(true);
     }
     setOpenDialog(false);
+    handleCloseBackdrop();
   };
 
   const handleCloseSnackbar = () => {
     setOpenSnackBar(false);
+  };
+
+  const handleCloseBackdrop = () => {
+    setOpenBackdrop(false);
   };
 
   return (
@@ -171,8 +220,8 @@ function EditToolbar(props: EditToolbarProps) {
         </Box>
       </GridToolbarContainer>
       <ConfirmDialog
-        title="Do you really want to delete these rows?"
-        content="There are some row from the origin table... Continue?"
+        title={dialogContent.title}
+        content={dialogContent.content}
         open={openDialog}
         onClose={handleDeleteRecordsConfirmation}
       />
@@ -189,6 +238,7 @@ function EditToolbar(props: EditToolbarProps) {
           {snackbarContent.content}
         </Alert>
       </Snackbar>
+      <GridBackdrop open={openBackdrop} handleClose={handleCloseBackdrop} />
     </>
   );
 }
@@ -245,12 +295,7 @@ export default function DataTableEditor({
         rowSelectionModel={rowSelectionModel}
         onRowSelectionModelChange={handleRowSelectionModelChange}
         disableRowSelectionOnClick
-        pageSizeOptions={[
-          { value: rows.length, label: "Max" },
-          25,
-          50,
-          100,
-        ]}
+        pageSizeOptions={[{ value: rows.length, label: "Max" }, 25, 50, 100]}
         slots={{
           toolbar: EditToolbar,
         }}
