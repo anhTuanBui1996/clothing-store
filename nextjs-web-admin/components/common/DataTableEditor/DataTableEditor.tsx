@@ -32,7 +32,6 @@ import {
   Backdrop,
   CircularProgress,
 } from "@mui/material";
-import { exactEntityToGridData } from "./utils";
 
 interface ConfirmDialogProps {
   title: string;
@@ -130,11 +129,19 @@ function EditToolbar(props: EditToolbarProps) {
     const id = randomId();
     setRows((oldRows) => [
       ...oldRows,
-      { id, name: "", age: "", role: "", isNew: true, isAdded: true },
+      {
+        id,
+        createdDate: new Date(),
+        createdBy: "",
+        lastModifiedDate: new Date(),
+        lastModifiedBy: "",
+        isNew: true,
+        isAdded: true,
+      },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "lineNo" },
     }));
   };
 
@@ -191,7 +198,7 @@ function EditToolbar(props: EditToolbarProps) {
   const handleCloseBackdrop = () => {
     setOpenBackdrop(false);
   };
-  
+
   return (
     <>
       <GridToolbarContainer sx={{ justifyContent: "space-between" }}>
@@ -289,6 +296,16 @@ export default function DataTableEditor({
         rows={rows}
         columns={columns}
         editMode="row"
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              createdDate: false,
+              createdBy: false,
+              lastModifiedDate: false,
+              lastModifiedBy: false,
+            },
+          },
+        }}
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
         processRowUpdate={processRowUpdate}

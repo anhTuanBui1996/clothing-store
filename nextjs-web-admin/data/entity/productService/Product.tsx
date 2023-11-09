@@ -1,5 +1,5 @@
-import BaseEntity from "@/data/core/baseEntity";
-import { GridRowId } from "@mui/x-data-grid";
+import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
+import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import Brand from "./Brand";
 import Category from "./Category";
@@ -48,3 +48,48 @@ export default class Product implements BaseEntity {
     this.category = category;
   }
 }
+
+export const gridCols: GridColDef[] = gridDefaults.concat([
+  {
+    field: "productId",
+    headerName: "Product Id",
+    type: "string",
+    editable: true,
+  },
+  {
+    field: "productName",
+    headerName: "Product Name",
+    type: "string",
+    editable: true,
+  },
+  {
+    field: "description",
+    headerName: "Description",
+    type: "string",
+    editable: true,
+  },
+  {
+    field: "price",
+    headerName: "Price",
+    type: "number",
+    editable: true,
+  },
+  {
+    field: "quantity",
+    headerName: "Price",
+    type: "number",
+    editable: true,
+  },
+  {
+    field: "brand",
+    headerName: "Brand",
+    type: "referenceSelect",
+    editable: true,
+  },
+  {
+    field: "category",
+    headerName: "Category",
+    type: "referenceSelect",
+    editable: true,
+  },
+]);

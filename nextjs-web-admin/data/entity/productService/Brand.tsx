@@ -1,5 +1,5 @@
-import BaseEntity from "@/data/core/baseEntity";
-import { GridRowId } from "@mui/x-data-grid";
+import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
+import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import Product from "./Product";
 
@@ -37,20 +37,26 @@ export default class Brand implements BaseEntity {
     this.description = description;
     this.products = products;
   }
-  fetchEntity(): boolean {
-    throw new Error("Method not implemented.");
-  }
-  renewEntity(): void {
-    this.id = randomId();
-    this.createdDate = new Date();
-    this.createdBy = "";
-    this.lastModifiedDate = new Date();
-    this.lastModifiedBy = "";
-  }
-  save(): boolean {
-    throw new Error("Method not implemented.");
-  }
-  delete(): boolean {
-    throw new Error("Method not implemented.");
-  }
 }
+
+export const gridCols: GridColDef[] = gridDefaults.concat([
+  { field: "brandId", headerName: "Brand Id", type: "string", editable: true },
+  {
+    field: "brandName",
+    headerName: "Brand Name",
+    type: "string",
+    editable: true,
+  },
+  {
+    field: "description",
+    headerName: "Description",
+    type: "string",
+    editable: true,
+  },
+  {
+    field: "products",
+    headerName: "Products",
+    type: "referenceSelect",
+    editable: true,
+  },
+]);

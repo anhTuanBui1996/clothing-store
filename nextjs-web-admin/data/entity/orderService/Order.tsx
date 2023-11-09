@@ -37,20 +37,4 @@ export default class Order implements BaseEntity {
     this.description = description;
     this.products = products;
   }
-  fetchEntity(): boolean {
-    throw new Error("Method not implemented.");
-  }
-  renewEntity(): void {
-    this.id = randomId();
-    this.createdDate = new Date();
-    this.createdBy = "";
-    this.lastModifiedDate = new Date();
-    this.lastModifiedBy = "";
-  }
-  save(): boolean {
-    throw new Error("Method not implemented.");
-  }
-  delete(): boolean {
-    throw new Error("Method not implemented.");
-  }
 }
