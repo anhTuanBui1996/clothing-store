@@ -9,7 +9,9 @@ import { gridCols } from "@/data/entity/productService/Product";
 
 export default function Page() {
   const columns = gridCols;
-  const rows: readonly GridValidRowModel[] = [];
+  const rows: readonly GridValidRowModel[] = [
+    { id: randomId(), productId: "Test product" },
+  ];
   return (
     <Box>
       <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>

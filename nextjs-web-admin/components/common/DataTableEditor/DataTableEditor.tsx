@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
+import HistoryIcon from "@mui/icons-material/History";
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -36,7 +37,7 @@ import {
 interface ConfirmDialogProps {
   title: string;
   content: string;
-  onClose: (isConfirm: boolean) => void;
+  onClose: ((isConfirm: boolean) => void) | undefined;
   open: boolean;
 }
 
@@ -44,11 +45,15 @@ function ConfirmDialog(props: ConfirmDialogProps) {
   const { title, content, onClose, open } = props;
 
   const handleCancel = () => {
-    onClose(false);
+    if (onClose) {
+      onClose(false);
+    }
   };
 
   const handleConfirm = () => {
-    onClose(true);
+    if (onClose) {
+      onClose(true);
+    }
   };
 
   return (
@@ -89,12 +94,14 @@ function GridBackdrop(props: GridBackdropProps) {
 }
 
 interface EditToolbarProps {
+  initialRows: GridRowsProp;
   rows: GridRowsProp;
   rowsSelection: GridInputRowSelectionModel;
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
+  setRowsSelection: (newRowsSelection: GridInputRowSelectionModel) => void;
 }
 
 interface DialogContentType {
@@ -102,13 +109,24 @@ interface DialogContentType {
   content: string;
 }
 
+type DialogConfirmationOnCloseHandler = (
+  isConfirm: boolean
+) => void | undefined;
+
 interface SnackbarContentType {
   type?: AlertColor;
   content?: string;
 }
 
 function EditToolbar(props: EditToolbarProps) {
-  const { rows, rowsSelection, setRows, setRowModesModel } = props;
+  const {
+    initialRows,
+    rows,
+    rowsSelection,
+    setRows,
+    setRowModesModel,
+    setRowsSelection,
+  } = props;
   const [deletedRows, setDeletedRows] = React.useState(new Set<string>());
 
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -116,6 +134,10 @@ function EditToolbar(props: EditToolbarProps) {
     title: "",
     content: "",
   });
+  const [
+    dialogConfirmationOnCloseHandler,
+    setDialogConfirmationOnCloseHandler,
+  ] = React.useState<DialogConfirmationOnCloseHandler>(() => undefined);
 
   const [openSnackBar, setOpenSnackBar] = React.useState(false);
   const [snackbarContent, setSnackbarContent] =
@@ -124,6 +146,35 @@ function EditToolbar(props: EditToolbarProps) {
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const selectedRows = rowsSelection as string[];
+
+  const handleRevertHistory = () => {
+    setDialogContent({
+      title: "Revert and refetch the data",
+      content:
+        "Do you really want to revert the origin history and refetch? All changes will be discarded.",
+    });
+    setDialogConfirmationOnCloseHandler(() => handleRevertHistoryConfirmation);
+    setOpenDialog(true);
+  };
+
+  const handleRevertHistoryConfirmation = (isConfirm: boolean) => {
+    if (isConfirm) {
+      setOpenBackdrop(true);
+      setSnackbarContent({
+        type: "info",
+        content: "Data reverted and refetched!",
+      });
+      setOpenSnackBar(true);
+      setRowsSelection([]);
+      setRows((oldRows) => [...initialRows]);
+    }
+    setOpenDialog(false);
+    setDialogContent({ title: "", content: "" });
+    setDialogConfirmationOnCloseHandler(() => undefined);
+    handleCloseBackdrop();
+  };
+
+  const handleSaveChanges = () => {};
 
   const handleAddRecord = () => {
     const id = randomId();
@@ -145,8 +196,6 @@ function EditToolbar(props: EditToolbarProps) {
     }));
   };
 
-  const handleSaveChanges = () => {};
-
   const handleDeleteRecords = () => {
     let isFoundOriginalRow = false;
     for (let i = 0; i < selectedRows.length; i++) {
@@ -162,6 +211,9 @@ function EditToolbar(props: EditToolbarProps) {
         title: "Do you really want to delete these rows?",
         content: "There are some row from the origin table... Continue?",
       });
+      setDialogConfirmationOnCloseHandler(
+        () => handleDeleteRecordsConfirmation
+      );
       setOpenDialog(true);
     } else {
       setRows((oldRows) =>
@@ -188,6 +240,8 @@ function EditToolbar(props: EditToolbarProps) {
       setOpenSnackBar(true);
     }
     setOpenDialog(false);
+    setDialogContent({ title: "", content: "" });
+    setDialogConfirmationOnCloseHandler(() => undefined);
     handleCloseBackdrop();
   };
 
@@ -208,6 +262,11 @@ function EditToolbar(props: EditToolbarProps) {
           <GridToolbarExport />
         </Box>
         <Box>
+          <Tooltip title="Undo">
+            <Button color="warning" onClick={handleRevertHistory}>
+              <HistoryIcon />
+            </Button>
+          </Tooltip>
           <Tooltip title="Save changes">
             <Button color="primary" onClick={handleSaveChanges}>
               <SaveIcon />
@@ -231,7 +290,7 @@ function EditToolbar(props: EditToolbarProps) {
         title={dialogContent.title}
         content={dialogContent.content}
         open={openDialog}
-        onClose={handleDeleteRecordsConfirmation}
+        onClose={dialogConfirmationOnCloseHandler}
       />
       <Snackbar
         open={openSnackBar}
@@ -319,10 +378,12 @@ export default function DataTableEditor({
         }}
         slotProps={{
           toolbar: {
+            initialRows,
             rows,
             rowsSelection: rowSelectionModel,
             setRows,
             setRowModesModel,
+            setRowsSelection: setRowSelectionModel,
           },
         }}
         sx={{ backgroundColor: "Background", overflowX: "auto" }}
