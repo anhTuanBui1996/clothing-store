@@ -1,11 +1,10 @@
 import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
-import { GridColDef, GridRowId } from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
+import { GridColDef } from "@mui/x-data-grid";
 import Brand from "./Brand";
 import Category from "./Category";
 
 export default class Product implements BaseEntity {
-  id?: GridRowId;
+  rowId?: string;
   createdDate?: Date;
   createdBy?: string;
   lastModifiedDate?: Date;
@@ -16,12 +15,11 @@ export default class Product implements BaseEntity {
   description?: string;
   price?: number;
   quantity?: number;
-
   brand?: Brand;
   category?: Category;
 
   constructor(
-    id: GridRowId = randomId(),
+    rowId?: string,
     createdDate: Date = new Date(),
     createdBy?: string,
     lastModifiedDate: Date = new Date(),
@@ -34,7 +32,7 @@ export default class Product implements BaseEntity {
     brand?: Brand,
     category?: Category
   ) {
-    this.id = id;
+    this.rowId = rowId;
     this.createdDate = createdDate;
     this.createdBy = createdBy;
     this.lastModifiedDate = lastModifiedDate;
@@ -51,38 +49,38 @@ export default class Product implements BaseEntity {
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
-    field: "productId",
-    headerName: "Product Id",
-    type: "string",
-    editable: true,
-  },
-  {
     field: "productName",
     headerName: "Product Name",
+    headerAlign: "left",
     type: "string",
     editable: true,
+    width: 200,
   },
   {
     field: "description",
     headerName: "Description",
+    headerAlign: "left",
     type: "string",
     editable: true,
   },
   {
     field: "price",
     headerName: "Price",
+    headerAlign: "left",
     type: "number",
     editable: true,
   },
   {
     field: "quantity",
-    headerName: "Price",
+    headerName: "Quantity",
+    headerAlign: "left",
     type: "number",
     editable: true,
   },
   {
     field: "brand",
     headerName: "Brand",
+    headerAlign: "left",
     type: "referenceSelect",
     editable: true,
   },

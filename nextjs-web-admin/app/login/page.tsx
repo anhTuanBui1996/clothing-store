@@ -136,6 +136,7 @@ export default function SignIn() {
           </div>
           <div className="login flex-col justify-between align-middle">
             <Button
+              className="bg-[#1976d2]"
               disabled={isSignedIn === undefined}
               variant="contained"
               color="primary"
@@ -145,7 +146,7 @@ export default function SignIn() {
                 isSignedIn === undefined && <CircularProgress size={"12px"} />
               }
             >
-              LOGIN
+              SIGN IN
             </Button>
           </div>
         </div>

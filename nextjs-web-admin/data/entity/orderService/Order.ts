@@ -1,10 +1,8 @@
 import BaseEntity from "@/data/core/baseEntity";
-import { GridRowId } from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
 import Product from "../productService/Product";
 
 export default class Order implements BaseEntity {
-  id?: GridRowId;
+  rowId?: string;
   createdDate?: Date;
   createdBy?: string;
   lastModifiedDate?: Date;
@@ -17,7 +15,7 @@ export default class Order implements BaseEntity {
   products?: Set<Product>;
 
   constructor(
-    id: GridRowId = randomId(),
+    rowId?: string,
     createdDate: Date = new Date(),
     createdBy?: string,
     lastModifiedDate: Date = new Date(),
@@ -27,7 +25,7 @@ export default class Order implements BaseEntity {
     description?: string,
     products?: Set<Product>
   ) {
-    this.id = id;
+    this.rowId = rowId;
     this.createdDate = createdDate;
     this.createdBy = createdBy;
     this.lastModifiedDate = lastModifiedDate;

@@ -14,12 +14,12 @@ export const gridDefaults: GridColDef[] = [
     hideable: true,
     sortable: false,
     headerName: "#",
+    headerAlign: "left",
     type: "number",
     flex: 0,
     width: 50,
     editable: false,
-    renderCell: (params: GridRenderCellParams) =>
-      params.api.getRowIndexRelativeToVisibleRows(params.row.id) + 1,
+    align: "left",
   },
   {
     field: "createdDate",
