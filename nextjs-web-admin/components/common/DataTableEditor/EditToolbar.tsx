@@ -17,15 +17,19 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
 import ResultSnackbar, {
+  ResultSnackbarProps,
   SnackbarContentType,
   SnackbarOnCloseHandler,
 } from "./toolbarItem/ResultSnackbar";
 import ConfirmDialog, {
+  ConfirmDialogProps,
   DialogConfirmationOnCloseHandler,
   DialogContentType,
 } from "./toolbarItem/ConfirmDialog";
-import GridBackdrop from "./toolbarItem/GridBackdrop";
-import AddRecordDropdownMenu from "./toolbarItem/AddRecordDropdownMenu";
+import GridBackdrop, { GridBackdropProps } from "./toolbarItem/GridBackdrop";
+import AddRecordDropdownMenu, {
+  DropdownMenuProps,
+} from "./toolbarItem/AddRecordDropdownMenu";
 
 export interface EditToolbarProps {
   initialRows: GridRowsProp;
@@ -36,36 +40,6 @@ export interface EditToolbarProps {
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
   setRowsSelection: (newRowsSelection: GridInputRowSelectionModel) => void;
-}
-
-interface MenuState {
-  anchorEl: null | HTMLElement;
-  position?: {
-    anchorOrigin: PopoverOrigin | undefined;
-    transformOrigin: PopoverOrigin | undefined;
-  };
-  onOkClick?: (v: any) => void;
-  onClose?: (
-    event: {},
-    reason: "escapeKeyDown" | "backdropClick" | "tabKeyDown"
-  ) => void;
-}
-
-interface BackdropState {
-  open: boolean;
-  isFullScreen?: boolean;
-}
-
-interface DialogState {
-  open: boolean;
-  content?: DialogContentType;
-  onClose?: DialogConfirmationOnCloseHandler;
-}
-
-interface SnackbarState {
-  open: boolean;
-  content?: SnackbarContentType;
-  onClose: SnackbarOnCloseHandler;
 }
 
 export default function EditToolbar(props: EditToolbarProps) {
@@ -83,7 +57,7 @@ export default function EditToolbar(props: EditToolbarProps) {
 
   //#region Menu
   const handleCloseMenu = () => {
-    setMenu((oldMenu) => ({ ...oldMenu, anchorEl: null }));
+    setMenu((oldMenu: DropdownMenuProps) => ({ ...oldMenu, anchorEl: null }));
   };
 
   const handleOpenAddRecordsMenu = (
@@ -105,12 +79,15 @@ export default function EditToolbar(props: EditToolbarProps) {
       onClose,
     });
   };
-  const [menu, setMenu] = React.useState<MenuState>({ anchorEl: null });
+  const [menu, setMenu] = React.useState<DropdownMenuProps>({ anchorEl: null });
   //#endregion
 
   //#region Dialog
   const handleCloseDialog = () => {
-    setDialog((oldDialog: DialogState) => ({ ...oldDialog, open: false }));
+    setDialog((oldDialog: ConfirmDialogProps) => ({
+      ...oldDialog,
+      open: false,
+    }));
   };
 
   const handleOpenDialog = (
@@ -120,14 +97,14 @@ export default function EditToolbar(props: EditToolbarProps) {
     setDialog({ open: true, content, onClose });
   };
 
-  const [dialog, setDialog] = React.useState<DialogState>({
+  const [dialog, setDialog] = React.useState<ConfirmDialogProps>({
     open: false,
   });
   //#endregion
 
   //#region Snackbar
   const handleCloseSnackbar = () => {
-    setSnackbar((oldSnackbar: SnackbarState) => ({
+    setSnackbar((oldSnackbar: ResultSnackbarProps) => ({
       ...oldSnackbar,
       open: false,
     }));
@@ -144,14 +121,14 @@ export default function EditToolbar(props: EditToolbarProps) {
     });
   };
 
-  const [snackbar, setSnackbar] = React.useState<SnackbarState>({
+  const [snackbar, setSnackbar] = React.useState<ResultSnackbarProps>({
     open: false,
     onClose: handleCloseSnackbar,
   });
   //#endregion
 
   //#region Backdrop
-  const [backdrop, setBackdrop] = React.useState<BackdropState>({
+  const [backdrop, setBackdrop] = React.useState<GridBackdropProps>({
     open: false,
   });
 
@@ -160,7 +137,10 @@ export default function EditToolbar(props: EditToolbarProps) {
   };
 
   const handleCloseBackdrop = () => {
-    setBackdrop((oldBackdrop) => ({ ...oldBackdrop, open: false }));
+    setBackdrop((oldBackdrop: GridBackdropProps) => ({
+      ...oldBackdrop,
+      open: false,
+    }));
   };
   //#endregion
 
@@ -239,6 +219,7 @@ export default function EditToolbar(props: EditToolbarProps) {
       );
       return newModel;
     });
+    handleCloseMenu();
   };
   //#endregion
 

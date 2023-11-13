@@ -41,7 +41,12 @@ export default function AddRecordDropdownMenu(props: DropdownMenuProps) {
       MenuListProps={{
         "aria-labelledby": "toolbar-dropdown-menu",
       }}
-      sx={{ textAlign: "end" }}
+      sx={{
+        "& .MuiMenu-list": {
+          paddingLeft: 1,
+          paddingRight: 1,
+        },
+      }}
       anchorOrigin={position?.anchorOrigin}
       transformOrigin={position?.transformOrigin}
     >
@@ -52,6 +57,7 @@ export default function AddRecordDropdownMenu(props: DropdownMenuProps) {
         variant="outlined"
         type="number"
         size="small"
+        sx={{ width: "100px" }}
       />
       {onOkClick && (
         <Button
@@ -60,8 +66,8 @@ export default function AddRecordDropdownMenu(props: DropdownMenuProps) {
           variant="contained"
           sx={{
             textAlign: "center",
-            margin: "0 1rem",
             width: "auto",
+            marginLeft: 1,
           }}
         >
           Ok

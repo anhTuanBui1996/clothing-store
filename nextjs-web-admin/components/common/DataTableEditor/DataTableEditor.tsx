@@ -25,7 +25,7 @@ export default function DataTableEditor({
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
-  const [rowSelectionModel, setRowSelectionModel] =
+  const [gridRowSelectionModel, setGridRowSelectionModel] =
     React.useState<GridInputRowSelectionModel>([]);
 
   const processRowUpdate = (newRow: GridRowModel) => {
@@ -42,7 +42,7 @@ export default function DataTableEditor({
     rowSelectionModel: GridRowSelectionModel,
     _details: GridCallbackDetails<any>
   ) => {
-    setRowSelectionModel(rowSelectionModel);
+    setGridRowSelectionModel(rowSelectionModel);
   };
 
   return (
@@ -75,7 +75,7 @@ export default function DataTableEditor({
         onRowModesModelChange={handleRowModesModelChange}
         processRowUpdate={processRowUpdate}
         checkboxSelection
-        rowSelectionModel={rowSelectionModel}
+        rowSelectionModel={gridRowSelectionModel}
         onRowSelectionModelChange={handleRowSelectionModelChange}
         disableRowSelectionOnClick
         pageSizeOptions={[{ value: rows.length, label: "Max" }, 25, 50, 100]}
@@ -86,10 +86,10 @@ export default function DataTableEditor({
           toolbar: {
             initialRows,
             rows,
-            rowsSelection: rowSelectionModel,
+            rowsSelection: gridRowSelectionModel,
             setRows,
             setRowModesModel,
-            setRowsSelection: setRowSelectionModel,
+            setRowsSelection: setGridRowSelectionModel,
           },
         }}
         sx={{

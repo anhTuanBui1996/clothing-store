@@ -87,7 +87,7 @@ export default function Routes({
                     justifyContent: isDrawerOpened ? "initial" : "center",
                     px: 2.5,
                     backgroundColor:
-                      routeItem.path === pathname ? ligthBlue[200] : "",
+                      routeItem.path === pathname ? "#0000001f" : "",
                   }}
                 >
                   <ListItemIcon
@@ -95,6 +95,7 @@ export default function Routes({
                       minWidth: 0,
                       mr: isDrawerOpened ? 3 : "auto",
                       justifyContent: "center",
+                      color: routeItem.path === pathname ? "#2e7d32" : "",
                     }}
                   >
                     {routeItem.icon}
