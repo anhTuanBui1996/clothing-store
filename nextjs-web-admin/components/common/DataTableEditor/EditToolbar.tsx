@@ -194,7 +194,7 @@ export default function EditToolbar(props: EditToolbarProps) {
   const handleAddRecordsConfirmation = (v: number) => {
     let newIdArr: GridRowId[] = [];
     for (let i = 0; i < v; i++) {
-      newIdArr = [...newIdArr, randomId()];
+      newIdArr.push(randomId());
     }
     setRows((oldRows) => [
       ...oldRows,
