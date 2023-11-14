@@ -15,7 +15,6 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import CategoryIcon from "@mui/icons-material/Category";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ligthBlue from "@mui/material/colors/lightBlue";
 import { usePathname } from "next/navigation";
 
 type RouteItemProps = {

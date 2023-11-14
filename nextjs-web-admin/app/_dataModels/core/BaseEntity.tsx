@@ -1,4 +1,4 @@
-import { GridColDef, GridRenderCellParams, GridRowId } from "@mui/x-data-grid";
+import { GridColDef, GridRowId } from "@mui/x-data-grid";
 
 export default interface BaseEntity {
   id?: GridRowId;

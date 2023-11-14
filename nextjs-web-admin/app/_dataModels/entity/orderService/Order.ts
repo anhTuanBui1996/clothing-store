@@ -1,4 +1,4 @@
-import BaseEntity from "@/data/core/baseEntity";
+import BaseEntity from "@/app/_dataModels/core/BaseEntity";
 import Product from "../productService/Product";
 
 export default class Order implements BaseEntity {

@@ -1,9 +1,9 @@
-import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
+import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
 import Brand from "./Brand";
 import Category from "./Category";
-import { RenderCellForReferenceSelect } from "@/components/common/ReferenceSelect/ReferenceSelect";
-import { RenderCellForBoolean } from "@/components/common/GridBooleanCellRenderer/GridBooleanCellRenderer";
+import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
+import { RenderCellForBoolean } from "@/app/_components/common/GridBooleanCellRenderer/GridBooleanCellRenderer";
 
 export default class Product implements BaseEntity {
   rowId?: string;
@@ -83,7 +83,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     field: "brand",
     headerName: "Brand",
     headerAlign: "left",
-    align: "center",
+    align: "right",
     type: "referenceSelect:1",
     width: 150,
     editable: true,
@@ -94,20 +94,11 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     field: "category",
     headerName: "Category",
     headerAlign: "left",
-    align: "center",
+    align: "right",
     type: "referenceSelect:n",
     width: 150,
     editable: true,
     renderCell: RenderCellForReferenceSelect,
     renderEditCell: RenderCellForReferenceSelect,
-  },
-  {
-    field: "checkbox",
-    headerName: "Checkbox",
-    headerAlign: "left",
-    align: "center",
-    type: "boolean",
-    editable: true,
-    renderCell: RenderCellForBoolean,
   },
 ]);

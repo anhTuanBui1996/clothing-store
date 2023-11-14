@@ -1,4 +1,4 @@
-import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
+import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
 import Product from "./Product";
 

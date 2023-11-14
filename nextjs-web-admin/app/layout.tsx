@@ -1,10 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import LeftSideMenu from "@/components/layout/LeftSideMenu/LeftSideMenu";
+import LeftSideMenu from "@/app/_components/layout/LeftSideMenu/LeftSideMenu";
 import "./globals.css";
 import { Box } from "@mui/material";
-import CustomThemeProvider from "@/components/layout/CustomThemeProvider/CustomThemeProvider";
+import CustomThemeProvider from "@/app/_components/layout/CustomThemeProvider/CustomThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -33,22 +33,22 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
   const handleCloseViewer = () => setOpenViewer(false);
 
   return (
-    <>
+    <Box
+      display={"flex"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+      gap={1}
+    >
+      {value}
       <ButtonGroup variant="text">
         <Tooltip title="View">
-          <Button
-            color="info"
-            onClick={handleOpenViewer}
-          >
+          <Button color="info" onClick={handleOpenViewer}>
             <InfoIcon />
           </Button>
         </Tooltip>
         {isEditable && (
           <Tooltip title="Edit">
-            <Button
-              color="warning"
-              onClick={handleOpenEditor}
-            >
+            <Button color="warning" onClick={handleOpenEditor}>
               <EditIcon />
             </Button>
           </Tooltip>
@@ -62,7 +62,7 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
         cellApi={api}
       />
       <ReferenceSelectViewer open={openViewer} onClose={handleCloseViewer} />
-    </>
+    </Box>
   );
 }
 

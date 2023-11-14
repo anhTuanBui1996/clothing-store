@@ -16,6 +16,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ResultSnackbar, {
   ResultSnackbarProps,
   SnackbarContentType,
@@ -295,7 +296,7 @@ export default function EditToolbar(props: EditToolbarProps) {
             </Button>
           </Tooltip>
           <Tooltip title="Add record">
-            <Button color="info" onClick={handleAddRecords}>
+            <Button color="success" onClick={handleAddRecords}>
               <AddBoxIcon />
             </Button>
           </Tooltip>
@@ -306,6 +307,13 @@ export default function EditToolbar(props: EditToolbarProps) {
               </Button>
             </Tooltip>
           )}
+          <>
+            <Tooltip title="Menu">
+              <Button color="info" className="min-w-[24px]">
+                <MoreVertIcon />
+              </Button>
+            </Tooltip>
+          </>
         </Box>
       </GridToolbarContainer>
       <AddRecordDropdownMenu {...menu} />

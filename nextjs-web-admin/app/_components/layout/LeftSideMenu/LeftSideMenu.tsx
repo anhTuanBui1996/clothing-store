@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Image from "next/image";
-import Routes from "@/components/routes/Routes";
+import Routes from "@/app/_components/routes/Routes";
 import TopHeaderBar from "../TopHeaderBar/TopHeaderBar";
 import { CssBaseline, Typography } from "@mui/material";
 import Link from "next/link";

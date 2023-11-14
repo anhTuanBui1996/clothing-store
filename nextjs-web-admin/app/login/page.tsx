@@ -8,18 +8,10 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 import { useRouter } from "next/navigation";
-import { signInWithCredentials, LoginInfo } from "@/data/service/AuthService";
-
-const theme = createTheme({
-  palette: {
-    secondary: {
-      main: grey[800],
-    },
-  },
-});
+import { signInWithCredentials, LoginInfo } from "@/app/_dataModels/service/AuthService";
 
 export default function SignIn() {
   const router = useRouter();

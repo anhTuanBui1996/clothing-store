@@ -1,8 +1,8 @@
-import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
+import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
 import Permission from "./Permission";
 
-export default class Category implements BaseEntity {
+export default class Menu implements BaseEntity {
   rowId?: string;
   createdDate?: Date;
   createdBy?: string;
