@@ -1,5 +1,5 @@
 import BaseEntity, { gridDefaults } from "@/data/core/baseEntity";
-import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import Brand from "./Brand";
 import Category from "./Category";
 import { RenderCellForReferenceSelect } from "@/components/common/ReferenceSelect/ReferenceSelect";

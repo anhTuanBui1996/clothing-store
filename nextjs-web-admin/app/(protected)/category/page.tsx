@@ -10,7 +10,7 @@ export default function Page() {
   const columns = gridCols;
   const rows: readonly GridValidRowModel[] = [];
   return (
-    <Box className="page-content">
+    <Box className="page-content" p={3}>
       <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>
         Product
       </Typography>

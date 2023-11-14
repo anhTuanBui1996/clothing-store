@@ -6,7 +6,10 @@ const philosopher = Philosopher({ subsets: ["latin"], weight: "700" });
 
 export default function Page() {
   return (
-    <Box className="page-content h-fit bg-white">
+    <Box
+      className="page-content flex flex-col justify-center items-center bg-inherit"
+      p={3}
+    >
       <Typography
         marginBottom={1}
         fontFamily={"inherit"}
@@ -30,11 +33,17 @@ export default function Page() {
         src="/images/welcome-img.png"
         width={768}
         height={368}
+        style={{ width: "768px", height: "368px" }}
         className="mx-auto"
       />
-      <Box>
-        <Button color="success">Go to Dashboard</Button>
-      </Box>
+      <Button
+        className="bg-[#2e7d32]"
+        color="success"
+        variant="contained"
+        sx={{ my: 5 }}
+      >
+        Go to Dashboard
+      </Button>
     </Box>
   );
 }
