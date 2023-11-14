@@ -82,7 +82,17 @@ export default function MiniDrawer({
     <>
       <CssBaseline />
       <TopHeaderBar isDrawerOpened={open} handleDrawerOpen={handleDrawerOpen} />
-      <Drawer variant="permanent" open={open} sx={{ flexGrow: 0 }}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{
+          flexGrow: 0,
+          "& .MuiDrawer-paper": {
+            boxShadow:
+              "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
+          },
+        }}
+      >
         <DrawerHeader>
           <Link href={"/"} style={{ display: "flex", alignItems: "center" }}>
             <Image
@@ -107,7 +117,7 @@ export default function MiniDrawer({
         <Divider />
         <Routes isDrawerOpened={open} />
       </Drawer>
-      <Box component="main" sx={{ minWidth: "1px", flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
         <DrawerHeader />
         {children}
       </Box>

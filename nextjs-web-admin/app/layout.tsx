@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import LeftSideMenu from "@/components/layout/LeftSideMenu/LeftSideMenu";
@@ -21,7 +22,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <CustomThemeProvider>
-          <Box sx={{ display: "flex", width: "100vw", minWidth: "100%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              width: "100vw",
+              minWidth: "100%",
+              background: "inherit",
+            }}
+          >
             <LeftSideMenu>{children}</LeftSideMenu>
           </Box>
         </CustomThemeProvider>

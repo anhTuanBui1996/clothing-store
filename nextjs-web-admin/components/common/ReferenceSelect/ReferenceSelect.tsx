@@ -34,11 +34,10 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
 
   return (
     <>
-      <ButtonGroup variant="contained">
+      <ButtonGroup variant="text">
         <Tooltip title="View">
           <Button
             color="info"
-            className="bg-[#01579b]"
             onClick={handleOpenViewer}
           >
             <InfoIcon />
@@ -48,7 +47,6 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
           <Tooltip title="Edit">
             <Button
               color="warning"
-              className="bg-[#e65100]"
               onClick={handleOpenEditor}
             >
               <EditIcon />
