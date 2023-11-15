@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  Tooltip,
 } from "@mui/material";
 import React, { ReactElement } from "react";
 import HomeIcon from "@mui/icons-material/Home";
@@ -19,7 +20,6 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SellIcon from "@mui/icons-material/Sell";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import { usePathname } from "next/navigation";
 
 type RouteItemProps = {
@@ -39,11 +39,6 @@ const routesArr = [
     itemLinks: [
       { path: "/", icon: <HomeIcon />, text: "Home" },
       { path: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
-      {
-        path: "/configuration",
-        icon: <SettingsApplicationsIcon />,
-        text: "Configuration",
-      },
     ],
   },
   {
@@ -89,45 +84,47 @@ export default function Routes({
         >
           {routeGroup.itemLinks.map((routeItem: RouteItemProps) => (
             <Link href={routeItem.path} key={routeItem.path}>
-              <ListItem
-                key={routeItem.path}
-                disablePadding
-                sx={{ display: "block" }}
-              >
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: isDrawerOpened ? "initial" : "center",
-                    px: 2.5,
-                    backgroundColor:
-                      routeItem.path === pathname ? "#0000001f" : "",
-                  }}
+              <Tooltip title={routeItem.text} placement="right">
+                <ListItem
+                  key={routeItem.path}
+                  disablePadding
+                  sx={{ display: "block" }}
                 >
-                  <ListItemIcon
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: isDrawerOpened ? 3 : "auto",
-                      justifyContent: "center",
-                      color: routeItem.path === pathname ? "#2e7d32" : "",
+                      minHeight: 48,
+                      justifyContent: isDrawerOpened ? "initial" : "center",
+                      px: 2.5,
+                      backgroundColor:
+                        routeItem.path === pathname ? "#0000001f" : "",
                     }}
                   >
-                    {routeItem.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={routeItem.text}
-                    primaryTypographyProps={{
-                      fontFamily: "inherit",
-                      fontWeight: "inherit",
-                      fontSize: 14,
-                      color: routeItem.path === pathname ? "#2e7d32" : "",
-                    }}
-                    sx={{
-                      opacity: isDrawerOpened ? 1 : 0,
-                      fontWeight: 500,
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: isDrawerOpened ? 3 : "auto",
+                        justifyContent: "center",
+                        color: routeItem.path === pathname ? "#2e7d32" : "",
+                      }}
+                    >
+                      {routeItem.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={routeItem.text}
+                      primaryTypographyProps={{
+                        fontFamily: "inherit",
+                        fontWeight: "inherit",
+                        fontSize: 14,
+                        color: routeItem.path === pathname ? "#2e7d32" : "",
+                      }}
+                      sx={{
+                        opacity: isDrawerOpened ? 1 : 0,
+                        fontWeight: 500,
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
             </Link>
           ))}
           <Divider />
