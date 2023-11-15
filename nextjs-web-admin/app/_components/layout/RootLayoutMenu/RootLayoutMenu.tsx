@@ -1,4 +1,5 @@
 "use client";
+import "animate.css";
 import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -12,6 +13,8 @@ import Routes from "@/app/_components/routes/Routes";
 import TopHeaderBar from "../TopHeaderBar/TopHeaderBar";
 import { CssBaseline, Typography } from "@mui/material";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { unprotectedRoutes } from "@/app/_utils/constants";
 
 const drawerWidth = 240;
 
@@ -62,13 +65,25 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({
+export default function RootLayoutMenu({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const route = usePathname();
+
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [isInUnprotectedRoutes, setInUnprotectedRoutes] =
+    React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    if (unprotectedRoutes.includes(route)) {
+      setInUnprotectedRoutes(true);
+    } else {
+      setInUnprotectedRoutes(false);
+    }
+  }, [route]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -78,19 +93,23 @@ export default function MiniDrawer({
     setOpen(false);
   };
 
-  return (
+  return isInUnprotectedRoutes ? (
+    <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
+      {children}
+    </Box>
+  ) : (
     <>
       <CssBaseline />
       <TopHeaderBar isDrawerOpened={open} handleDrawerOpen={handleDrawerOpen} />
       <Drawer
+        className="animate__animated animate__slideInLeft"
         variant="permanent"
+        elevation={20}
         open={open}
         sx={{
           flexGrow: 0,
-          "& .MuiDrawer-paper": {
-            boxShadow:
-              "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
-          },
+          boxShadow:
+            "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
         }}
       >
         <DrawerHeader>

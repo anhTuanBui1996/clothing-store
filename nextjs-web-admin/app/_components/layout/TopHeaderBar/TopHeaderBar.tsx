@@ -1,3 +1,4 @@
+import 'animate.css';
 import React from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -47,6 +48,7 @@ export default function TopHeaderBar({
       open={isDrawerOpened}
       variant="elevation"
       color="success"
+      className="animate__animated animate__slideInDown"
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box display={"flex"} flexDirection={"row"}>

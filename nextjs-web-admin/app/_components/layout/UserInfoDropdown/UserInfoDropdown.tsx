@@ -10,8 +10,11 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function UserInfoDropdown() {
+  const router = useRouter();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -19,6 +22,7 @@ export default function UserInfoDropdown() {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => setAnchorEl(null);
+  const handleLogout = () => router.replace("/login");
 
   return (
     <>
@@ -56,7 +60,7 @@ export default function UserInfoDropdown() {
           <ListItemText>Settings</ListItemText>
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>

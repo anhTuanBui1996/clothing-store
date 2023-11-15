@@ -15,6 +15,11 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import CategoryIcon from "@mui/icons-material/Category";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import SellIcon from "@mui/icons-material/Sell";
+import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import { usePathname } from "next/navigation";
 
 type RouteItemProps = {
@@ -34,6 +39,11 @@ const routesArr = [
     itemLinks: [
       { path: "/", icon: <HomeIcon />, text: "Home" },
       { path: "/dashboard", icon: <DashboardIcon />, text: "Dashboard" },
+      {
+        path: "/configuration",
+        icon: <SettingsApplicationsIcon />,
+        text: "Configuration",
+      },
     ],
   },
   {
@@ -42,6 +52,10 @@ const routesArr = [
       { path: "/product", icon: <ShoppingBagIcon />, text: "Product" },
       { path: "/brand", icon: <Diversity3Icon />, text: "Brand" },
       { path: "/category", icon: <CategoryIcon />, text: "Category" },
+      { path: "/user", icon: <ContactsIcon />, text: "User" },
+      { path: "/role", icon: <AdminPanelSettingsIcon />, text: "Role" },
+      { path: "/menu", icon: <MenuBookIcon />, text: "Menu" },
+      { path: "/order", icon: <SellIcon />, text: "Order" },
     ],
   },
 ] as RouteGroupProps[];
@@ -105,6 +119,7 @@ export default function Routes({
                       fontFamily: "inherit",
                       fontWeight: "inherit",
                       fontSize: 14,
+                      color: routeItem.path === pathname ? "#2e7d32" : "",
                     }}
                     sx={{
                       opacity: isDrawerOpened ? 1 : 0,
