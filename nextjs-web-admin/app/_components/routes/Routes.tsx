@@ -20,6 +20,8 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SellIcon from "@mui/icons-material/Sell";
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { usePathname } from "next/navigation";
 
 type RouteItemProps = {
@@ -51,6 +53,13 @@ const routesArr = [
       { path: "/role", icon: <AdminPanelSettingsIcon />, text: "Role" },
       { path: "/menu", icon: <MenuBookIcon />, text: "Menu" },
       { path: "/order", icon: <SellIcon />, text: "Order" },
+      { path: "/orderDetail", icon: <ReceiptIcon />, text: "Order Detail" },
+    ],
+  },
+  {
+    text: "Featuring",
+    itemLinks: [
+      { path: "/featuring/manageOrder", icon: <ReceiptLongIcon />, text: "Orders Management" },
     ],
   },
 ] as RouteGroupProps[];

@@ -1,11 +1,10 @@
 import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
-import Brand from "./Brand";
-import Category from "./Category";
+import Brand from "./Brands";
+import Category from "./Categories";
 import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
-import { RenderCellForBoolean } from "@/app/_components/common/GridBooleanCellRenderer/GridBooleanCellRenderer";
 
-export default class Product implements BaseEntity {
+export default class Products implements BaseEntity {
   rowId?: string;
   createdDate?: Date;
   createdBy?: string;

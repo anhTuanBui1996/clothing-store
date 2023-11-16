@@ -4,7 +4,7 @@ import { GridValidRowModel } from "@mui/x-data-grid";
 import DataTableEditor from "@/app/_components/common/DataTableEditor/DataTableEditor";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
-import { gridCols } from "@/app/_dataModels/entity/productService/Product";
+import { gridCols } from "@/app/_dataModels/entity/productService/Products";
 
 export default function Page() {
   const columns = gridCols;
