@@ -1,7 +1,7 @@
 import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
 
-export default class Permission implements BaseEntity {
+export default class Permissions implements BaseEntity {
   rowId?: string;
   createdDate?: Date;
   createdBy?: string;
@@ -11,8 +11,6 @@ export default class Permission implements BaseEntity {
   categoryName?: string;
   description?: string;
 
-  products?: Set<Permission>;
-
   constructor(
     rowId?: string,
     createdDate: Date = new Date(),
@@ -21,7 +19,6 @@ export default class Permission implements BaseEntity {
     lastModifiedBy?: string,
     categoryName?: string,
     description?: string,
-    products?: Set<Permission>
   ) {
     this.rowId = rowId;
     this.createdDate = createdDate;
@@ -30,7 +27,6 @@ export default class Permission implements BaseEntity {
     this.lastModifiedBy = lastModifiedBy;
     this.categoryName = categoryName;
     this.description = description;
-    this.products = products;
   }
 }
 

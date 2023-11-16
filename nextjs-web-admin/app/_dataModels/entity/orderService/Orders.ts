@@ -1,7 +1,7 @@
 import BaseEntity from "@/app/_dataModels/core/BaseEntity";
-import Product from "../productService/Product";
+import Product from "../productService/Products";
 
-export default class Order implements BaseEntity {
+export default class Orders implements BaseEntity {
   rowId?: string;
   createdDate?: Date;
   createdBy?: string;

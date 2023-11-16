@@ -6,7 +6,7 @@ import "./globals.css";
 import { Box } from "@mui/material";
 import CustomThemeProvider from "@/app/_components/layout/CustomThemeProvider/CustomThemeProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
 export const metadata: Metadata = {
   title: "Clothing - Your store administrator",

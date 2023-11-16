@@ -34,6 +34,7 @@ export default function Page() {
         width={768}
         height={368}
         style={{ width: "768px", height: "368px" }}
+        priority
         className="mx-auto"
       />
       <Button

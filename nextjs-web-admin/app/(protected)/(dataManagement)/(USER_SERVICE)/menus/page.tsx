@@ -3,20 +3,16 @@ import React from "react";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import DataTableEditor from "@/app/_components/common/DataTableEditor/DataTableEditor";
 import Typography from "@mui/material/Typography";
-import { Box, Chip } from "@mui/material";
-import { gridCols } from "@/app/_dataModels/entity/productService/Brand";
+import { Box } from "@mui/material";
+import { gridCols } from "@/app/_dataModels/entity/productService/Categories";
 
 export default function Page() {
   const columns = gridCols;
   const rows: readonly GridValidRowModel[] = [];
   return (
     <Box className="page-content" p={3}>
-      <Typography
-        marginBottom={4}
-        fontFamily={"inherit"}
-        fontWeight={500}
-      >
-        <Chip label="Brand" size="medium" color="success" />
+      <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>
+        User
       </Typography>
       <DataTableEditor columns={columns} initialRows={rows} />
     </Box>

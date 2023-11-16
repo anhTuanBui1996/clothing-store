@@ -1,16 +1,15 @@
 import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
-import Product from "./Product";
+import Product from "./Products";
 
-export default class Category implements BaseEntity {
+export default class Brands implements BaseEntity {
   rowId?: string;
   createdDate?: Date;
   createdBy?: string;
   lastModifiedDate?: Date;
   lastModifiedBy?: string;
 
-  categoryId?: string;
-  categoryName?: string;
+  brandName?: string;
   description?: string;
   products?: Set<Product>;
 
@@ -20,7 +19,7 @@ export default class Category implements BaseEntity {
     createdBy?: string,
     lastModifiedDate: Date = new Date(),
     lastModifiedBy?: string,
-    categoryName?: string,
+    brandName?: string,
     description?: string,
     products?: Set<Product>
   ) {
@@ -29,7 +28,7 @@ export default class Category implements BaseEntity {
     this.createdBy = createdBy;
     this.lastModifiedDate = lastModifiedDate;
     this.lastModifiedBy = lastModifiedBy;
-    this.categoryName = categoryName;
+    this.brandName = brandName;
     this.description = description;
     this.products = products;
   }
@@ -37,8 +36,8 @@ export default class Category implements BaseEntity {
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
-    field: "categoryName",
-    headerName: "Category Name",
+    field: "brandName",
+    headerName: "Brand Name",
     headerAlign: "left",
     type: "string",
     editable: true,
