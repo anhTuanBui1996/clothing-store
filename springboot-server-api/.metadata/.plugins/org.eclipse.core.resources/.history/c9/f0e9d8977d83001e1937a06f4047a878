@@ -1,5 +1,0 @@
-package com.api.service;
-
-public interface ServiceUtils<T> {
-	T convertFromDtoToEntity(T t);
-}

@@ -1,5 +1,0 @@
-package com.api.service;
-
-public abstract class ServiceUtils<T> {
-	protected abstract T convertFromDtoToEntity(T t);
-}

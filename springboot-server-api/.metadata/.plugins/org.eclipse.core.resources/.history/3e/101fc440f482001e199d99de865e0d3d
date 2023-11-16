@@ -1,5 +1,0 @@
-package com.api.service.dto;
-
-public class UpdatePasswordUserDto {
-
-}
