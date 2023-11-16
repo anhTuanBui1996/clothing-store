@@ -1,0 +1,18 @@
+package com.api.service.dto;
+
+import java.util.Set;
+
+import com.api.service.entity.Permission;
+import com.api.service.entity.User;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+
+public class RoleDto extends BaseDto {
+
+	private String roleName;
+	private Set<Permission> permissions;
+	private Set<User> users;
+
+}

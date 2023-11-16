@@ -1,0 +1,5 @@
+package com.api.service.entity;
+
+public class BaseEntity {
+
+}

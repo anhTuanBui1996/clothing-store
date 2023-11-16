@@ -1,0 +1,9 @@
+package com.api.service.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.api.service.entity.Permission;
+import com.api.service.entity.composite.PermissionKey;
+
+public interface PermissionRepository extends JpaRepository<Permission, PermissionKey> {
+
+}

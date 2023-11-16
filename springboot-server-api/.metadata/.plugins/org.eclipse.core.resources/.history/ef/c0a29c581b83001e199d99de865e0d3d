@@ -1,0 +1,81 @@
+package com.api.service.entity.base;
+
+import java.util.Date;
+import java.util.UUID;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
+public class CompositeEntity {
+
+	@ColumnDefault(value = "UUID()")
+	@Column(name = "ID", nullable = false)
+	protected UUID id;
+
+	@ColumnDefault(value = "CURDATE()")
+	@Column(name = "CREATED_DATE", nullable = false)
+	protected Date createdDate;
+
+	@Column(name = "CREATED_BY", nullable = false)
+	protected String createdBy;
+
+	@ColumnDefault(value = "CURDATE()")
+	@Column(name = "LAST_MODIFIED_DATE", nullable = false)
+	protected Date lastModifiedDate;
+
+	@Column(name = "LAST_MODIFIED_BY", nullable = false)
+	protected String lastModifiedBy;
+
+	protected CompositeEntity() {
+
+	}
+
+	protected CompositeEntity(UUID id, Date createdDate, String createdBy, Date lastModifiedDate,
+			String lastModifiedBy) {
+
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+}

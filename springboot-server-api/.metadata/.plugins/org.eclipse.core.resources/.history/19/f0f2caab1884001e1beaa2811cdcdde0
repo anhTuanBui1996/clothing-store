@@ -1,0 +1,138 @@
+package com.api.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.api.service.dto.UsersDto;
+import com.api.service.entity.Role;
+import com.api.service.entity.Userss;
+import com.api.service.exception.UsersServiceCustomException;
+import com.api.service.repository.RoleRepository;
+import com.api.service.repository.UsersRepository;
+
+@Service
+public class UsersService implements ServiceUtils<Users, UsersDto> {
+
+	@Autowired
+	UsersRepository userRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
+
+	public Users createUsers(Userss user) {
+		if (userRepository.existsById(user.getId())) {
+			return userRepository.save(user);
+		}
+
+		throw new UsersServiceCustomException("Users with given Id is already existed", "USER_EXISTED");
+	}
+
+	public List<Userss> getAllUsers() {
+		List<Userss> users = new ArrayList<>();
+		userRepository.findAll().forEach(user -> users.add(user));
+		return users;
+	}
+
+	public List<UsersDto> getAllUsersDto() {
+		List<UsersDto> users = new ArrayList<>();
+		userRepository.findAll().forEach(user -> users.add(convertFromEntityToDto(user)));
+		return users;
+	}
+
+	public UsersDto getUsersDtoById(UUID id) {
+		Users user = userRepository.findById(id)
+				.orElseThrow(() -> new UsersServiceCustomException("Users with given Id not found", "USER_NOT_FOUND"));
+		return convertFromEntityToDto(user);
+	}
+
+	public UsersDto getUsersByEmailAndPassword(boolean isAdmin, String email, String password) {
+		Users foundUsers = userRepository.findByIsAdminAndEmailAndPassword(isAdmin, email, password);
+		if (foundUsers == null) {
+			throw new UsersServiceCustomException("Users with given username and password not found",
+					"USER_NOT_FOUND_EMAIL_PASSWORD");
+		}
+		return convertFromEntityToDto(foundUsers);
+	}
+
+	public UsersDto updateUsers(UsersDto dto) {
+		Users user = userRepository.findById(dto.getId())
+				.orElseThrow(() -> new UsersServiceCustomException("Users with given Id not found", "USER_NOT_FOUND"));
+		if (user != null) {
+			return convertFromEntityToDto(userRepository.save(convertFromDtoToEntity(dto)));
+		}
+		return null;
+	}
+
+	public boolean updateUsersPassword(UUID userId, String oldPassword, String newPassword) {
+		Users user = userRepository.findById(userId)
+				.orElseThrow(() -> new UsersServiceCustomException("Users with givent Id not found", "USER_NOT_FOUND"));
+		if (user.getPassword() == oldPassword) {
+			user.setPassword(newPassword);
+			return true;
+		}
+		throw new UsersServiceCustomException("Users with given Id doesn't match with provided password",
+				"USER_PASSWORD_MISMATCH");
+	}
+
+	public boolean deleteUsers(UUID userId) {
+		if (userRepository.existsById(userId)) {
+			userRepository.deleteById(userId);
+			return true;
+		}
+		throw new UsersServiceCustomException("Users with given Id not found", "USER_NOT_FOUND");
+	}
+
+	@Override
+	public Users convertFromDtoToEntity(UsersDto dto) {
+		Users entity = new Users();
+		entity.setId(dto.getId());
+		entity.setCreatedDate(dto.getCreatedDate());
+		entity.setCreatedBy(dto.getCreatedBy());
+		entity.setLastModifiedDate(dto.getLastModifiedDate());
+		entity.setLastModifiedBy(dto.getLastModifiedBy());
+
+		entity.setAdmin(dto.isAdmin());
+		entity.setEmail(dto.getEmail());
+		entity.setFirstName(dto.getFirstName());
+		entity.setLastName(dto.getLastName());
+		entity.setMale(dto.isMale());
+		entity.setDob(dto.getDob());
+		entity.setCitizenId(dto.getCitizenId());
+		Role role = roleRepository.findById(dto.getRoleId())
+				.orElseThrow(() -> new UsersServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
+		Optional<Users> foundUsers = userRepository.findById(dto.getId());
+		if (foundUsers.isPresent()) {
+			entity.setPassword(foundUsers.get().getPassword());
+		}
+
+		entity.setRole(role);
+
+		return entity;
+	}
+
+	public UsersDto convertFromEntityToDto(Users entity) {
+		UsersDto dto = new UsersDto();
+		dto.setId(entity.getId());
+		dto.setCreatedDate(entity.getCreatedDate());
+		dto.setCreatedBy(entity.getCreatedBy());
+		dto.setLastModifiedDate(entity.getLastModifiedDate());
+		dto.setLastModifiedBy(entity.getLastModifiedBy());
+
+		dto.setAdmin(entity.isAdmin());
+		dto.setEmail(entity.getEmail());
+		dto.setFirstName(entity.getFirstName());
+		dto.setLastName(entity.getLastName());
+		dto.setMale(entity.isMale());
+		dto.setDob(entity.getDob());
+		dto.setCitizenId(entity.getCitizenId());
+		dto.setRoleId(entity.getRole().getId());
+
+		return dto;
+	}
+
+}

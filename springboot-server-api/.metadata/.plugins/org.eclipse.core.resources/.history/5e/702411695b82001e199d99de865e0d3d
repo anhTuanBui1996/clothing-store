@@ -1,0 +1,146 @@
+package com.api.service.entity;
+
+import java.sql.Date;
+import java.util.UUID;
+
+import com.api.service.dto.UserDto;
+import com.api.service.entity.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class User extends BaseEntity {
+
+	@Column(name = "IS_ADMIN")
+	private boolean isAdmin;
+
+	@Column(name = "EMAIL")
+	private String email;
+
+	@Column(name = "PASSWORD")
+	private String password;
+
+	@Column(name = "FIRST_NAME")
+	private String firstName;
+
+	@Column(name = "LAST_NAME")
+	private String lastName;
+
+	@Column(name = "IS_MALE")
+	private boolean isMale;
+
+	@Column(name = "DOB")
+	private Date dob;
+
+	@Column(name = "CITIZEN_ID")
+	private String citizenId;
+
+	@ManyToOne
+	private Role role;
+
+	public User(UUID id, Date createdDate, String createdBy, Date lastModifiedDate, String lastModifiedBy) {
+		super(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy);
+	}
+
+	public User(UUID id, Date createdDate, String createdBy, Date lastModifiedDate, String lastModifiedBy,
+			boolean isAdmin, String email, String password, String firstName, String lastName, boolean isMale, Date dob,
+			String citizenId, Role role) {
+		super(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy);
+		this.isAdmin = isAdmin;
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.isMale = isMale;
+		this.dob = dob;
+		this.citizenId = citizenId;
+		this.role = role;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public boolean isMale() {
+		return isMale;
+	}
+
+	public void setMale(boolean isMale) {
+		this.isMale = isMale;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+	public String getCitizenId() {
+		return citizenId;
+	}
+
+	public void setCitizenId(String citizenId) {
+		this.citizenId = citizenId;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public UserDto convertEntityToDto() {
+		UserDto dto = new UserDto();
+
+		dto.setId(id);
+		dto.setCitizenId(citizenId);
+		dto.setDob(dob);
+		dto.setEmail(email);
+		dto.setFirstName(firstName);
+		dto.setLastName(lastName);
+		dto.setMale(isMale);
+
+		return dto;
+	}
+}

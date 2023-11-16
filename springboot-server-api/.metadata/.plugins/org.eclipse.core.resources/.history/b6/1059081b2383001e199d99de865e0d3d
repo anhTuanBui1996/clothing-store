@@ -1,0 +1,16 @@
+package com.api.service.repository;
+
+import org.springframework.data.repository.CrudRepository;
+
+import com.api.service.entity.User;
+import com.api.service.entity.composite.UserKey;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface UserRepository extends CrudRepository<User, UserKey> {
+
+	public List<User> findByIsAdminAndEmailAndPassword(boolean isAdmin, String email, String password);
+
+	public List<User> findById(UUID id);
+}

@@ -1,0 +1,150 @@
+package com.api.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.api.service.dto.UserDto;
+import com.api.service.entity.Role;
+import com.api.service.entity.User;
+import com.api.service.exception.UserServiceCustomException;
+import com.api.service.repository.RoleRepository;
+import com.api.service.repository.UserRepository;
+
+@Service
+public class UserService implements ServiceUtils<User, UserDto> {
+
+	@Autowired
+	UserRepository userRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
+
+	public User createUser(User user) {
+		if (userRepository.existsById(user.getId())) {
+			return userRepository.save(user);
+		}
+
+		throw new UserServiceCustomException("User with given Id is already existed", "USER_EXISTED");
+	}
+
+	public List<User> getAllUser() {
+		List<User> users = new ArrayList<>();
+		userRepository.findAll().forEach(user -> users.add(user));
+		return users;
+	}
+
+	public List<UserDto> getAllUserDto() {
+		List<UserDto> users = new ArrayList<>();
+		userRepository.findAll().forEach(user -> users.add(convertFromEntityToDto(user)));
+		return users;
+	}
+
+	public UserDto getUserDtoById(UUID id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+		return convertFromEntityToDto(user);
+	}
+
+	public UserDto getUserByEmailAndPassword(boolean isAdmin, String email, String password) {
+		User foundUser = userRepository.findByIsAdminAndEmailAndPassword(isAdmin, email, password);
+		if (foundUser == null) {
+			throw new UserServiceCustomException("User with given username and password not found",
+					"USER_NOT_FOUND_EMAIL_PASSWORD");
+		}
+		return convertFromEntityToDto(foundUser);
+	}
+
+	public UserDto updateUser(UserDto dto) {
+		User user = userRepository.findById(dto.getId()).orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+		if (user != null) {
+			return userRepository.save(convertFromDtoToEntity(dto));
+		}
+		return null;
+	}
+
+	public UserDto updateUserPassword(UUID userId, String oldPassword, String newPassword) {
+		List<User> entities = userRepository.findById(userId);
+		if (entities.size() == 1) {
+			User user = entities.get(0);
+
+			if (user.getPassword() != oldPassword) {
+				throw new UserServiceCustomException("User with given id and password is incorrect",
+						"PASSWORD_INCORRECT");
+			}
+
+			user.setPassword(newPassword);
+			return userRepository.save(user).convertEntityToDto();
+		} else if (entities.size() == 0) {
+			throw new UserServiceCustomException("User with given id not found", "USER_NOT_FOUND");
+		} else {
+			throw new UserServiceCustomException("User with given id dupplicate", "ID_DUPPLICATE");
+		}
+	}
+
+	public boolean deleteUser(UUID userId) {
+		List<User> entities = userRepository.findById(userId);
+
+		if (entities.size() == 1) {
+			userRepository.delete(entities.get(0));
+			return true;
+		} else if (entities.size() == 0) {
+			throw new UserServiceCustomException("User with given id not found", "USER_NOT_FOUND");
+		} else {
+			throw new UserServiceCustomException("User with given id dupplicate", "ID_DUPPLICATE");
+		}
+	}
+
+	@Override
+	public User convertFromDtoToEntity(UserDto dto) {
+		User entity = new User();
+		entity.setId(dto.getId());
+		entity.setCreatedDate(dto.getCreatedDate());
+		entity.setCreatedBy(dto.getCreatedBy());
+		entity.setLastModifiedDate(dto.getLastModifiedDate());
+		entity.setLastModifiedBy(dto.getLastModifiedBy());
+
+		entity.setAdmin(dto.isAdmin());
+		entity.setEmail(dto.getEmail());
+		entity.setFirstName(dto.getFirstName());
+		entity.setLastName(dto.getLastName());
+		entity.setMale(dto.isMale());
+		entity.setDob(dto.getDob());
+		entity.setCitizenId(dto.getCitizenId());
+		Role role = roleRepository.findById(dto.getRoleId())
+				.orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
+		Optional<User> foundUser = userRepository.findById(dto.getId());
+		if (foundUser.isPresent()) {
+			entity.setPassword(foundUser.get().getPassword());
+		}
+
+		entity.setRole(role);
+
+		return entity;
+	}
+
+	public UserDto convertFromEntityToDto(User entity) {
+		UserDto dto = new UserDto();
+		dto.setId(entity.getId());
+		dto.setCreatedDate(entity.getCreatedDate());
+		dto.setCreatedBy(entity.getCreatedBy());
+		dto.setLastModifiedDate(entity.getLastModifiedDate());
+		dto.setLastModifiedBy(entity.getLastModifiedBy());
+
+		dto.setAdmin(entity.isAdmin());
+		dto.setEmail(entity.getEmail());
+		dto.setFirstName(entity.getFirstName());
+		dto.setLastName(entity.getLastName());
+		dto.setMale(entity.isMale());
+		dto.setDob(entity.getDob());
+		dto.setCitizenId(entity.getCitizenId());
+		dto.setRoleId(entity.getRole().getId());
+
+		return dto;
+	}
+
+}

@@ -1,0 +1,26 @@
+package com.api.service.dto;
+
+import java.util.List;
+import com.api.service.entity.Menu;
+import com.api.service.entity.Permission;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MenuDto extends BaseDto<Menu> {
+
+	private String menuName;
+	private String description;
+	List<Permission> permissions;
+
+	@Override
+	public Menu convertToEntity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,52 @@
+package com.api.service.entity;
+
+import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "USER", indexes = @Index(columnList = "EMAIL,PASSWORD"))
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class User extends BaseEntity {
+
+	@Column(name = "IS_ADMIN")
+	private boolean isAdmin;
+
+	@Id
+	@Column(name = "EMAIL")
+	private String email;
+
+	@Column(name = "PASSWORD")
+	private String password;
+
+	@Column(name = "FIRST_NAME")
+	private String firstName;
+
+	@Column(name = "LAST_NAME")
+	private String lastName;
+
+	@Column(name = "IS_MALE")
+	private boolean isMale;
+
+	@Column(name = "DOB")
+	private Date dob;
+
+	@Column(name = "CITIZEN_ID")
+	private String citizenId;
+
+	@ManyToOne
+	@Column(name = "ROLE")
+	private Role role;
+
+}

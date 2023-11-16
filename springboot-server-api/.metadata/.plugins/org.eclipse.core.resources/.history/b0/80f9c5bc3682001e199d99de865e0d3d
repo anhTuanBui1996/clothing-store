@@ -1,0 +1,98 @@
+package com.api.service;
+
+import java.util.Date;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.api.service.dto.PermissionDto;
+import com.api.service.entity.Role;
+import com.api.service.entity.Menu;
+import com.api.service.entity.Permission;
+import com.api.service.entity.composite.PermissionKey;
+import com.api.service.exception.UserServiceCustomException;
+import com.api.service.repository.MenuRepository;
+import com.api.service.repository.PermissionRepository;
+import com.api.service.repository.RoleRepository;
+
+@Service
+public class PermissionService {
+	@Autowired
+	PermissionRepository permissionRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
+
+	@Autowired
+	MenuRepository menuRepository;
+
+	public PermissionDto createPermission(PermissionDto dto) {
+		UUID roleId = dto.getRole();
+		UUID menuId = dto.getMenu();
+
+		Role role = roleRepository.findById(roleId)
+				.orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT FOUND"));
+		Menu menu = menuRepository.findById(menuId)
+				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+		if (role == null || menu == null) {
+			return null;
+		}
+
+		Permission entity = new Permission(role, menu);
+		PermissionKey key = new PermissionKey(dto.getId(), new Date(), dto.getCreatedBy(), new Date(),
+				dto.getLastModifiedBy());
+		entity.setPermissionId(key);
+		entity.setCanCreate(dto.isCanCreate());
+		entity.setCanRead(dto.isCanRead());
+		entity.setCanUpdate(dto.isCanUpdate());
+		entity.setCanDelete(dto.isCanDelete());
+		Permission resultEntity = permissionRepository.save(entity);
+
+		PermissionKey resultEntityKey = resultEntity.getPermissionId();
+		PermissionDto resultDto = new PermissionDto(resultEntityKey.getId(), resultEntityKey.getCreatedDate(),
+				resultEntityKey.getCreatedBy(), resultEntityKey.getLastModifiedDate(),
+				resultEntityKey.getLastModifiedBy());
+		resultDto.setRole(resultEntity.getPermissionId().getRoleId());
+		resultDto.setMenu(resultEntity.getPermissionId().getMenuId());
+		resultDto.setCanCreate(resultEntity.getCanCreate());
+		resultDto.setCanRead(resultEntity.getCanRead());
+		resultDto.setCanUpdate(resultEntity.getCanUpdate());
+		resultDto.setCanDelete(resultEntity.getCanDelete());
+		return resultDto;
+	}
+
+	public PermissionDto updatePermission(PermissionDto dto) {
+		UUID roleId = dto.getRole();
+		UUID menuId = dto.getMenu();
+
+		Role role = roleRepository.findById(roleId)
+				.orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT FOUND"));
+		Menu menu = menuRepository.findById(menuId)
+				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+		if (role == null || menu == null) {
+			return null;
+		}
+
+		Permission entity = new Permission(role, menu);
+		PermissionKey key = new PermissionKey(dto.getId(), new Date(), "e", new Date(), "e");
+		entity.setPermissionId(key);
+		entity.setCanCreate(dto.isCanCreate());
+		entity.setCanRead(dto.isCanRead());
+		entity.setCanUpdate(dto.isCanUpdate());
+		entity.setCanDelete(dto.isCanDelete());
+		Permission resultEntity = permissionRepository.save(entity);
+
+		PermissionKey resultEntityKey = resultEntity.getPermissionId();
+		PermissionDto resultDto = new PermissionDto(resultEntityKey.getId(), resultEntityKey.getCreatedDate(),
+				resultEntityKey.getCreatedBy(), resultEntityKey.getLastModifiedDate(),
+				resultEntityKey.getLastModifiedBy());
+		resultDto.setRole(resultEntity.getPermissionId().getRoleId());
+		resultDto.setMenu(resultEntity.getPermissionId().getMenuId());
+		resultDto.setCanCreate(resultEntity.getCanCreate());
+		resultDto.setCanRead(resultEntity.getCanRead());
+		resultDto.setCanUpdate(resultEntity.getCanUpdate());
+		resultDto.setCanDelete(resultEntity.getCanDelete());
+		return resultDto;
+	}
+}

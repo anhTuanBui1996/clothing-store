@@ -1,0 +1,82 @@
+package com.api.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.api.service.dto.MenuDto;
+import com.api.service.entity.Menu;
+import com.api.service.entity.Permission;
+import com.api.service.exception.UserServiceCustomException;
+import com.api.service.repository.MenuRepository;
+import com.api.service.repository.PermissionRepository;
+
+@Service
+public class MenuService implements ServiceUtils<Menu, MenuDto> {
+
+	@Autowired
+	MenuRepository menuRepository;
+
+	@Autowired
+	PermissionRepository permissionRepository;
+
+	public List<Menu> getAll() {
+		List<Menu> entities = new ArrayList<Menu>();
+		menuRepository.findAll().forEach(entity -> entities.add(entity));
+		return entities;
+	}
+
+	public Menu getById(UUID id) {
+		Menu menu = menuRepository.findById(id)
+				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+		return menu;
+	}
+
+	public Menu createMenu(MenuDto dto) {
+		if (menuRepository.findById(dto.getId()).isEmpty()) {
+			return menuRepository.save(convertFromDtoToEntity(dto));
+		}
+		throw new UserServiceCustomException("Menu with given Id is already existed", "MENU_EXISTED");
+	}
+
+	public Menu updateMenu(MenuDto dto) {
+		Menu foundMenu = menuRepository.findById(dto.getId())
+				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+		if (foundMenu != null) {
+			return menuRepository.save(convertFromDtoToEntity(dto));
+		}
+		return null;
+	}
+
+	public boolean deleteMenu(UUID rowId) {
+		Menu foundMenu = menuRepository.findById(rowId)
+				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+		if (foundMenu != null) {
+			menuRepository.delete(foundMenu);
+			return true;
+		}
+		return false;
+	}
+
+	public Menu convertFromDtoToEntity(MenuDto dto) {
+		Menu entity = new Menu();
+		entity.setId(dto.getId());
+		entity.setCreatedDate(dto.getCreatedDate());
+		entity.setCreatedBy(dto.getCreatedBy());
+		entity.setLastModifiedDate(dto.getLastModifiedDate());
+		entity.setLastModifiedBy(dto.getLastModifiedBy());
+
+		List<Permission> permissionList = new ArrayList<Permission>();
+		dto.getPermissions().forEach((UUID id) -> {
+			Permission foundPermission = permissionRepository.findById(id).orElseThrow(
+					() -> new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND"));
+			permissionList.add(foundPermission);
+		});
+		entity.setPermission(permissionList);
+
+		return entity;
+	}
+}

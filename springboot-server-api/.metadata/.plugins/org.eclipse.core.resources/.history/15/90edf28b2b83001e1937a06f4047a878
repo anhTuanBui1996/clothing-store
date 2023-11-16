@@ -1,0 +1,109 @@
+package com.api.service.dto;
+
+import java.util.Date;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.api.service.entity.BaseEntity;
+import com.api.service.entity.Menu;
+import com.api.service.entity.Permission;
+import com.api.service.entity.Role;
+import com.api.service.entity.composite.PermissionKey;
+import com.api.service.exception.UserServiceCustomException;
+import com.api.service.repository.MenuRepository;
+import com.api.service.repository.RoleRepository;
+
+public class PermissionDto extends BaseDto {
+	
+	private UUID id;
+	private UUID role;
+	private UUID menu;
+
+	private boolean canCreate;
+	private boolean canRead;
+	private boolean canUpdate;
+	private boolean canDelete;
+
+	public PermissionDto(UUID id, Date createdDate, String createdBy, Date lastModifiedDate, String lastModifiedBy) {
+		super(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy);
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public UUID getRole() {
+		return role;
+	}
+
+	public void setRole(UUID role) {
+		this.role = role;
+	}
+
+	public UUID getMenu() {
+		return menu;
+	}
+
+	public void setMenu(UUID menu) {
+		this.menu = menu;
+	}
+
+	public boolean isCanCreate() {
+		return canCreate;
+	}
+
+	public void setCanCreate(boolean canCreate) {
+		this.canCreate = canCreate;
+	}
+
+	public boolean isCanRead() {
+		return canRead;
+	}
+
+	public void setCanRead(boolean canRead) {
+		this.canRead = canRead;
+	}
+
+	public boolean isCanUpdate() {
+		return canUpdate;
+	}
+
+	public void setCanUpdate(boolean canUpdate) {
+		this.canUpdate = canUpdate;
+	}
+
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
+
+	public Permission convertFromDtoToEntity() {
+		PermissionKey key = new PermissionKey(this.getId(), this.getCreatedDate(), this.getCreatedBy(),
+				this.getLastModifiedDate(), this.getLastModifiedBy());
+		Permission entity = new Permission();
+
+		Role role = roleRepository.findById(this.getRole())
+				.orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT FOUND"));
+		Menu menu = menuRepository.findById(this.getMenu())
+				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+
+		entity.setPermissionId(key);
+		entity.setRole(role);
+		entity.setMenu(menu);
+		entity.setCanCreate(this.isCanCreate());
+		entity.setCanRead(this.isCanRead());
+		entity.setCanUpdate(this.isCanUpdate());
+		entity.setCanDelete(this.isCanDelete());
+
+		return entity;
+	}
+
+}

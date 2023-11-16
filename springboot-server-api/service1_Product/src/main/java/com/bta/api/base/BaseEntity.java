@@ -1,25 +1,17 @@
 package com.bta.api.base;
 
-import java.util.Date;
-import java.util.UUID;
-
-import org.hibernate.annotations.ColumnDefault;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.CurrentTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import java.util.Date;
+import java.util.UUID;
 
 @MappedSuperclass
 @Data
@@ -29,8 +21,9 @@ public class BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	@Column(nullable = false, insertable = false, updatable = false)
-	protected UUID id = UUID.randomUUID();
+	@UuidGenerator(style = UuidGenerator.Style.AUTO)
+	@Column(nullable = false, updatable = false)
+	protected UUID id;
 
 	@CreatedDate
 	@Column(nullable = false)

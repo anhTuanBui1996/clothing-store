@@ -1,0 +1,24 @@
+package com.api.service.dto;
+
+import java.util.Date;
+import java.util.UUID;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+public abstract class BaseDto<T> {
+
+	protected UUID id;
+	protected Date createdDate;
+	protected String createdBy;
+	protected Date lastModifiedDate;
+	protected String lastModifiedBy;
+
+	public abstract T convertToEntity();
+}

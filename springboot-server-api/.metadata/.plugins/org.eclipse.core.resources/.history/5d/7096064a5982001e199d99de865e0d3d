@@ -1,0 +1,78 @@
+package com.api.service.dto;
+
+import java.util.Date;
+import java.util.UUID;
+
+import com.api.service.entity.base.BaseEntity;
+
+public class PermissionDto extends BaseEntity {
+	private UUID id;
+	private UUID role;
+	private UUID menu;
+
+	private boolean canCreate;
+	private boolean canRead;
+	private boolean canUpdate;
+	private boolean canDelete;
+
+	public PermissionDto(UUID id, Date createdDate, String createdBy, Date lastModifiedDate, String lastModifiedBy) {
+		super(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy);
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public UUID getRole() {
+		return role;
+	}
+
+	public void setRole(UUID role) {
+		this.role = role;
+	}
+
+	public UUID getMenu() {
+		return menu;
+	}
+
+	public void setMenu(UUID menu) {
+		this.menu = menu;
+	}
+
+	public boolean isCanCreate() {
+		return canCreate;
+	}
+
+	public void setCanCreate(boolean canCreate) {
+		this.canCreate = canCreate;
+	}
+
+	public boolean isCanRead() {
+		return canRead;
+	}
+
+	public void setCanRead(boolean canRead) {
+		this.canRead = canRead;
+	}
+
+	public boolean isCanUpdate() {
+		return canUpdate;
+	}
+
+	public void setCanUpdate(boolean canUpdate) {
+		this.canUpdate = canUpdate;
+	}
+
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
+
+}

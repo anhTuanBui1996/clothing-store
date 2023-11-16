@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="Users"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="true"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="User"/>
+			<item value="dto"/>
+			<item value="rowId"/>
+			<item value="package com.api.service.dto;"/>
+			<item value="/"/>
+			<item value="Product"/>
+			<item value="Brand"/>
+			<item value="roleManagedEntity"/>
+			<item value="RoleManagedEntity"/>
+			<item value="managedEntity"/>
+			<item value="ManagedEntity"/>
+			<item value="user"/>
+			<item value="managedEntityId"/>
+			<item value="roleId"/>
+			<item value="Id"/>
+		</list>
+		<list key="replacehistory">
+			<item value="Users"/>
+			<item value="this"/>
+			<item value="id"/>
+			<item value="/product/"/>
+			<item value="User"/>
+			<item value=""/>
+			<item value="BrandRequest"/>
+			<item value="permission"/>
+			<item value="Permission"/>
+			<item value="menu"/>
+			<item value="Menu"/>
+			<item value="Order"/>
+			<item value="order"/>
+			<item value="managedEntity"/>
+			<item value="role"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="769"/>
+		<item key="DIALOG_Y_ORIGIN" value="191"/>
+		<item key="DIALOG_WIDTH" value="336"/>
+		<item key="DIALOG_HEIGHT" value="402"/>
+		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
+	</section>
+</section>

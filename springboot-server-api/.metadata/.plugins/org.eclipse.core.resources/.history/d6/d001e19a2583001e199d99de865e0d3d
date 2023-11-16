@@ -1,0 +1,41 @@
+package com.api.service.entity;
+
+import java.util.Set;
+
+import com.api.service.dto.MenuDto;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
+@Entity
+@Table(name = "MENU")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Menu extends BaseEntity<MenuDto> {
+
+	@Column(name = "MENU_NAME")
+	public String menuName;
+
+	@Column(name = "DESCRIPTION")
+	public String description;
+
+	@OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+	Set<Permission> permission;
+
+	@Override
+	public MenuDto convertToDto() {
+		MenuDto dto = new MenuDto();
+		dto.
+		return dto;
+	}
+
+}

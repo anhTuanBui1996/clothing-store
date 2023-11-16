@@ -1,0 +1,18 @@
+package com.api.service.repository;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+
+import com.api.service.entity.User;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface UserRepository extends CrudRepository<User, UUID> {
+
+	public User findByIsAdminAndEmailAndPassword(boolean isAdmin, String email, String password);
+
+	@Query(value = "SELECT * FROM USER WHERE ROLE = ?1")
+	public List<User> findByRoleId(UUID roleId);
+	
+}

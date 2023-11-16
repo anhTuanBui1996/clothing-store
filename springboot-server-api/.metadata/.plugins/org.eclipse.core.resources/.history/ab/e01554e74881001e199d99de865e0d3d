@@ -1,0 +1,76 @@
+package com.api.service.dto;
+
+import java.util.Date;
+
+public class UserDto {
+
+	public Long id;
+	public String email;
+	public String fullName;
+	public boolean isMale;
+	public Date dob;
+	public String citizenId;
+
+	public UserDto() {
+
+	}
+
+	public UserDto(Long id, String email, String fullName, boolean isMale, Date dob, String citizenId) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.fullName = fullName;
+		this.isMale = isMale;
+		this.dob = dob;
+		this.citizenId = citizenId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public boolean isMale() {
+		return isMale;
+	}
+
+	public void setMale(boolean isMale) {
+		this.isMale = isMale;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+	public String getCitizenId() {
+		return citizenId;
+	}
+
+	public void setCitizenId(String citizenId) {
+		this.citizenId = citizenId;
+	}
+
+}

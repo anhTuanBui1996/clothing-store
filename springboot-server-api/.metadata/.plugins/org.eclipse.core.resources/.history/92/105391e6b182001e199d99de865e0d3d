@@ -1,0 +1,86 @@
+package com.api.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.api.service.dto.UserDto;
+import com.api.service.entity.User;
+import com.api.service.exception.UserServiceCustomException;
+import com.api.service.repository.UserRepository;
+
+@Service
+public class UserService {
+	@Autowired
+	UserRepository userRepository;
+
+	public List<User> getAllUser() {
+		List<User> users = new ArrayList<>();
+		userRepository.findAll().forEach(user -> users.add(user));
+		return users;
+	}
+
+	public List<UserDto> getAllUserDto() {
+		List<UserDto> users = new ArrayList<>();
+		userRepository.findAll().forEach(user -> users.add(user.convertEntityToDto()));
+		return users;
+	}
+
+	public UserDto getUserById(UUID id) {
+		User entity = userRepository.findById(id)
+				.orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+		return entity.convertEntityToDto();
+	}
+
+	public UserDto getUserByEmailAndPassword(boolean isAdmin, String email, String password) {
+		List<User> foundUsers = userRepository.findByEmailAndPassword(email, password);
+		if (foundUsers.isEmpty()) {
+			throw new UserServiceCustomException("User with given username and password not found",
+					"USER_NOT_FOUND_USERNAME_PASSWORD");
+		}
+		User foundUser = foundUsers.get(0);
+		return foundUser.convertEntityToDto();
+	}
+
+	public User createUser(User user) {
+		if (userRepository.findById(user.getId()).isEmpty()) {
+			return userRepository.save(user);
+		}
+
+		throw new UserServiceCustomException("User with given Id is already existed", "USER_EXISTED");
+	}
+
+	public UserDto updateUser(UserDto dto) {
+		User entity = userRepository.findById(dto.getId())
+				.orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+
+		if (entity == null) {
+			return null;
+		}
+
+		return userRepository.save(dto.convertDtoToEntity()).convertEntityToDto();
+	}
+
+	public UserDto updateUserPassword(UUID userId, String oldPassword, String newPassword) {
+		User entity = userRepository.findById(userId)
+				.orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+
+		if (entity.getPassword() != oldPassword) {
+			throw new UserServiceCustomException("User with given id and password is incorrect", "PASSWORD_INCORRECT");
+		}
+
+		entity.setPassword(newPassword);
+		return userRepository.save(entity).convertEntityToDto();
+	}
+
+	public boolean deleteUser(UUID userId) {
+		User entity = userRepository.findById(userId)
+				.orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+
+		userRepository.delete(entity);
+		return true;
+	}
+}
