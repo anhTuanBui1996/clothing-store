@@ -1,52 +1,6 @@
-import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
+import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
-import Brand from "./Brands";
-import Category from "./Categories";
 import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
-
-export default class Products implements BaseEntity {
-  rowId?: string;
-  createdDate?: Date;
-  createdBy?: string;
-  lastModifiedDate?: Date;
-  lastModifiedBy?: string;
-
-  productId?: string;
-  productName?: string;
-  description?: string;
-  price?: number;
-  quantity?: number;
-  brand?: Brand;
-  category?: Category;
-
-  constructor(
-    rowId?: string,
-    createdDate: Date = new Date(),
-    createdBy?: string,
-    lastModifiedDate: Date = new Date(),
-    lastModifiedBy?: string,
-    productId?: string,
-    productName?: string,
-    description?: string,
-    price?: number,
-    quantity?: number,
-    brand?: Brand,
-    category?: Category
-  ) {
-    this.rowId = rowId;
-    this.createdDate = createdDate;
-    this.createdBy = createdBy;
-    this.lastModifiedDate = lastModifiedDate;
-    this.lastModifiedBy = lastModifiedBy;
-    this.productId = productId;
-    this.productName = productName;
-    this.description = description;
-    this.price = price;
-    this.quantity = quantity;
-    this.brand = brand;
-    this.category = category;
-  }
-}
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {

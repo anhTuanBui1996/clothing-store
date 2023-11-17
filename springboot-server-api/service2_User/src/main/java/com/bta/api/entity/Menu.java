@@ -21,7 +21,7 @@ public class Menu extends BaseEntity {
 	private String menuName;
 	private String description;
 
-	@OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "menu", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Permission> permission;
 
 }

@@ -2,6 +2,7 @@ package com.bta.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.bta.api.base.ImplService;
@@ -29,32 +30,37 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
     @Autowired
     UserRepository usersRepository;
 
-    public Role createRole(Role role) {
-        if (roleRepository.findById(role.getId()).isPresent()) {
-            throw new UserServiceCustomException("Role with given Id is already existed", "ROLE_EXISTED");
-        }
-        return roleRepository.save(role);
-    }
-
-    public List<Role> getAllRole() {
+    @Override
+    public List<Role> getAll() {
         List<Role> roles = new ArrayList<>();
         roleRepository.findAll().forEach(roles::add);
         return roles;
     }
 
-    public Role getRoleById(UUID id) {
+    @Override
+    public Role getById(UUID id) {
         return roleRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
     }
 
-    public Role updateRole(Role role) {
-        Role entity = roleRepository.findById(role.getId()).orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
+    @Override
+    public Role create(RoleDto dto) {
+        if (roleRepository.existsById(dto.getId())) {
+            throw new UserServiceCustomException("Role with given Id is already ", "ROLE_NOT_FOUND");
+        }
+        return roleRepository.save(convertFromDtoToEntity(dto));
+    }
+
+    @Override
+    public Role update(RoleDto dto) {
+        Role entity = roleRepository.findById(dto.getId()).orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
         if (entity != null) {
-            return roleRepository.save(role);
+            return roleRepository.save(convertFromDtoToEntity(dto));
         }
         return null;
     }
 
-    public boolean deleteRole(UUID id) {
+    @Override
+    public boolean delete(UUID id) {
         Role entity = roleRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
         if (entity != null) {
             roleRepository.deleteById(id);
@@ -66,7 +72,12 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
     @Override
     public Role convertFromDtoToEntity(RoleDto dto) {
         Role entity = new Role();
-        entity.setId(dto.getId());
+        Optional<Role> foundEntity = roleRepository.findById(dto.getId());
+        if (foundEntity.isPresent()) {
+            entity = foundEntity.get();
+        } else {
+            entity.setId(dto.getId());
+        }
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setCreatedBy(dto.getCreatedBy());
         entity.setLastModifiedDate(dto.getLastModifiedDate());
@@ -74,9 +85,14 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
 
         entity.setRoleName(dto.getRoleName());
         entity.setDescription(dto.getDescription());
-        List<Permission> permissionList = permissionRepository.findByRoleId(dto.getId());
-        List<User> userList = usersRepository.findByRoleId(dto.getId());
+        List<Permission> permissionList = new ArrayList<Permission>();
+        dto.getPermissions().forEach((UUID id) -> {
+            Permission foundPermission = permissionRepository.findById(id).orElseThrow(
+                    () -> new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND"));
+            permissionList.add(foundPermission);
+        });
         entity.setPermissions(permissionList);
+        List<User> userList = usersRepository.findByRoleId(dto.getId());
         entity.setUsers(userList);
 
         return entity;

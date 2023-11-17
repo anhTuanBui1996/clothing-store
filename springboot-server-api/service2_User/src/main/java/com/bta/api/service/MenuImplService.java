@@ -2,6 +2,7 @@ package com.bta.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.bta.api.base.ImplService;
@@ -33,9 +34,9 @@ public class MenuImplService implements ImplService<Menu, MenuDto> {
 				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
 	}
 
-	public Menu create(Menu dto) {
+	public Menu create(MenuDto dto) {
 		if (menuRepository.findById(dto.getId()).isEmpty()) {
-			return menuRepository.save(dto);
+			return menuRepository.save(convertFromDtoToEntity(dto));
 		}
 		throw new UserServiceCustomException("Menu with given Id is already existed", "MENU_EXISTED");
 	}
@@ -62,7 +63,12 @@ public class MenuImplService implements ImplService<Menu, MenuDto> {
 	@Override
 	public Menu convertFromDtoToEntity(MenuDto dto) {
 		Menu entity = new Menu();
-		entity.setId(dto.getId());
+		Optional<Menu> foundEntity = menuRepository.findById(dto.getId());
+		if (foundEntity.isPresent()) {
+			entity = foundEntity.get();
+		} else {
+			entity.setId(dto.getId());
+		}
 		entity.setCreatedDate(dto.getCreatedDate());
 		entity.setCreatedBy(dto.getCreatedBy());
 		entity.setLastModifiedDate(dto.getLastModifiedDate());

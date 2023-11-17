@@ -1,5 +1,5 @@
 import BaseEntity from "@/app/_dataModels/core/BaseEntity";
-import Product from "../productService/Products";
+import Product from "../productService/Product";
 
 export default class Orders implements BaseEntity {
   rowId?: string;

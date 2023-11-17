@@ -25,26 +25,6 @@ public class UserImplService implements ImplService<User, UserDto> {
 	@Autowired
 	RoleRepository roleRepository;
 
-	public User createUser(User user) {
-		if (usersRepository.existsById(user.getId())) {
-			return usersRepository.save(user);
-		}
-
-		throw new UserServiceCustomException("User with given Id is already existed", "USER_EXISTED");
-	}
-
-	public List<User> getAllUser() {
-		List<User> users = new ArrayList<>();
-		usersRepository.findAll().forEach(user -> users.add(user));
-		return users;
-	}
-
-	public List<UserDto> getAllUserDto() {
-		List<UserDto> users = new ArrayList<>();
-		usersRepository.findAll().forEach(user -> users.add(convertFromEntityToDto(user)));
-		return users;
-	}
-
 	public UserDto getUserDtoById(UUID id) {
 		User user = usersRepository.findById(id)
 				.orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
@@ -89,9 +69,57 @@ public class UserImplService implements ImplService<User, UserDto> {
 	}
 
 	@Override
+	public List<User> getAll() {
+		List<User> users = new ArrayList<>();
+		usersRepository.findAll().forEach(users::add);
+		return users;
+	}
+
+	public List<UserDto> getAllUserDto() {
+		List<UserDto> users = new ArrayList<>();
+		usersRepository.findAll().forEach(user -> users.add(convertFromEntityToDto(user)));
+		return users;
+	}
+
+	@Override
+	public User getById(UUID id) {
+		return null;
+	}
+
+	@Override
+	public User create(UserDto dto) {
+		if (usersRepository.existsById(dto.getId())) {
+			throw new UserServiceCustomException("User with given Id is already existed", "USER_EXISTED");
+		}
+		return usersRepository.save(convertFromDtoToEntity(dto));
+	}
+
+	public User create(User entity) {
+		if (usersRepository.existsById(entity.getId())) {
+			throw new UserServiceCustomException("User with given Id is already existed", "USER_EXISTED");
+		}
+		return usersRepository.save(entity);
+	}
+
+	@Override
+	public User update(UserDto dto) {
+		return null;
+	}
+
+	@Override
+	public boolean delete(UUID id) {
+		return false;
+	}
+
+	@Override
 	public User convertFromDtoToEntity(UserDto dto) {
 		User entity = new User();
-		entity.setId(dto.getId());
+		Optional<User> foundEntity = usersRepository.findById(dto.getId());
+		if (foundEntity.isPresent()) {
+			entity = foundEntity.get();
+		} else {
+			entity.setId(dto.getId());
+		}
 		entity.setCreatedDate(dto.getCreatedDate());
 		entity.setCreatedBy(dto.getCreatedBy());
 		entity.setLastModifiedDate(dto.getLastModifiedDate());

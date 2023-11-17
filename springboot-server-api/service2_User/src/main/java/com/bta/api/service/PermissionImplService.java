@@ -2,6 +2,7 @@ package com.bta.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.bta.api.base.ImplService;
@@ -43,14 +44,6 @@ public class PermissionImplService implements ImplService<Permission, Permission
 		throw new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND");
 	}
 
-	public Permission savePermission(PermissionDto dto) {
-		Permission entity = convertFromDtoToEntity(dto);
-		if (entity != null) {
-			return permissionRepository.save(entity);
-		}
-		return null;
-	}
-
 	public List<Permission>	saveAllPermission(List<PermissionDto> dtos) {
 		List<Permission> entities = new ArrayList<>();
 		dtos.forEach((PermissionDto dto) -> entities.add(convertFromDtoToEntity(dto)));
@@ -58,9 +51,51 @@ public class PermissionImplService implements ImplService<Permission, Permission
 	}
 
 	@Override
+	public List<Permission> getAll() {
+		return permissionRepository.findAll();
+	}
+
+	@Override
+	public Permission getById(UUID id) {
+		return permissionRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND"));
+	}
+
+	@Override
+	public Permission create(PermissionDto dto) {
+		Permission entity = convertFromDtoToEntity(dto);
+		if (entity != null) {
+			return permissionRepository.save(entity);
+		}
+		return null;
+	}
+
+	@Override
+	public Permission update(PermissionDto dto) {
+		Permission entity = convertFromDtoToEntity(dto);
+		if (entity != null) {
+			return permissionRepository.save(entity);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean delete(UUID id) {
+		if (permissionRepository.existsById(id)) {
+			permissionRepository.deleteById(id);
+			return true;
+		}
+		throw new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND");
+	}
+
+	@Override
 	public Permission convertFromDtoToEntity(PermissionDto dto) {
 		Permission entity = new Permission();
-		entity.setId(dto.getId());
+		Optional<Permission> foundEntity = permissionRepository.findById(dto.getId());
+		if (foundEntity.isPresent()) {
+			entity = foundEntity.get();
+		} else {
+			entity.setId(dto.getId());
+		}
 		entity.setCreatedDate(dto.getCreatedDate());
 		entity.setCreatedBy(dto.getCreatedBy());
 		entity.setLastModifiedDate(dto.getLastModifiedDate());

@@ -1,4 +1,4 @@
-import Product from "../entity/productService/Products";
+import Product from "../entity/productService/Product";
 
 export async function getProducts(): Promise<Product> {
   const result = await fetch(`${process.env.PRODUCT_SERVICE_ORIGIN}/product`, {

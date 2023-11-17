@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.UUID;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -14,5 +17,6 @@ public class RoleDto extends BaseDto {
 
 	private String roleName;
 	private String description;
+	private List<UUID> permissions;
 
 }
