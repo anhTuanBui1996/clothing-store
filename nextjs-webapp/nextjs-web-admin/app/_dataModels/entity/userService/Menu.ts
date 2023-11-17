@@ -1,7 +1,12 @@
 import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
-import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
+import { BaseDto, gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
 
+/**
+ * Extended types
+ * type: "referenceSelect",
+ * * syntax "referenceSelect:tableName:1|n", example "referenceSelect:User:1"
+ */
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
     field: "menuName",
@@ -13,6 +18,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     field: "description",
     headerName: "Description",
     type: "string",
+    width: 350,
     editable: true,
   },
   {
@@ -20,7 +26,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerName: "Permissions",
     headerAlign: "left",
     align: "right",
-    type: "referenceSelect:n",
+    type: "referenceSelect:Permission:n",
     width: 150,
     editable: true,
     renderCell: RenderCellForReferenceSelect,

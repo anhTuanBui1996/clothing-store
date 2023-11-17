@@ -50,6 +50,18 @@ public class MenuImplService implements ImplService<Menu, MenuDto> {
 		return null;
 	}
 
+	@Override
+	public List<Menu> updateCollection(List<MenuDto> dtos) {
+		List<Menu> entities = new ArrayList<>();
+		dtos.forEach((MenuDto dto) -> {
+			if (!menuRepository.existsById(dto.getId())) {
+				throw new UserServiceCustomException("User with given Id not found", "MENU_NOT_FOUND");
+			}
+			entities.add(convertFromDtoToEntity(dto));
+		});
+		return menuRepository.saveAll(entities);
+	}
+
 	public boolean delete(UUID rowId) {
 		Menu foundMenu = menuRepository.findById(rowId)
 				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
@@ -58,6 +70,21 @@ public class MenuImplService implements ImplService<Menu, MenuDto> {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<Boolean> deleteCollection(List<UUID> ids) {
+		List<Boolean> resList = new ArrayList<>();
+		ids.forEach((UUID id) -> {
+			if (menuRepository.existsById(id)) {
+				resList.add(true);
+			} else {
+				resList.add(false);
+				throw new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND");
+			}
+		});
+		menuRepository.deleteAllByIdInBatch(ids);
+		return resList;
 	}
 
 	@Override

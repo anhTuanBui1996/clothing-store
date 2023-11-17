@@ -19,7 +19,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerName: "Menu",
     headerAlign: "left",
     align: "right",
-    type: "referenceSelect:1",
+    type: "referenceSelect:Menu:1",
     width: 150,
     editable: true,
     renderCell: RenderCellForReferenceSelect,

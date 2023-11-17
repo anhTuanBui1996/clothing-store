@@ -1,6 +1,4 @@
-import Product from "../entity/productService/Product";
-
-export async function getProducts(): Promise<Product> {
+export async function getProducts(): Promise<Response> {
   const result = await fetch(`${process.env.PRODUCT_SERVICE_ORIGIN}/product`, {
     method: "GET",
     cache: "no-store",
@@ -16,7 +14,7 @@ export async function getProductById(id: string) {
   return result.json();
 }
 
-export async function createNewProduct(product: Product) {
+export async function createNewProduct(product: Response) {
   const result = await fetch(`${process.env.PRODUCT_SERVICE_ORIGIN}/product`, {
     method: "POST",
     cache: "no-store",
@@ -25,7 +23,7 @@ export async function createNewProduct(product: Product) {
   return result.json();
 }
 
-export async function updateExistingProduct(product: Product) {
+export async function updateExistingProduct(product: Response) {
   const result = await fetch(`${process.env.PRODUCT_SERVICE_ORIGIN}/product`, {
     method: "PUT",
     cache: "no-store",

@@ -13,7 +13,11 @@ public interface ImplService<E, D> {
 
 	abstract E update(D dto);
 
+	abstract List<E> updateCollection(List<D> dtos);
+
 	abstract boolean delete (UUID id);
+
+	abstract List<Boolean> deleteCollection(List<UUID> ids);
 
 	abstract E convertFromDtoToEntity(D dto);
 

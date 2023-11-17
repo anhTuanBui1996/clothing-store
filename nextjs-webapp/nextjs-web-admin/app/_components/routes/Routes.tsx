@@ -53,13 +53,6 @@ const routesArr = [
       { path: "/role", icon: <AdminPanelSettingsIcon />, text: "Role" },
       { path: "/menu", icon: <MenuBookIcon />, text: "Menu" },
       { path: "/order", icon: <SellIcon />, text: "Order" },
-      { path: "/orderDetail", icon: <ReceiptIcon />, text: "Order Detail" },
-    ],
-  },
-  {
-    text: "Featuring",
-    itemLinks: [
-      { path: "/featuring/manageOrder", icon: <ReceiptLongIcon />, text: "Orders Management" },
     ],
   },
 ] as RouteGroupProps[];

@@ -60,6 +60,18 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
     }
 
     @Override
+    public List<Role> updateCollection(List<RoleDto> dtos) {
+        List<Role> entities = new ArrayList<>();
+        dtos.forEach((RoleDto dto) -> {
+            if (!roleRepository.existsById(dto.getId())) {
+                throw new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND");
+            }
+            entities.add(convertFromDtoToEntity(dto));
+        });
+        return roleRepository.saveAll();
+    }
+
+    @Override
     public boolean delete(UUID id) {
         Role entity = roleRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
         if (entity != null) {
@@ -67,6 +79,21 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Boolean> deleteCollection(List<UUID> ids) {
+        List<Boolean> resList = new ArrayList<>();
+        ids.forEach((UUID id) -> {
+            if (roleRepository.existsById(id)) {
+                resList.add(true);
+            } else {
+                resList.add(false);
+                throw new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND");
+            }
+        });
+        roleRepository.deleteAllById(ids);
+        return resList;
     }
 
     @Override

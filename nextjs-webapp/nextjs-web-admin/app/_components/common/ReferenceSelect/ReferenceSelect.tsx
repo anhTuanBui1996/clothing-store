@@ -1,7 +1,6 @@
 import {
   DataGrid,
   GridCallbackDetails,
-  GridColType,
   GridInputRowSelectionModel,
   GridRenderCellParams,
   GridRowId,

@@ -5,6 +5,7 @@ import java.util.List;
 import com.bta.api.base.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class Menu extends BaseEntity {
 	private String menuName;
 	private String description;
 
-	@OneToMany(mappedBy = "menu", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Permission> permission;
 
 }

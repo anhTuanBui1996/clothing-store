@@ -107,8 +107,18 @@ public class UserImplService implements ImplService<User, UserDto> {
 	}
 
 	@Override
+	public List<User> updateCollection(List<UserDto> dtos) {
+		return null;
+	}
+
+	@Override
 	public boolean delete(UUID id) {
 		return false;
+	}
+
+	@Override
+	public List<Boolean> deleteCollection(List<UUID> ids) {
+		return null;
 	}
 
 	@Override

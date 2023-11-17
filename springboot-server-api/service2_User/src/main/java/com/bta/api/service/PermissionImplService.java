@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.bta.api.base.ImplService;
+import com.bta.api.dto.MenuDto;
 import com.bta.api.dto.PermissionDto;
 import com.bta.api.entity.Menu;
 import com.bta.api.repository.MenuRepository;
@@ -79,12 +80,39 @@ public class PermissionImplService implements ImplService<Permission, Permission
 	}
 
 	@Override
+	public List<Permission> updateCollection(List<PermissionDto> dtos) {
+		List<Permission> entities = new ArrayList<>();
+		dtos.forEach((PermissionDto dto) -> {
+			if (!permissionRepository.existsById(dto.getId())) {
+				throw new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND");
+			}
+			entities.add(convertFromDtoToEntity(dto));
+		});
+		return permissionRepository.saveAll(entities);
+	}
+
+	@Override
 	public boolean delete(UUID id) {
 		if (permissionRepository.existsById(id)) {
 			permissionRepository.deleteById(id);
 			return true;
 		}
 		throw new UserServiceCustomException("User with given Id not found", "USER_NOT_FOUND");
+	}
+
+	@Override
+	public List<Boolean> deleteCollection(List<UUID> ids) {
+		List<Boolean> resList = new ArrayList<>();
+		ids.forEach((UUID id) -> {
+			if (permissionRepository.existsById(id)) {
+				resList.add(true);
+			} else {
+				resList.add(false);
+				throw new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND");
+			}
+		});
+		permissionRepository.deleteAllByIdInBatch(ids);
+		return resList;
 	}
 
 	@Override

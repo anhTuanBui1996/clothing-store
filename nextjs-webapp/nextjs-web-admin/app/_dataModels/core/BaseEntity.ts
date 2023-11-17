@@ -1,4 +1,12 @@
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+
+export type BaseDto = {
+  id: string;
+  createdDate: Date;
+  createdBy: string;
+  lastModifiedDate: Date;
+  lastModifiedBy: string;
+}
 
 export const gridDefaults: GridColDef[] = [
   {
@@ -20,6 +28,7 @@ export const gridDefaults: GridColDef[] = [
     flex: 0,
     width: 200,
     editable: false,
+    valueGetter: (params: GridValueGetterParams) => new Date(params.value),
   },
   {
     field: "createdBy",
@@ -36,6 +45,7 @@ export const gridDefaults: GridColDef[] = [
     flex: 0,
     width: 200,
     editable: false,
+    valueGetter: (params: GridValueGetterParams) => new Date(params.value),
   },
   {
     field: "lastModifiedBy",

@@ -16,7 +16,6 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ResultSnackbar, {
   ResultSnackbarProps,
   SnackbarContentType,
@@ -31,6 +30,8 @@ import GridBackdrop, { GridBackdropProps } from "./toolbarItem/GridBackdrop";
 import AddRecordDropdownMenu, {
   DropdownMenuProps,
 } from "./toolbarItem/AddRecordDropdownMenu";
+import BaseReponse from "@/app/_dataModels/core/BaseResponse";
+import { BaseDto } from "@/app/_dataModels/core/BaseEntity";
 
 export interface EditToolbarProps {
   initialRows: GridRowsProp;
@@ -41,6 +42,10 @@ export interface EditToolbarProps {
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
   setRowsSelection: (newRowsSelection: GridInputRowSelectionModel) => void;
+  getPromise?: () => Promise<BaseReponse>;
+  createPromise?: (data: BaseDto) => Promise<BaseReponse>;
+  updatePromise?: (data: BaseDto) => Promise<BaseReponse>;
+  deletePromise?: (id: string) => Promise<BaseReponse>;
 }
 
 export default function EditToolbar(props: EditToolbarProps) {
@@ -51,6 +56,10 @@ export default function EditToolbar(props: EditToolbarProps) {
     setRows,
     setRowModesModel,
     setRowsSelection,
+    getPromise,
+    createPromise,
+    updatePromise,
+    deletePromise,
   } = props;
   // Data model states
   const selectedRows = rowsSelection as string[];
@@ -167,8 +176,18 @@ export default function EditToolbar(props: EditToolbarProps) {
         },
         handleCloseSnackbar
       );
+      getPromise
+        ? getPromise().then((obj: BaseReponse) =>
+            setRows(
+              obj.dataResponse.map((v: any, i: number) => ({
+                ...v,
+                lineNo: i + 1,
+              }))
+            )
+          )
+        : setRows(() => initialRows);
       setRowsSelection([]);
-      setRows(() => [...initialRows]);
+      setDeletedRows(new Set<string>());
     }
     handleCloseDialog();
     handleCloseBackdrop();
@@ -176,7 +195,11 @@ export default function EditToolbar(props: EditToolbarProps) {
   //#endregion
 
   //#region Save changes Button
-  const handleSaveChanges = () => {};
+  const handleSaveChanges = () => {
+    if (deletedRows.size > 0) {
+      
+    }
+  };
   //#endregion
 
   //#region Add record Button
@@ -205,9 +228,8 @@ export default function EditToolbar(props: EditToolbarProps) {
         createdBy: "ANHBT",
         lastModifiedDate: new Date(),
         lastModifiedBy: "ANHBT",
-        isNew: true,
-        isAdded: true,
         lineNo: oldRows.length + index + 1,
+        isAdded: true,
       })),
     ]);
     setRowModesModel((oldModel) => {
@@ -307,13 +329,6 @@ export default function EditToolbar(props: EditToolbarProps) {
               </Button>
             </Tooltip>
           )}
-          <>
-            <Tooltip title="Menu">
-              <Button color="info" className="min-w-[24px]">
-                <MoreVertIcon />
-              </Button>
-            </Tooltip>
-          </>
         </Box>
       </GridToolbarContainer>
       <AddRecordDropdownMenu {...menu} />
