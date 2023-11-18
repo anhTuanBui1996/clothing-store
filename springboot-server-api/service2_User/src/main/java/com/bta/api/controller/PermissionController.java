@@ -22,8 +22,9 @@ public class PermissionController {
     @Autowired
     PermissionImplService permissionService;
 
-    @PostMapping(path = "/")
-    public BaseResponse savePermission(@RequestBody PermissionDto permissionDto) {
+    @PostMapping(path = "/{id}")
+    public BaseResponse savePermission(@PathVariable UUID id, @RequestBody PermissionDto permissionDto) {
+        permissionDto.setId(id);
         try {
             return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a Menu successfully", new Date(), permissionService.update(permissionDto));
         } catch (UserServiceCustomException ex) {
@@ -31,7 +32,7 @@ public class PermissionController {
         }
     }
 
-    @PostMapping(path = "/saveByList")
+    @PostMapping(path = "/")
     public BaseResponse savePermissions(@RequestBody List<PermissionDto> permissionDtos) {
         try {
             List<Permission> entities = new ArrayList<>();

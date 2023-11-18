@@ -38,7 +38,7 @@ public class RoleController {
     }
 
     @GetMapping(path = "/")
-    public BaseResponse getAll() {
+    public BaseResponse getAllRole() {
         try {
             return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read all Role successfully", new Date(), roleService.getAll());
         } catch (UserServiceCustomException ex) {
@@ -47,7 +47,7 @@ public class RoleController {
     }
 
     @GetMapping(path = "/{id}")
-    public BaseResponse getRoleById(@PathVariable("id") UUID id) {
+    public BaseResponse getRoleById(@PathVariable(name = "id") UUID id) {
         try {
             return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read all Role successfully", new Date(), roleService.getById(id));
         } catch (UserServiceCustomException ex) {
@@ -55,10 +55,20 @@ public class RoleController {
         }
     }
 
-    @PutMapping(path = "/")
-    public BaseResponse updateRole(@RequestBody RoleDto role) {
+    @PutMapping(path = "/{id}")
+    public BaseResponse updateRole(@PathVariable(name = "id") UUID id, @RequestBody RoleDto role) {
+        role.setId(id);
         try {
             return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing Role successfully", new Date(), roleService.update(role));
+        } catch (UserServiceCustomException ex) {
+            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+        }
+    }
+
+    @PutMapping(path = "/")
+    public BaseResponse updateAllRole(@RequestBody List<RoleDto> roles) {
+        try {
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing Role successfully", new Date(), roleService.updateCollection(roles));
         } catch (UserServiceCustomException ex) {
             return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
@@ -70,6 +80,15 @@ public class RoleController {
             return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted an existing Role successfully", new Date(), roleService.delete(id));
         } catch (UserServiceCustomException ex) {
             return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted an existing Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+        }
+    }
+
+    @DeleteMapping(path = "/")
+    public BaseResponse deleteAllRole(@RequestBody List<UUID> ids) {
+        try {
+            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted list of Role successfully", new Date(), roleService.deleteCollection(ids));
+        } catch (UserServiceCustomException ex) {
+            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted list of Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 

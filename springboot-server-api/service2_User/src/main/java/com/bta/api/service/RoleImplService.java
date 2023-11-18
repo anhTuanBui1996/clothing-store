@@ -68,7 +68,7 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
             }
             entities.add(convertFromDtoToEntity(dto));
         });
-        return roleRepository.saveAll();
+        return (List<Role>) roleRepository.saveAll(entities);
     }
 
     @Override

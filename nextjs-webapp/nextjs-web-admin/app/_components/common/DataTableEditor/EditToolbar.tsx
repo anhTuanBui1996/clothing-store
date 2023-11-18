@@ -197,6 +197,7 @@ export default function EditToolbar(props: EditToolbarProps) {
   //#region Save changes Button
   const handleSaveChanges = () => {
     if (deletedRows.size > 0) {
+      let deletedCount = 0
       
     }
   };

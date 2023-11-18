@@ -111,7 +111,7 @@ public class PermissionImplService implements ImplService<Permission, Permission
 				throw new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND");
 			}
 		});
-		permissionRepository.deleteAllByIdInBatch(ids);
+		permissionRepository.deleteAllById(ids);
 		return resList;
 	}
 
