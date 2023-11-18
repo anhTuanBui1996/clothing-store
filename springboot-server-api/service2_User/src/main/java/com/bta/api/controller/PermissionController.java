@@ -26,9 +26,9 @@ public class PermissionController {
     public BaseResponse savePermission(@PathVariable UUID id, @RequestBody PermissionDto permissionDto) {
         permissionDto.setId(id);
         try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a Menu successfully", new Date(), permissionService.update(permissionDto));
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a Permission successfully", new Date(), permissionService.update(permissionDto));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated a Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated a Permission failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
@@ -37,27 +37,27 @@ public class PermissionController {
         try {
             List<Permission> entities = new ArrayList<>();
             permissionDtos.forEach((PermissionDto dto) -> entities.add(permissionService.convertFromDtoToEntity(dto)));
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a Menu successfully", new Date(), entities);
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a list of Permission successfully", new Date(), entities);
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated a Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated a list of Permission failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
     @GetMapping(path = "/byRole/{id}")
     public BaseResponse getPermissionByRoleId(@PathVariable UUID id) {
         try {
-            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read Menu by id successfully", new Date(), permissionService.getPermissionByRoleId(id));
+            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read Permission by Role id successfully", new Date(), permissionService.getPermissionByRoleId(id));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.ReadFailed, "Read Menu by id failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.ReadFailed, "Read Permission by Role id failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
     @GetMapping(path = "/byMenu/{id}")
     public BaseResponse getPermissionByMenuId(@PathVariable UUID id) {
         try {
-            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read Menu by id successfully", new Date(), permissionService.getPermissionByMenuId(id));
+            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read Permission by Menu id successfully", new Date(), permissionService.getPermissionByMenuId(id));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.ReadFailed, "Read Menu by id failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.ReadFailed, "Read Permission by Menu id failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 

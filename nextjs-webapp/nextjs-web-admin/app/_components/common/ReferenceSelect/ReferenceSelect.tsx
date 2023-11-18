@@ -28,7 +28,6 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
     api.stopRowEditMode({ id, field: colDef.field });
   };
   const handleOpenViewer = () => setOpenViewer(true);
-
   const handleCloseViewer = () => setOpenViewer(false);
 
   return (

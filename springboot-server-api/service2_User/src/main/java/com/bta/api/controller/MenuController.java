@@ -25,9 +25,9 @@ public class MenuController {
     @GetMapping(path = "/{id}")
     public BaseResponse getMenu(@PathVariable UUID id) {
         try {
-            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read All Menu successfully!", new Date(), menuService.getById(id));
+            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read a Menu successfully!", new Date(), menuService.getById(id));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.ReadFailed, "Read All Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.ReadFailed, "Read a Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
@@ -62,27 +62,27 @@ public class MenuController {
     @PutMapping(path = "/")
     public BaseResponse updateAllMenu(@RequestBody List<MenuDto> dtos) {
         try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a new Menu successfully", new Date(), menuService.updateCollection(dtos));
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a list of Menu successfully", new Date(), menuService.updateCollection(dtos));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated a list of Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
     @DeleteMapping(path = "/{id}")
     public BaseResponse deleteMenu(@PathVariable UUID id) {
         try {
-            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Updated a new Menu successfully", new Date(), menuService.delete(id));
+            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted a existing Menu successfully", new Date(), menuService.delete(id));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.DeletedFailed, "Updated an existing Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), false);
+            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted an existing Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), false);
         }
     }
 
     @DeleteMapping(path = "/")
     public BaseResponse deleteAllMenu(@RequestBody List<UUID> ids) {
         try {
-            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted list of Menu successfully", new Date(), menuService.deleteCollection(ids));
+            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted a list of Menu successfully", new Date(), menuService.deleteCollection(ids));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted list of Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), false);
+            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted a list of Menu failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), false);
         }
     }
 

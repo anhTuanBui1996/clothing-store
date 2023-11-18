@@ -10,6 +10,8 @@ import {
   createNewMenu,
   updateExistingMenu,
   deleteExistingMenu,
+  updateAllMenus,
+  deleteAllMenus,
 } from "@/app/_dataModels/service/UserService";
 import BaseResponse from "@/app/_dataModels/core/BaseResponse";
 
@@ -20,9 +22,14 @@ export default function Page() {
   );
 
   React.useEffect(() => {
-    getAllMenu().then((res: BaseResponse) => {
-      setInitialRows(res.dataResponse || []);
-    });
+    getAllMenu()
+      .then((res: BaseResponse) => {
+        setInitialRows(res.dataResponse || []);
+      })
+      .catch((err) => {
+        console.error(err);
+        setInitialRows([]);
+      });
   }, []);
 
   return (
@@ -38,7 +45,9 @@ export default function Page() {
             getPromise={getAllMenu}
             createPromise={createNewMenu}
             updatePromise={updateExistingMenu}
+            updateAllPromise={updateAllMenus}
             deletePromise={deleteExistingMenu}
+            deleteAllPromise={deleteAllMenus}
           />
         </>
       )}

@@ -1,13 +1,5 @@
 import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
-export type BaseDto = {
-  id: string;
-  createdDate: Date;
-  createdBy: string;
-  lastModifiedDate: Date;
-  lastModifiedBy: string;
-}
-
 export const gridDefaults: GridColDef[] = [
   {
     field: "lineNo",

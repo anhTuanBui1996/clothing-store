@@ -50,16 +50,26 @@ public class UserController {
     @PostMapping(path = "/")
     public BaseResponse createUser(@RequestBody(required = true) User user) {
         try {
-            return new BaseResponse(ResponseStatus.CreatedSuccessfully, "Read an existing User successfully", new Date(), userService.create(user));
+            return new BaseResponse(ResponseStatus.CreatedSuccessfully, "Created a new User successfully", new Date(), userService.create(user));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.CreatedFailed, "Read an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.CreatedFailed, "Created a new User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+        }
+    }
+
+    @PutMapping(path = "/{id}")
+    public BaseResponse updateUser(@PathVariable UUID id, @RequestBody(required = true) UserDto user) {
+        user.setId(id);
+        try {
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing User successfully", new Date(), userService.updateUser(user));
+        } catch (UserServiceCustomException ex) {
+            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
     @PutMapping(path = "/")
-    public BaseResponse updateUser(@RequestBody(required = true) UserDto user) {
+    public BaseResponse updateAllUser(@RequestBody(required = true) List<UserDto> users) {
         try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing User successfully", new Date(), userService.updateUser(user));
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing User successfully", new Date(), userService.updateCollection(users));
         } catch (UserServiceCustomException ex) {
             return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
@@ -74,6 +84,15 @@ public class UserController {
         }
     }
 
+    @DeleteMapping(path = "/")
+    public BaseResponse deleteAllUser(@RequestBody List<UUID> ids) {
+        try {
+            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted list of User successfully", new Date(), userService.deleteCollection(ids));
+        } catch (UserServiceCustomException ex) {
+            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted list of User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+        }
+    }
+
     @PostMapping(path = "/auth/credentials")
     public BaseResponse loginByCredentials(boolean isAdmin, String email, String password) {
         try {
@@ -83,8 +102,9 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/auth/credentials/changePassword")
-    public BaseResponse changeUserPassword(@RequestBody(required = true) ChangeUserPasswordDto dto) {
+    @PostMapping(path = "/auth/credentials/changePassword/{id}")
+    public BaseResponse changeUserPassword(@PathVariable(name = "id") UUID id, @RequestBody(required = true) ChangeUserPasswordDto dto) {
+        dto.setId(id);
         try {
             return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Change user password successfully", new Date(), userService.updateUserPassword(dto.getId(), dto.getOldPassword(), dto.getNewPassword()));
         } catch (UserServiceCustomException ex) {

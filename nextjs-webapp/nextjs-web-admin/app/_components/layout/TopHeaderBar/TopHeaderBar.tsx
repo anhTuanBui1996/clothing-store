@@ -71,7 +71,8 @@ export default function TopHeaderBar({
                 src={`/images/retina-logo.png`}
                 width={250}
                 height={256}
-                style={{ width: "40px", height: "40px" }}
+                priority
+                style={{ width: "40px", height: "auto" }}
               />
               <Typography variant="h6" noWrap component="div" marginLeft={2}>
                 BTAWebApp

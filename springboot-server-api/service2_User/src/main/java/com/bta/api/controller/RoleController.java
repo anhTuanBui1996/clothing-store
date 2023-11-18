@@ -49,9 +49,9 @@ public class RoleController {
     @GetMapping(path = "/{id}")
     public BaseResponse getRoleById(@PathVariable(name = "id") UUID id) {
         try {
-            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read all Role successfully", new Date(), roleService.getById(id));
+            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read a Role successfully", new Date(), roleService.getById(id));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.ReadFailed, "Read all new Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.ReadFailed, "Read a Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
@@ -68,9 +68,9 @@ public class RoleController {
     @PutMapping(path = "/")
     public BaseResponse updateAllRole(@RequestBody List<RoleDto> roles) {
         try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing Role successfully", new Date(), roleService.updateCollection(roles));
+            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated a list of Role successfully", new Date(), roleService.updateCollection(roles));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated a list of Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 
@@ -86,9 +86,9 @@ public class RoleController {
     @DeleteMapping(path = "/")
     public BaseResponse deleteAllRole(@RequestBody List<UUID> ids) {
         try {
-            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted list of Role successfully", new Date(), roleService.deleteCollection(ids));
+            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted a list of Role successfully", new Date(), roleService.deleteCollection(ids));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted list of Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted a list of Role failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
         }
     }
 

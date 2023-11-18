@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   GridInputRowSelectionModel,
   GridRowModes,
@@ -9,6 +9,8 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
   GridToolbarFilterButton,
+  GridValidRowModel,
+  GridColDef,
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import { Box, Button, Tooltip, PopoverOrigin } from "@mui/material";
@@ -16,11 +18,6 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
-import ResultSnackbar, {
-  ResultSnackbarProps,
-  SnackbarContentType,
-  SnackbarOnCloseHandler,
-} from "./toolbarItem/ResultSnackbar";
 import ConfirmDialog, {
   ConfirmDialogProps,
   DialogConfirmationOnCloseHandler,
@@ -31,11 +28,13 @@ import AddRecordDropdownMenu, {
   DropdownMenuProps,
 } from "./toolbarItem/AddRecordDropdownMenu";
 import BaseReponse from "@/app/_dataModels/core/BaseResponse";
-import { BaseDto } from "@/app/_dataModels/core/BaseEntity";
+import { useSnackbar } from "notistack";
+import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 
 export interface EditToolbarProps {
   initialRows: GridRowsProp;
-  rows: GridRowsProp;
+  columns: GridColDef[];
+  rows: GridValidRowModel[];
   rowsSelection: GridInputRowSelectionModel;
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
@@ -43,14 +42,19 @@ export interface EditToolbarProps {
   ) => void;
   setRowsSelection: (newRowsSelection: GridInputRowSelectionModel) => void;
   getPromise?: () => Promise<BaseReponse>;
-  createPromise?: (data: BaseDto) => Promise<BaseReponse>;
-  updatePromise?: (data: BaseDto) => Promise<BaseReponse>;
+  createPromise?: (data: any) => Promise<BaseReponse>;
+  updatePromise?: (data: any) => Promise<BaseReponse>;
+  updateAllPromise?: (data: any[]) => Promise<BaseReponse>;
   deletePromise?: (id: string) => Promise<BaseReponse>;
+  deleteAllPromise?: (id: string[]) => Promise<BaseReponse>;
 }
+
+type ActionStatus = "idle" | "processing" | "success" | "fail";
 
 export default function EditToolbar(props: EditToolbarProps) {
   const {
     initialRows,
+    columns,
     rows,
     rowsSelection,
     setRows,
@@ -59,11 +63,32 @@ export default function EditToolbar(props: EditToolbarProps) {
     getPromise,
     createPromise,
     updatePromise,
+    updateAllPromise,
     deletePromise,
+    deleteAllPromise,
   } = props;
-  // Data model states
+  //#region Data model states
   const selectedRows = rowsSelection as string[];
   const [deletedRows, setDeletedRows] = React.useState(new Set<string>());
+  const newRowModel = useMemo(() => {
+    const resModel = columns.reduce((result, key) => {
+      const { field, type } = key;
+      (result as any)[field] = type?.startsWith("referenceSelect") ? [] : null;
+      return result;
+    }, {});
+    gridDefaults.forEach((col) => {
+      delete (resModel as any)[col.field];
+    });
+    return resModel;
+  }, [columns]);
+  //#endregion
+
+  //#region CRUD action statuses
+  const [deletedActionStatus, setDeletedActionStatus] =
+    useState<ActionStatus>("idle");
+  const [updatedActionStatus, setUpdateddActionStatus] =
+    useState<ActionStatus>("idle");
+  //#endregion
 
   //#region Menu
   const handleCloseMenu = () => {
@@ -113,28 +138,13 @@ export default function EditToolbar(props: EditToolbarProps) {
   //#endregion
 
   //#region Snackbar
-  const handleCloseSnackbar = () => {
-    setSnackbar((oldSnackbar: ResultSnackbarProps) => ({
-      ...oldSnackbar,
-      open: false,
-    }));
-  };
-
+  const { enqueueSnackbar } = useSnackbar();
   const handleOpenSnackbar = (
-    content: SnackbarContentType,
-    onClose: SnackbarOnCloseHandler
+    content: string,
+    variant: "default" | "error" | "success" | "warning" | "info"
   ) => {
-    setSnackbar({
-      open: true,
-      content,
-      onClose,
-    });
+    enqueueSnackbar(content, { variant });
   };
-
-  const [snackbar, setSnackbar] = React.useState<ResultSnackbarProps>({
-    open: false,
-    onClose: handleCloseSnackbar,
-  });
   //#endregion
 
   //#region Backdrop
@@ -154,6 +164,47 @@ export default function EditToolbar(props: EditToolbarProps) {
   };
   //#endregion
 
+  // Background effect async
+  //#region Backdrop for CRUD actions
+  useEffect(() => {
+    if (
+      deletedActionStatus === "processing" ||
+      updatedActionStatus === "processing"
+    ) {
+      handleOpenBackdrop(false);
+    } else {
+      handleCloseBackdrop();
+      if (
+        deletedActionStatus === "success" &&
+        updatedActionStatus === "success"
+      ) {
+        handleOpenSnackbar("Save changes successfully", "success");
+      } else if (
+        deletedActionStatus === "fail" ||
+        updatedActionStatus === "fail"
+      ) {
+        handleOpenSnackbar("Save changes failed", "error");
+      }
+      setDeletedActionStatus("idle");
+      setUpdateddActionStatus("idle");
+    }
+  }, [deletedActionStatus, updatedActionStatus]);
+  //#endregion
+
+  //#region Rows changes event listener
+  const [saveChangesDisabled, setSaveChangesDisabled] = useState(false);
+  useEffect(() => {
+    if (
+      rows.filter((row) => row.isUpdated).length > 0 ||
+      deletedRows.size > 0
+    ) {
+      setSaveChangesDisabled(false);
+    } else {
+      setSaveChangesDisabled(true);
+    }
+  }, [rows]);
+  //#endregion
+
   // Advance handlers
   //#region Revert origin Button
   const handleRevertHistory = () => {
@@ -169,13 +220,7 @@ export default function EditToolbar(props: EditToolbarProps) {
   const handleRevertHistoryConfirmation = (isConfirm: boolean) => {
     if (isConfirm) {
       handleOpenBackdrop(false);
-      handleOpenSnackbar(
-        {
-          type: "success",
-          text: "Data reverted and refetched!",
-        },
-        handleCloseSnackbar
-      );
+      handleOpenSnackbar("Refreshed data and discarded changes", "success");
       getPromise
         ? getPromise().then((obj: BaseReponse) =>
             setRows(
@@ -196,9 +241,56 @@ export default function EditToolbar(props: EditToolbarProps) {
 
   //#region Save changes Button
   const handleSaveChanges = () => {
-    if (deletedRows.size > 0) {
-      let deletedCount = 0
-      
+    if (
+      rows.filter((row) => row.isUpdated).length > 0 ||
+      deletedRows.size > 0
+    ) {
+      handleOpenDialog(
+        {
+          title: "Save all changes",
+          body: "All deleted rows and modified changes will be committed",
+        },
+        handleSaveChangesConfirmation
+      );
+    }
+  };
+
+  const handleSaveChangesConfirmation = (isConfirm: boolean) => {
+    if (isConfirm) {
+      handleOpenBackdrop(false);
+      if (deletedRows.size > 0) {
+        setDeletedActionStatus("processing");
+        deleteAllPromise &&
+          deleteAllPromise(Array.from(deletedRows)).then((obj: BaseReponse) => {
+            if (typeof obj.status === "string") {
+              setDeletedRows(new Set<string>());
+              if (obj.status.endsWith("Successfully")) {
+                setDeletedActionStatus("success");
+              } else {
+                setDeletedActionStatus("fail");
+              }
+            } else {
+              setDeletedActionStatus("fail");
+              console.log(obj);
+            }
+          });
+      }
+      if (rows.filter((row) => row.isUpdated).length > 0) {
+        updateAllPromise &&
+          updateAllPromise(rows).then((obj: BaseReponse) => {
+            if (typeof obj.status === "string") {
+              if (obj.status.endsWith("Successfully")) {
+                setUpdateddActionStatus("success");
+              } else {
+                setDeletedActionStatus("fail");
+              }
+              handleRevertHistory();
+            } else {
+              setDeletedActionStatus("fail");
+              console.log(obj);
+            }
+          });
+      }
     }
   };
   //#endregion
@@ -224,6 +316,7 @@ export default function EditToolbar(props: EditToolbarProps) {
     setRows((oldRows) => [
       ...oldRows,
       ...newIdArr.map((id, index) => ({
+        ...newRowModel,
         id,
         createdDate: new Date(),
         createdBy: "ANHBT",
@@ -231,6 +324,7 @@ export default function EditToolbar(props: EditToolbarProps) {
         lastModifiedBy: "ANHBT",
         lineNo: oldRows.length + index + 1,
         isAdded: true,
+        isUpdated: true,
       })),
     ]);
     setRowModesModel((oldModel) => {
@@ -286,13 +380,7 @@ export default function EditToolbar(props: EditToolbarProps) {
           setDeletedRows(deletedRows.add(id));
         }
       });
-      handleOpenSnackbar(
-        {
-          type: "info",
-          text: `${selectedRows.length} rows deleted!`,
-        },
-        handleCloseSnackbar
-      );
+      handleOpenSnackbar(`${selectedRows.length} rows deleted!`, "info");
     }
     handleCloseDialog();
     handleCloseBackdrop();
@@ -314,7 +402,11 @@ export default function EditToolbar(props: EditToolbarProps) {
             </Button>
           </Tooltip>
           <Tooltip title="Save changes">
-            <Button color="primary" onClick={handleSaveChanges}>
+            <Button
+              color="primary"
+              onClick={handleSaveChanges}
+              disabled={saveChangesDisabled}
+            >
               <SaveIcon />
             </Button>
           </Tooltip>
@@ -334,7 +426,6 @@ export default function EditToolbar(props: EditToolbarProps) {
       </GridToolbarContainer>
       <AddRecordDropdownMenu {...menu} />
       <ConfirmDialog {...dialog} />
-      <ResultSnackbar {...snackbar} />
       <GridBackdrop {...backdrop} />
     </>
   );

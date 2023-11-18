@@ -1,6 +1,6 @@
 import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
-import { BaseDto, gridDefaults } from "@/app/_dataModels/core/BaseEntity";
-import { GridColDef } from "@mui/x-data-grid";
+import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 /**
  * Extended types

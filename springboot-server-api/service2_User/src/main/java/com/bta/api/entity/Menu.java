@@ -22,7 +22,7 @@ public class Menu extends BaseEntity {
 	private String menuName;
 	private String description;
 
-	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<Permission> permission;
+	@OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Permission> permissions;
 
 }

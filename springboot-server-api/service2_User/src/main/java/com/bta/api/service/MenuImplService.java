@@ -54,9 +54,6 @@ public class MenuImplService implements ImplService<Menu, MenuDto> {
 	public List<Menu> updateCollection(List<MenuDto> dtos) {
 		List<Menu> entities = new ArrayList<>();
 		dtos.forEach((MenuDto dto) -> {
-			if (!menuRepository.existsById(dto.getId())) {
-				throw new UserServiceCustomException("User with given Id not found", "MENU_NOT_FOUND");
-			}
 			entities.add(convertFromDtoToEntity(dto));
 		});
 		return menuRepository.saveAll(entities);
@@ -109,7 +106,7 @@ public class MenuImplService implements ImplService<Menu, MenuDto> {
 					() -> new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND"));
 			permissionList.add(foundPermission);
 		});
-		entity.setPermission(permissionList);
+		entity.setPermissions(permissionList);
 
 		return entity;
 	}
