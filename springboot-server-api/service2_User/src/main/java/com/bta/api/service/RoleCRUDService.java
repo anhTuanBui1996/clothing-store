@@ -1,9 +1,6 @@
 package com.bta.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import com.bta.api.base.ImplService;
 import com.bta.api.entity.User;
@@ -112,14 +109,14 @@ public class RoleImplService implements ImplService<Role, RoleDto> {
 
         entity.setRoleName(dto.getRoleName());
         entity.setDescription(dto.getDescription());
-        List<Permission> permissionList = new ArrayList<Permission>();
+        List<Permission> permissionList = new ArrayList<>();
         dto.getPermissions().forEach((UUID id) -> {
             Permission foundPermission = permissionRepository.findById(id).orElseThrow(
                     () -> new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND"));
             permissionList.add(foundPermission);
         });
         entity.setPermissions(permissionList);
-        List<User> userList = usersRepository.findByRoleId(dto.getId());
+        Set<User> userList = usersRepository.findByRoleId(dto.getId());
         entity.setUsers(userList);
 
         return entity;

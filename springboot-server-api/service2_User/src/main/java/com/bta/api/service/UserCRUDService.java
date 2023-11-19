@@ -1,15 +1,15 @@
 package com.bta.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import com.bta.api.base.ImplService;
 import com.bta.api.dto.PermissionDto;
 import com.bta.api.entity.Permission;
 import com.bta.api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.bta.api.dto.UserDto;
@@ -19,7 +19,7 @@ import com.bta.api.repository.RoleRepository;
 import com.bta.api.repository.UserRepository;
 
 @Service
-public class UserImplService implements ImplService<User, UserDto> {
+public class UserImplService implements ImplService<User, UserDto>, UserDetailsService {
 
     @Autowired
     UserRepository usersRepository;
@@ -168,14 +168,14 @@ public class UserImplService implements ImplService<User, UserDto> {
         entity.setMale(dto.isMale());
         entity.setDob(dto.getDob());
         entity.setCitizenId(dto.getCitizenId());
-        Role role = roleRepository.findById(dto.getRoleId())
-                .orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND"));
+        Set<Role> roles = new HashSet<>();
+        roleRepository.findAllById(dto.getRoles()).forEach(roles::add);
         Optional<User> foundUser = usersRepository.findById(dto.getId());
         if (foundUser.isPresent()) {
             entity.setPassword(foundUser.get().getPassword());
         }
 
-        entity.setRole(role);
+        entity.setRoles(roles);
 
         return entity;
     }
@@ -195,9 +195,15 @@ public class UserImplService implements ImplService<User, UserDto> {
         dto.setMale(entity.isMale());
         dto.setDob(entity.getDob());
         dto.setCitizenId(entity.getCitizenId());
-        dto.setRoleId(entity.getRole().getId());
+        Set<UUID> roles = new HashSet<>();
+        entity.getRoles().forEach((Role role) -> roles.add(role.getId()));
+        dto.setRoles(roles);
 
         return dto;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
+    }
 }
