@@ -1,8 +1,10 @@
 package com.bta.api.configuration;
 
+import jakarta.annotation.Priority;
+import jakarta.annotation.security.DeclareRoles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Description;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    public static final String LOGIN_URL = "/login";
+    public static final String LOGIN_URL = "http://localhost:3000/login";
     public static final String LOGOUT_URL = "/logout";
     public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
     public static final String DEFAULT_SUCCESS_URL = "/home";
@@ -41,7 +43,7 @@ public class WebSecurityConfig {
                         .passwordParameter(PASSWORD)
                         .defaultSuccessUrl(DEFAULT_SUCCESS_URL))
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl(LOGOUT_URL)
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl(LOGIN_URL + "?logout"))
@@ -50,20 +52,24 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    @Description("In memory User details service registered since DB doesn't have user table ")
     public UserDetailsService users() {
         // The builder will ensure the passwords are encoded before saving in memory
-        UserDetails user = User.builder()
-                .username("user")
+        UserDetails customer = User.builder()
+                .username("customer")
                 .password("password")
-                .roles("USER")
+                .roles("CUSTOMER")
+                .build();
+        UserDetails employee = User.builder()
+                .username("employee")
+                .password("password")
+                .roles("EMPLOYEE")
                 .build();
         UserDetails admin = User.builder()
                 .username("admin")
                 .password("password")
-                .roles("USER", "ADMIN")
+                .roles("ADMIN")
                 .build();
-        return new InMemoryUserDetailsManager(user, admin);
+        return new InMemoryUserDetailsManager(customer, employee, admin);
     }
 
     @Bean

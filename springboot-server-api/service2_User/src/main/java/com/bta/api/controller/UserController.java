@@ -1,109 +1,79 @@
 package com.bta.api.controller;
 
+import com.bta.api.dto.ChangeUserPasswordDto;
+import com.bta.api.dto.LoginUserDto;
+import com.bta.api.dto.UserDto;
+import com.bta.api.exception.UserServiceCustomException;
+import com.bta.api.service.UserCRUDService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-
-import com.bta.api.base.BaseResponse;
-import com.bta.api.entity.User;
-import com.bta.api.enums.ResponseStatus;
-import com.bta.api.exception.UserServiceCustomException;
-import com.bta.api.service.UserImplService;
-import com.bta.api.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.bta.api.dto.ChangeUserPasswordDto;
 
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
 
     @Autowired
-    UserImplService userService;
-
-    @GetMapping(path = "/")
-    public BaseResponse getAllUser() {
-        try {
-            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read all User successfully", new Date(), userService.getAllUserDto());
-        } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.ReadFailed, "Read all User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
-        }
-    }
+    UserCRUDService userService;
 
     @GetMapping(path = "/{id}")
-    public BaseResponse getUserById(@PathVariable("id") UUID id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") UUID id) {
         try {
-            return new BaseResponse(ResponseStatus.ReadSuccessfully, "Read an existing User successfully", new Date(), userService.getUserDtoById(id));
+            return new ResponseEntity<>(userService.getById(id), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.ReadFailed, "Read an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
         }
     }
 
-    @PostMapping(path = "/")
-    public BaseResponse createUser(@RequestBody(required = true) User user) {
+    @GetMapping(path = "/")
+    public ResponseEntity<List<UserDto>> getAllUser() {
         try {
-            return new BaseResponse(ResponseStatus.CreatedSuccessfully, "Created a new User successfully", new Date(), userService.create(user));
+            return new ResponseEntity<>(userService.getAll(), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.CreatedFailed, "Created a new User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
         }
     }
 
     @PutMapping(path = "/{id}")
-    public BaseResponse updateUser(@PathVariable UUID id, @RequestBody(required = true) UserDto user) {
-        user.setId(id);
+    public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @RequestBody UserDto dto) {
+        dto.setId(id);
         try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing User successfully", new Date(), userService.updateUser(user));
+            return new ResponseEntity<>(userService.save(dto), HttpStatusCode.valueOf(HttpStatus.OK.value()));
         } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
+            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_MODIFIED.value()));
         }
     }
 
     @PutMapping(path = "/")
-    public BaseResponse updateAllUser(@RequestBody(required = true) List<UserDto> users) {
-        try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Updated an existing User successfully", new Date(), userService.updateCollection(users));
-        } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Updated an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
-        }
+    public ResponseEntity<List<UserDto>> updateAllUser(@RequestBody List<UserDto> dtos) {
+        return new ResponseEntity<>(userService.saveCollection(dtos), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 
     @DeleteMapping(path = "/{id}")
-    public BaseResponse deleteUser(@PathVariable("id") UUID id) {
-        try {
-            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted an existing User successfully", new Date(), userService.deleteUser(id));
-        } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted an existing User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
-        }
+    public ResponseEntity<Boolean> deleteUser(@PathVariable("id") UUID id) {
+        return new ResponseEntity<>(userService.delete(id), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 
     @DeleteMapping(path = "/")
-    public BaseResponse deleteAllUser(@RequestBody List<UUID> ids) {
-        try {
-            return new BaseResponse(ResponseStatus.DeletedSuccessfully, "Deleted list of User successfully", new Date(), userService.deleteCollection(ids));
-        } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.DeletedFailed, "Deleted list of User failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
-        }
+    public ResponseEntity<Boolean> deleteAllUser(@RequestBody Set<UUID> ids) {
+        return new ResponseEntity<>(userService.deleteCollection(ids), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 
     @PostMapping(path = "/auth/credentials")
-    public BaseResponse loginByCredentials(boolean isAdmin, String email, String password) {
-        try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Login by credentials successfully", new Date(), userService.getUserByEmailAndPassword(isAdmin, email, password));
-        } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Login by credentials failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
-        }
+    public ResponseEntity<UserDto> loginByCredentials(@RequestBody LoginUserDto dto) {
+        userService.loadUserByUsername()
     }
 
     @PostMapping(path = "/auth/credentials/changePassword/{id}")
-    public BaseResponse changeUserPassword(@PathVariable(name = "id") UUID id, @RequestBody(required = true) ChangeUserPasswordDto dto) {
+    public BaseResponse changeUserPassword(@PathVariable(name = "id") UUID id, @RequestBody ChangeUserPasswordDto dto) {
         dto.setId(id);
         try {
             return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Change user password successfully", new Date(), userService.updateUserPassword(dto.getId(), dto.getOldPassword(), dto.getNewPassword()));

@@ -1,38 +1,27 @@
-import BaseEntity from "@/app/_dataModels/core/BaseEntity";
-import Product from "../productService/Product";
+import { GridColDef } from "@mui/x-data-grid";
+import { gridDefaults } from "../../core/BaseEntity";
 
-export default class Orders implements BaseEntity {
-  rowId?: string;
-  createdDate?: Date;
-  createdBy?: string;
-  lastModifiedDate?: Date;
-  lastModifiedBy?: string;
-
-  orderId?: string;
-  orderName?: string;
-  description?: string;
-
-  products?: Set<Product>;
-
-  constructor(
-    rowId?: string,
-    createdDate: Date = new Date(),
-    createdBy?: string,
-    lastModifiedDate: Date = new Date(),
-    lastModifiedBy?: string,
-    orderId?: string,
-    orderName?: string,
-    description?: string,
-    products?: Set<Product>
-  ) {
-    this.rowId = rowId;
-    this.createdDate = createdDate;
-    this.createdBy = createdBy;
-    this.lastModifiedDate = lastModifiedDate;
-    this.lastModifiedBy = lastModifiedBy;
-    this.orderId = orderId;
-    this.orderName = orderName;
-    this.description = description;
-    this.products = products;
-  }
-}
+export const gridCols: GridColDef[] = gridDefaults.concat([
+  {
+    field: "brandName",
+    headerName: "Brand Name",
+    headerAlign: "left",
+    type: "string",
+    editable: true,
+    width: 200,
+  },
+  {
+    field: "description",
+    headerName: "Description",
+    headerAlign: "left",
+    type: "string",
+    editable: true,
+  },
+  {
+    field: "products",
+    headerName: "Products",
+    headerAlign: "left",
+    type: "referenceSelect",
+    editable: true,
+  },
+]);

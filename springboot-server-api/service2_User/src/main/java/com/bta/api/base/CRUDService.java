@@ -1,24 +1,21 @@
 package com.bta.api.base;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-public interface ImplService<E, D> {
+public interface CRUDService<D> {
 
-	abstract List<E> getAll();
+	abstract List<D> getAll();
 
-	abstract E getById(UUID id);
+	abstract D getById(UUID id);
 
-	abstract E create(D dto);
+	abstract D save(D dto);
 
-	abstract E update(D dto);
-
-	abstract List<E> updateCollection(List<D> dtos);
+	abstract List<D> saveCollection(List<D> dtos);
 
 	abstract boolean delete (UUID id);
 
-	abstract List<Boolean> deleteCollection(List<UUID> ids);
-
-	abstract E convertFromDtoToEntity(D dto);
+	abstract boolean deleteCollection(Set<UUID> ids);
 
 }

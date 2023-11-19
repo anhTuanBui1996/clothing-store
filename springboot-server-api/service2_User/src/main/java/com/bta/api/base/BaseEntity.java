@@ -1,13 +1,5 @@
 package com.bta.api.base;
 
-import java.util.Date;
-import java.util.UUID;
-
-import org.hibernate.annotations.*;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
@@ -18,14 +10,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.Date;
+import java.util.UUID;
+
 @MappedSuperclass
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseEntity {
+public abstract class BaseEntity<E extends BaseEntity, D extends BaseDto> {
 
 	@Id
-	@UuidGenerator
 	protected UUID id;
 
 	@CreatedDate
@@ -39,5 +33,9 @@ public class BaseEntity {
 
 	@LastModifiedBy
 	protected String lastModifiedBy;
+
+	public abstract E applyChanges(D dto);
+
+	public abstract D toDto();
 
 }

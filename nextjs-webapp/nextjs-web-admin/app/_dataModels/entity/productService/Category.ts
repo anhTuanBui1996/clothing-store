@@ -1,39 +1,5 @@
-import BaseEntity, { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
+import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import { GridColDef } from "@mui/x-data-grid";
-import Product from "./Product";
-
-export default class Categories implements BaseEntity {
-  rowId?: string;
-  createdDate?: Date;
-  createdBy?: string;
-  lastModifiedDate?: Date;
-  lastModifiedBy?: string;
-
-  categoryId?: string;
-  categoryName?: string;
-  description?: string;
-  products?: Set<Product>;
-
-  constructor(
-    rowId?: string,
-    createdDate: Date = new Date(),
-    createdBy?: string,
-    lastModifiedDate: Date = new Date(),
-    lastModifiedBy?: string,
-    categoryName?: string,
-    description?: string,
-    products?: Set<Product>
-  ) {
-    this.rowId = rowId;
-    this.createdDate = createdDate;
-    this.createdBy = createdBy;
-    this.lastModifiedDate = lastModifiedDate;
-    this.lastModifiedBy = lastModifiedBy;
-    this.categoryName = categoryName;
-    this.description = description;
-    this.products = products;
-  }
-}
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {

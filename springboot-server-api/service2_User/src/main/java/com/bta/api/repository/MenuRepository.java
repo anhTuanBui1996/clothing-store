@@ -1,10 +1,10 @@
 package com.bta.api.repository;
 
+import com.bta.api.entity.Menu;
+import org.springframework.data.repository.CrudRepository;
+
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.bta.api.entity.Menu;
-
-public interface MenuRepository extends JpaRepository<Menu, UUID> {
+public interface MenuRepository extends CrudRepository<Menu, UUID> {
 
 }

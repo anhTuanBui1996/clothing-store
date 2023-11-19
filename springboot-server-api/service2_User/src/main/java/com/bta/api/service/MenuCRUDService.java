@@ -1,113 +1,78 @@
 package com.bta.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.bta.api.base.ImplService;
+import com.bta.api.base.CRUDService;
 import com.bta.api.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bta.api.dto.MenuDto;
 import com.bta.api.entity.Menu;
-import com.bta.api.entity.Permission;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.PermissionRepository;
 
 @Service
-public class MenuImplService implements ImplService<Menu, MenuDto> {
+public class MenuCRUDService implements CRUDService<MenuDto> {
 
-	@Autowired
+    @Autowired
     MenuRepository menuRepository;
 
-	@Autowired
-	PermissionRepository permissionRepository;
+    @Autowired
+    PermissionRepository permissionRepository;
 
-	public List<Menu> getAll() {
-        return new ArrayList<>(menuRepository.findAll());
-	}
+	@Override
+    public List<MenuDto> getAll() {
+        List<MenuDto> menuDtos = new ArrayList<>();
+        menuRepository.findAll().forEach(menu -> menuDtos.add(menu.toDto()));
+        return menuDtos;
+    }
 
-	public Menu getById(UUID id) {
+	@Override
+    public MenuDto getById(UUID id) {
         return menuRepository.findById(id)
-				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
-	}
+                .orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND")).toDto();
+    }
 
-	public Menu create(MenuDto dto) {
-		if (menuRepository.findById(dto.getId()).isEmpty()) {
-			return menuRepository.save(convertFromDtoToEntity(dto));
-		}
-		throw new UserServiceCustomException("Menu with given Id is already existed", "MENU_EXISTED");
-	}
+    @Override
+    public MenuDto save(MenuDto dto) {
+        return menuRepository.save(new Menu().applyChanges(dto)).toDto();
+    }
 
-	public Menu update(MenuDto dto) {
-		Menu foundMenu = menuRepository.findById(dto.getId())
-				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
-		if (foundMenu != null) {
-			return menuRepository.save(convertFromDtoToEntity(dto));
-		}
-		return null;
-	}
-
-	@Override
-	public List<Menu> updateCollection(List<MenuDto> dtos) {
-		List<Menu> entities = new ArrayList<>();
-		dtos.forEach((MenuDto dto) -> {
-			entities.add(convertFromDtoToEntity(dto));
-		});
-		return menuRepository.saveAll(entities);
-	}
-
-	public boolean delete(UUID rowId) {
-		Menu foundMenu = menuRepository.findById(rowId)
-				.orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
-		if (foundMenu != null) {
-			menuRepository.delete(foundMenu);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public List<MenuDto> saveCollection(List<MenuDto> dtos) {
+        List<Menu> menus = new ArrayList<>();
+        dtos.forEach((MenuDto dto) -> {
+            menus.add(new Menu().applyChanges(dto));
+        });
+        List<MenuDto> menuDtos = new ArrayList<>();
+		menuRepository.saveAll(menus).forEach(menu -> menuDtos.add(menu.toDto()));
+        return menuDtos;
+    }
 
 	@Override
-	public List<Boolean> deleteCollection(List<UUID> ids) {
-		List<Boolean> resList = new ArrayList<>();
-		ids.forEach((UUID id) -> {
-			if (menuRepository.existsById(id)) {
-				resList.add(true);
-			} else {
-				resList.add(false);
-				throw new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND");
-			}
-		});
-		menuRepository.deleteAllByIdInBatch(ids);
-		return resList;
-	}
+    public boolean delete(UUID rowId) {
+        Menu menu = menuRepository.findById(rowId)
+                .orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+        if (menu != null) {
+            menuRepository.delete(menu);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public Menu convertFromDtoToEntity(MenuDto dto) {
-		Menu entity = new Menu();
-		Optional<Menu> foundEntity = menuRepository.findById(dto.getId());
-		if (foundEntity.isPresent()) {
-			entity = foundEntity.get();
-		} else {
-			entity.setId(dto.getId());
-		}
-		entity.setCreatedDate(dto.getCreatedDate());
-		entity.setCreatedBy(dto.getCreatedBy());
-		entity.setLastModifiedDate(dto.getLastModifiedDate());
-		entity.setLastModifiedBy(dto.getLastModifiedBy());
+    @Override
+    public boolean deleteCollection(Set<UUID> ids) {
+		AtomicBoolean result = new AtomicBoolean(true);
+        ids.forEach((UUID id) -> {
+            if (!menuRepository.existsById(id)) {
+				result.set(false);
+                throw new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND");
+            }
+        });
+        menuRepository.deleteAllById(ids);
+        return result.get();
+    }
 
-		entity.setDescription(dto.getDescription());
-		entity.setMenuName(dto.getMenuName());
-		List<Permission> permissionList = new ArrayList<Permission>();
-		dto.getPermissions().forEach((UUID id) -> {
-			Permission foundPermission = permissionRepository.findById(id).orElseThrow(
-					() -> new UserServiceCustomException("Permission with given Id not found", "PERMISSION_NOT_FOUND"));
-			permissionList.add(foundPermission);
-		});
-		entity.setPermissions(permissionList);
-
-		return entity;
-	}
 }

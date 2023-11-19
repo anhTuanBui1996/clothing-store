@@ -1,2 +1,15 @@
-package com.bta.api.dto;public class LoginUserDto {
+package com.bta.api.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginUserDto {
+
+    private String email;
+    private String password;
+
 }
