@@ -1,22 +1,20 @@
 package com.bta.api.controller;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import com.bta.api.dto.MenuDto;
 import com.bta.api.exception.UserServiceCustomException;
+import com.bta.api.service.MenuCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.bta.api.service.MenuCRUDService;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/menu")
-@CrossOrigin(origins = "http://localhost:3000")
 public class MenuController {
 
     @Autowired

@@ -11,6 +11,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public abstract class BaseDto {
 
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
 }

@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Data
@@ -68,7 +69,34 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
     public User applyChanges(UserDto userDto) {
         id = userDto.getId();
         email = userDto.getEmail();
-        password = userDto.getPassword();
+        isMale = userDto.isMale();
+        dob = userDto.getDob();
+        citizenId = userDto.getCitizenId();
+        firstName = userDto.getFirstName();
+        lastName = userDto.getLastName();
+        roles.clear();
+        userDto.getRoles().forEach(roleDto -> roles.add(new Role().applyChanges(roleDto)));
+        return this;
+    }
+
+    public User applyChanges(UserEntityDto userDto, PasswordEncoder encoder) {
+        id = userDto.getId();
+        email = userDto.getEmail();
+        password = encoder.encode(userDto.getPassword());
+        isMale = userDto.isMale();
+        dob = userDto.getDob();
+        citizenId = userDto.getCitizenId();
+        firstName = userDto.getFirstName();
+        lastName = userDto.getLastName();
+        roles.clear();
+        userDto.getRoles().forEach(roleDto -> roles.add(new Role().applyChanges(roleDto)));
+        return this;
+    }
+
+    public User applyChanges(RegisterUserDto userDto, PasswordEncoder encoder) {
+        id = userDto.getId();
+        email = userDto.getEmail();
+        password = encoder.encode(userDto.getPassword());
         isMale = userDto.isMale();
         dob = userDto.getDob();
         citizenId = userDto.getCitizenId();

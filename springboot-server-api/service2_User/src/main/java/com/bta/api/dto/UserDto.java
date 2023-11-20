@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class UserDto extends BaseDto {
 
 	private String email;
-	private String password;
 	private String firstName;
 	private String lastName;
 	private boolean isMale;

@@ -1,21 +1,18 @@
 package com.bta.api.controller;
 
-import com.bta.api.dto.ChangeUserPasswordDto;
-import com.bta.api.dto.LoginUserDto;
-import com.bta.api.dto.UserDto;
+import com.bta.api.dto.*;
+import com.bta.api.entity.User;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.service.UserCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -42,19 +39,23 @@ public class UserController {
         }
     }
 
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @RequestBody UserDto dto) {
-        dto.setId(id);
+    @GetMapping(path = "/forAdmin/")
+    public ResponseEntity<List<User>> getAllUserEntity() {
         try {
-            return new ResponseEntity<>(userService.save(dto), HttpStatusCode.valueOf(HttpStatus.OK.value()));
+            return new ResponseEntity<>(userService.getAllEntity(), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_MODIFIED.value()));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
         }
     }
 
     @PutMapping(path = "/")
     public ResponseEntity<List<UserDto>> updateAllUser(@RequestBody List<UserDto> dtos) {
         return new ResponseEntity<>(userService.saveCollection(dtos), HttpStatusCode.valueOf(HttpStatus.OK.value()));
+    }
+
+    @PutMapping(path = "/forAdmin/")
+    public ResponseEntity<List<User>> updateAllUserEntity(@RequestBody List<UserEntityDto> dtos) {
+        return new ResponseEntity<>(userService.saveEntityCollection(dtos), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -65,21 +66,6 @@ public class UserController {
     @DeleteMapping(path = "/")
     public ResponseEntity<Boolean> deleteAllUser(@RequestBody Set<UUID> ids) {
         return new ResponseEntity<>(userService.deleteCollection(ids), HttpStatusCode.valueOf(HttpStatus.OK.value()));
-    }
-
-    @PostMapping(path = "/auth/credentials")
-    public ResponseEntity<UserDto> loginByCredentials(@RequestBody LoginUserDto dto) {
-        userService.loadUserByUsername()
-    }
-
-    @PostMapping(path = "/auth/credentials/changePassword/{id}")
-    public BaseResponse changeUserPassword(@PathVariable(name = "id") UUID id, @RequestBody ChangeUserPasswordDto dto) {
-        dto.setId(id);
-        try {
-            return new BaseResponse(ResponseStatus.UpdatedSuccessfully, "Change user password successfully", new Date(), userService.updateUserPassword(dto.getId(), dto.getOldPassword(), dto.getNewPassword()));
-        } catch (UserServiceCustomException ex) {
-            return new BaseResponse(ResponseStatus.UpdatedFailed, "Change user password failed | " + ex.getErrorCode() + " | " + ex.getMessage(), new Date(), null);
-        }
     }
 
 }
