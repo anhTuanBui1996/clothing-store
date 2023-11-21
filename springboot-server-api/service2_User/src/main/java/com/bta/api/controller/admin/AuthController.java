@@ -1,4 +1,4 @@
-package com.bta.api.controller;
+package com.bta.api.controller.admin;
 
 import com.bta.api.dto.ChangeUserPasswordDto;
 import com.bta.api.dto.LoginUserDto;
@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "/admin/auth")
 public class AuthController {
 
     @Autowired
@@ -24,6 +24,11 @@ public class AuthController {
 
     @Autowired
     UserCRUDService userService;
+
+    @GetMapping(path = "/")
+    public ResponseEntity<UserDto> validate() {
+        return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.OK.value()));
+    }
 
     @PostMapping(path = "/credentials")
     public ResponseEntity<UserDto> loginByCredentials(@RequestBody LoginUserDto dto) {

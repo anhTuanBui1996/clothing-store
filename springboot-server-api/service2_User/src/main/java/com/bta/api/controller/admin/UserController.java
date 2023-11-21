@@ -1,4 +1,4 @@
-package com.bta.api.controller;
+package com.bta.api.controller.admin;
 
 import com.bta.api.dto.*;
 import com.bta.api.entity.User;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/admin/user")
 public class UserController {
 
     @Autowired

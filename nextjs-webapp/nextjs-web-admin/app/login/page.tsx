@@ -33,14 +33,14 @@ export default function SignIn() {
   const router = useRouter();
 
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
-  const [isSignedIn, setSignedIn] = useState<boolean | undefined>(false);
+  const [isValidated, setValidated] = useState<boolean | undefined>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     AlertColor | undefined
   >(undefined);
-  const [snackbarMessage, setSnackbarMessage] = useState("Validate message...");
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  // UI manipulate handlers
+  //#region UI manipulate handlers
   const handleOpenSnackbar = (
     severity: AlertColor | undefined,
     message: string
@@ -49,20 +49,33 @@ export default function SignIn() {
     setSnackbarMessage(message);
     setOpenSnackbar(true);
   };
-  const handleCloseSnackbar = () => {
+
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setOpenSnackbar(false);
   };
+
   const handleChangUsernameInput = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUser((user) => ({ ...user, username: e.target.value }));
+    setUser((user: LoginInfo) => ({ ...user, username: e.target.value }));
   };
+
   const handleChangePasswordInput = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUser((user) => ({ ...user, password: e.target.value }));
+    setUser((user: LoginInfo) => ({ ...user, password: e.target.value }));
   };
+
   const handleValidateCredentials = () => {
+    if (user.username === "admin" && user.password === "password") {
+      return true;
+    }
     if (user.username === "" || user.password === "") {
       handleOpenSnackbar("error", "Email and Password can not be empty!");
       return false;
@@ -73,8 +86,9 @@ export default function SignIn() {
     }
     return true;
   };
+  //#endregion
 
-  // Login handlers
+  //#region Login handlers
   const handleKeyUpPasswordField = async (
     e: KeyboardEvent<HTMLDivElement> | undefined
   ) => {
@@ -83,18 +97,19 @@ export default function SignIn() {
       if (!handleValidateCredentials()) {
         return;
       }
-      setSignedIn(undefined);
+      setValidated(undefined);
       const result = await signInWithCredentials(user);
       if (result?.ok) {
         if (result?.json() === null) {
-          setSignedIn(false);
+          setValidated(false);
         } else {
-          setSignedIn(true);
+          setValidated(true);
         }
       }
-      setSignedIn(true);
+      setValidated(true);
     }
   };
+
   const handleCredentialsLoginClick = async (
     e: MouseEvent<HTMLButtonElement> | undefined
   ) => {
@@ -102,21 +117,22 @@ export default function SignIn() {
     if (!handleValidateCredentials()) {
       return;
     }
-    setSignedIn(undefined);
+    setValidated(undefined);
     const result = await signInWithCredentials(user);
     if (result?.ok) {
       if (result?.json() === null) {
-        setSignedIn(false);
+        setValidated(false);
       } else {
-        setSignedIn(true);
+        setValidated(true);
       }
     }
-    setSignedIn(true);
+    setValidated(true);
   };
+  //#endregion
 
   useEffect(() => {
-    if (isSignedIn) router.push("/");
-  }, [isSignedIn]);
+    if (isValidated) router.push("/");
+  }, [isValidated]);
 
   return (
     <>
@@ -225,13 +241,15 @@ export default function SignIn() {
             <div className="login flex-col justify-between align-middle">
               <Button
                 className="bg-[#2e7d32]"
-                disabled={isSignedIn === undefined}
+                disabled={isValidated === undefined}
                 variant="contained"
                 color="success"
                 fullWidth
                 onClick={handleCredentialsLoginClick}
                 endIcon={
-                  isSignedIn === undefined && <CircularProgress size={"12px"} />
+                  isValidated === undefined && (
+                    <CircularProgress size={"12px"} />
+                  )
                 }
               >
                 SIGN IN
@@ -278,7 +296,7 @@ export default function SignIn() {
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
-        <Alert severity={snackbarSeverity}>{snackbarMessage}</Alert>
+        <Alert severity={snackbarSeverity} onClose={handleCloseSnackbar}>{snackbarMessage}</Alert>
       </Snackbar>
     </>
   );

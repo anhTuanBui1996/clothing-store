@@ -1,4 +1,4 @@
-package com.bta.api.controller;
+package com.bta.api.controller.admin;
 
 import com.bta.api.dto.MenuDto;
 import com.bta.api.exception.UserServiceCustomException;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/menu")
+@RequestMapping(path = "/admin/menu")
 public class MenuController {
 
     @Autowired

@@ -3,11 +3,10 @@ export interface AuthInfo {
   session: string;
 }
 
-export async function getAuthentication(authInfo: AuthInfo) {
-  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}`, {
-    method: "POST",
+export async function getAuthentication() {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/auth`, {
+    method: "GET",
     cache: "default",
-    body: JSON.stringify(authInfo),
   });
   return result;
 }
@@ -18,9 +17,13 @@ export interface LoginInfo {
 }
 
 export async function signInWithCredentials(loginInfo: LoginInfo) {
-  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/credentials`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/auth/credentials`, {
     method: "POST",
     cache: "default",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify(loginInfo),
   });
   return result;
