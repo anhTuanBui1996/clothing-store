@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.dto.PermissionDto;
 import com.bta.api.dto.RoleDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,28 +18,27 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"roleName"}))
-public class Role extends BaseEntity<Role, RoleDto> implements GrantedAuthority {
+public class Roles extends BaseEntity<Roles, RoleDto> implements GrantedAuthority {
 
     private String roleName;
     private String description;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Permission> permissions;
 
     @ManyToMany
-    private Set<User> users;
+    private Set<Users> users;
 
     @Override
     public String getAuthority() {
         return roleName;
     }
 
-    public Role applyChanges(RoleDto roleDto) {
+    public Roles applyChanges(RoleDto roleDto) {
         id = roleDto.getId();
         roleName = roleDto.getRoleName();
         description = roleDto.getDescription();
-        permissions.clear();
-        roleDto.getPermissions().forEach(permissionDto -> permissions.add(new Permission().applyChanges(permissionDto)));
+        permissions = roleDto.getPermissions();
         return this;
     }
 
@@ -49,9 +47,7 @@ public class Role extends BaseEntity<Role, RoleDto> implements GrantedAuthority 
         RoleDto roleDto = new RoleDto();
         roleDto.setRoleName(roleName);
         roleDto.setDescription(description);
-        Set<PermissionDto> permissionDtoSet = new HashSet<>();
-        permissions.forEach(permission -> permissionDtoSet.add(permission.toDto()));
-        roleDto.setPermissions(permissionDtoSet);
+        roleDto.setPermissions(permissions);
         return roleDto;
     }
 

@@ -1,12 +1,10 @@
 package com.bta.api.entity;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.dto.MenuDto;
-import com.bta.api.dto.PermissionDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,9 +29,7 @@ public class Menu extends BaseEntity<Menu, MenuDto> {
     public Menu applyChanges(MenuDto dto) {
         menuCode = dto.getMenuCode();
         menuName = dto.getMenuName();
-        Set<Permission> permissionSet = new HashSet<>();
-        dto.getPermissions().forEach(permissionDto -> permissionSet.add(new Permission().applyChanges(permissionDto)));
-        permissions = permissionSet;
+        permissions = dto.getPermissions();
         return this;
     }
 
@@ -44,9 +40,7 @@ public class Menu extends BaseEntity<Menu, MenuDto> {
 		menuDto.setMenuCode(menuCode);
 		menuDto.setMenuName(menuName);
 		menuDto.setDescription(description);
-        Set<PermissionDto> permissionDtoSet = new HashSet<>();
-        permissions.forEach(permission -> permissionDtoSet.add(permission.toDto()));
-		menuDto.setPermissions(permissionDtoSet);
+		menuDto.setPermissions(permissions);
         return menuDto;
     }
 }

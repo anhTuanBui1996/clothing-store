@@ -1,9 +1,6 @@
 package com.bta.api.entity;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.dto.*;
@@ -14,13 +11,16 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity<User, UserDto> implements UserDetails {
+public class Users extends BaseEntity<Users, UserDto> implements UserDetails, OAuth2User {
+
+    private OAuth2User oauth2User;
 
     private String email;
     private String password;
@@ -30,13 +30,25 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
     private Date dob;
     private String citizenId;
 
-    @ManyToMany
-    private Set<Role> roles;
+    @ManyToMany(mappedBy = "users")
+    private Set<Roles> roles;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Providers> providers;
 
     private boolean enabled;
 
+    public Users(OAuth2User oauth2User) {
+        email = oauth2User.getAttribute("email");
+    }
+
     @Override
-    public Collection<Role> getAuthorities() {
+    public Map<String, Object> getAttributes() {
+        return oauth2User.getAttributes();
+    }
+
+    @Override
+    public Collection<Roles> getAuthorities() {
         return getRoles();
     }
 
@@ -66,7 +78,7 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
     }
 
     @Override
-    public User applyChanges(UserDto userDto) {
+    public Users applyChanges(UserDto userDto) {
         id = userDto.getId();
         email = userDto.getEmail();
         isMale = userDto.isMale();
@@ -75,11 +87,11 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
         firstName = userDto.getFirstName();
         lastName = userDto.getLastName();
         roles.clear();
-        userDto.getRoles().forEach(roleDto -> roles.add(new Role().applyChanges(roleDto)));
+        userDto.getRoles().forEach(roleDto -> roles.add(new Roles().applyChanges(roleDto)));
         return this;
     }
 
-    public User applyChanges(UserEntityDto userDto, PasswordEncoder encoder) {
+    public Users applyChanges(UserEntityDto userDto, PasswordEncoder encoder) {
         id = userDto.getId();
         email = userDto.getEmail();
         password = encoder.encode(userDto.getPassword());
@@ -89,11 +101,11 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
         firstName = userDto.getFirstName();
         lastName = userDto.getLastName();
         roles.clear();
-        userDto.getRoles().forEach(roleDto -> roles.add(new Role().applyChanges(roleDto)));
+        userDto.getRoles().forEach(roleDto -> roles.add(new Roles().applyChanges(roleDto)));
         return this;
     }
 
-    public User applyChanges(RegisterUserDto userDto, PasswordEncoder encoder) {
+    public Users applyChanges(RegisterUserDto userDto, PasswordEncoder encoder) {
         id = userDto.getId();
         email = userDto.getEmail();
         password = encoder.encode(userDto.getPassword());
@@ -103,7 +115,7 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
         firstName = userDto.getFirstName();
         lastName = userDto.getLastName();
         roles.clear();
-        userDto.getRoles().forEach(roleDto -> roles.add(new Role().applyChanges(roleDto)));
+        userDto.getRoles().forEach(roleDto -> roles.add(new Roles().applyChanges(roleDto)));
         return this;
     }
 
@@ -122,4 +134,8 @@ public class User extends BaseEntity<User, UserDto> implements UserDetails {
         return userDto;
     }
 
+    @Override
+    public String getName() {
+        return email;
+    }
 }

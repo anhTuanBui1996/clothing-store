@@ -1,9 +1,11 @@
 package com.bta.api.dto;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.Set;
 
 import com.bta.api.base.BaseDto;
 import com.bta.api.base.BaseEntity;
+import com.bta.api.entity.Menu;
 import com.bta.api.entity.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,14 +16,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PermissionDto extends BaseDto {
+public class MenuDto extends BaseDto {
 
-	private RoleDto role;
-	private MenuDto menu;
-
-	private boolean canCreate;
-	private boolean canRead;
-	private boolean canUpdate;
-	private boolean canDelete;
+	private String menuCode;
+	private String menuName;
+	private String description;
+	private Set<Permission> permissions;
 
 }

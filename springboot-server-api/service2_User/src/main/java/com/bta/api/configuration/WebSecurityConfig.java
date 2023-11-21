@@ -1,0 +1,83 @@
+package com.bta.api.configuration;
+
+import com.bta.api.provider.CredentialsProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Set;
+
+@Configuration
+@EnableWebSecurity
+@Order(1)
+public class WebSecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    private CredentialsProvider emailPasswordProvider;
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(emailPasswordProvider);
+        return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public UserDetailsService users() throws Exception {
+        // The builder will ensure the passwords are encoded before saving in memory
+        UserDetails customer = User.builder()
+                .username("customer")
+                .password("{noop}password")
+                .roles("CUSTOMER")
+                .build();
+        UserDetails employee = User.builder()
+                .username("employee")
+                .password("{noop}password")
+                .roles("EMPLOYEE")
+                .build();
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password("{noop}password")
+                .roles("ADMIN, EMPLOYEE, CUSTOMER")
+                .build();
+        return new InMemoryUserDetailsManager(customer, employee, admin);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/auth/credentials/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults())
+                .logout(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+
+}
