@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    PRODUCT_SERVICE_ORIGIN: "http://localhost:8081/api",
-    USER_SERVICE_ORIGIN: "http://localhost:8082/api",
-    ORDER_SERVICE_ORIGIN: "http://localhost:8083/api",
+    PRODUCT_SERVICE_ORIGIN: "http://localhost:8081",
+    USER_SERVICE_ORIGIN: "http://localhost:8082",
+    ORDER_SERVICE_ORIGIN: "http://localhost:8083",
   },
 };
 

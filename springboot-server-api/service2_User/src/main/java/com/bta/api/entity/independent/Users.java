@@ -1,9 +1,12 @@
-package com.bta.api.entity;
-
-import java.util.*;
+package com.bta.api.entity.independent;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.dto.*;
+import com.bta.api.entity.composites.ProviderUserKey;
+import com.bta.api.entity.dto.RegisterUserDto;
+import com.bta.api.entity.dto.RoleDto;
+import com.bta.api.entity.dto.UserDto;
+import com.bta.api.entity.dto.UserEntityDto;
+import com.bta.api.entity.relationship.Providers;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.*;
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -20,6 +25,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @AllArgsConstructor
 public class Users extends BaseEntity<Users, UserDto> implements UserDetails, OAuth2User {
 
+    @Transient
     private OAuth2User oauth2User;
 
     private String email;
@@ -33,7 +39,7 @@ public class Users extends BaseEntity<Users, UserDto> implements UserDetails, OA
     @ManyToMany(mappedBy = "users")
     private Set<Roles> roles;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Providers> providers;
 
     private boolean enabled;

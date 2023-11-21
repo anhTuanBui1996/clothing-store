@@ -1,21 +1,24 @@
-package com.bta.api.entity;
+package com.bta.api.entity.composites;
 
-import com.bta.api.enums.Provider;
+import com.bta.api.entity.independent.Users;
+import com.bta.api.entity.enums.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Embeddable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Providers implements Serializable {
+@EqualsAndHashCode
+public class ProviderUserKey implements Serializable {
 
-    @ManyToOne
-    private Users userId;
+    private UUID userId;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;

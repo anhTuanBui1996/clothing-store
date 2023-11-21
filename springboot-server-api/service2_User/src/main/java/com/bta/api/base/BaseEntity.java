@@ -5,6 +5,7 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,9 +18,10 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class BaseEntity<E extends BaseEntity, D extends BaseDto> {
+public abstract class BaseEntity<E extends BaseEntity<E, D>, D extends BaseDto> {
 
 	@Id
+	@UuidGenerator
 	protected UUID id;
 
 	@CreatedDate

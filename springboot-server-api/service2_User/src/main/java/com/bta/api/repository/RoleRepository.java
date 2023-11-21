@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.bta.api.entity.Role;
+import com.bta.api.entity.independent.Roles;
 
-public interface RoleRepository extends CrudRepository<Role, UUID> {
+public interface RoleRepository extends CrudRepository<Roles, UUID> {
 
 }

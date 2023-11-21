@@ -1,13 +1,13 @@
 package com.bta.api.repository;
 
-import com.bta.api.entity.User;
+import com.bta.api.entity.independent.Users;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface UserRepository extends CrudRepository<User, UUID> {
+public interface UserRepository extends CrudRepository<Users, UUID> {
 
-	public List<User> findByEmail(String email);
+	public List<Users> findByEmail(String email);
 
 }

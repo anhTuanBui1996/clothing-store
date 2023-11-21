@@ -8,8 +8,8 @@ import com.bta.api.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.dto.MenuDto;
-import com.bta.api.entity.Menu;
+import com.bta.api.entity.dto.MenuDto;
+import com.bta.api.entity.independent.Menu;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.PermissionRepository;
 

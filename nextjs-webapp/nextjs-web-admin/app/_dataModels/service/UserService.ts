@@ -3,6 +3,7 @@ import BaseReponse from "../core/BaseResponse";
 export async function getAllMenu(): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
     method: "GET",
+    mode: "no-cors",
     cache: "no-store",
   });
   return await result.json();
@@ -13,6 +14,7 @@ export async function getMenuById(id: string): Promise<BaseReponse> {
     `${process.env.USER_SERVICE_ORIGIN}/menu/{${id}}`,
     {
       method: "GET",
+      mode: "no-cors",
       cache: "no-store",
     }
   );
@@ -22,6 +24,7 @@ export async function getMenuById(id: string): Promise<BaseReponse> {
 export async function createNewMenu(menu: any): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
     method: "POST",
+    mode: "no-cors",
     cache: "no-store",
     body: JSON.stringify(menu),
     headers: {
@@ -36,6 +39,7 @@ export async function createNewMenu(menu: any): Promise<BaseReponse> {
 export async function updateExistingMenu(menu: any): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
     method: "PUT",
+    mode: "no-cors",
     cache: "no-store",
     body: JSON.stringify(menu),
     headers: {
@@ -50,6 +54,7 @@ export async function updateExistingMenu(menu: any): Promise<BaseReponse> {
 export async function updateAllMenus(menus: any[]): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
     method: "PUT",
+    mode: "no-cors",
     cache: "no-store",
     body: JSON.stringify(menus),
     headers: {
@@ -64,6 +69,7 @@ export async function updateAllMenus(menus: any[]): Promise<BaseReponse> {
 export async function deleteExistingMenu(id: string): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/${id}`, {
     method: "DELETE",
+    mode: "no-cors",
     cache: "no-store",
   });
   return await result.json();
@@ -72,6 +78,7 @@ export async function deleteExistingMenu(id: string): Promise<BaseReponse> {
 export async function deleteAllMenus(ids: string[]): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
     method: "DELETE",
+    mode: "no-cors",
     cache: "no-store",
     body: JSON.stringify(ids),
     headers: {

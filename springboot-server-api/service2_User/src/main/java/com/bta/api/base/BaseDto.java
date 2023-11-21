@@ -3,6 +3,7 @@ package com.bta.api.base;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public abstract class BaseDto {
 
-    private UUID id = UUID.randomUUID();
+    @UuidGenerator
+    private UUID id;
 
 }

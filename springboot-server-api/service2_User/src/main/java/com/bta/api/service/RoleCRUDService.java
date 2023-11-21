@@ -4,13 +4,13 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.bta.api.base.CRUDService;
+import com.bta.api.entity.independent.Roles;
 import com.bta.api.repository.PermissionRepository;
 import com.bta.api.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.dto.RoleDto;
-import com.bta.api.entity.Role;
+import com.bta.api.entity.dto.RoleDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.UserRepository;
 
@@ -35,19 +35,19 @@ public class RoleCRUDService implements CRUDService<RoleDto> {
 
     @Override
     public RoleDto getById(UUID id) {
-        return roleRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND")).toDto();
+        return roleRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("Roles with given Id not found", "ROLE_NOT_FOUND")).toDto();
     }
 
     @Override
     public RoleDto save(RoleDto dto) {
-        return roleRepository.save(new Role().applyChanges(dto)).toDto();
+        return roleRepository.save(new Roles().applyChanges(dto)).toDto();
     }
 
     @Override
     public List<RoleDto> saveCollection(List<RoleDto> dtos) {
-        List<Role> roles = new ArrayList<>();
+        List<Roles> roles = new ArrayList<>();
         dtos.forEach((RoleDto dto) -> {
-            roles.add(new Role().applyChanges(dto));
+            roles.add(new Roles().applyChanges(dto));
         });
         List<RoleDto> roleDtos = new ArrayList<>();
         roleRepository.saveAll(roles).forEach(role -> roleDtos.add(role.toDto()));
@@ -57,7 +57,7 @@ public class RoleCRUDService implements CRUDService<RoleDto> {
     @Override
     public boolean delete(UUID id) {
         if (!roleRepository.existsById(id)) {
-            throw new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND");
+            throw new UserServiceCustomException("Roles with given Id not found", "ROLE_NOT_FOUND");
         }
         roleRepository.deleteById(id);
         return true;
@@ -69,7 +69,7 @@ public class RoleCRUDService implements CRUDService<RoleDto> {
         ids.forEach((UUID id) -> {
             if (!roleRepository.existsById(id)) {
                 result.set(false);
-                throw new UserServiceCustomException("Role with given Id not found", "ROLE_NOT_FOUND");
+                throw new UserServiceCustomException("Roles with given Id not found", "ROLE_NOT_FOUND");
             }
         });
         roleRepository.deleteAllById(ids);

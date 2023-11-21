@@ -1,4 +1,4 @@
-package com.bta.api.dto;
+package com.bta.api.entity.dto;
 
 import java.util.Date;
 import java.util.Set;

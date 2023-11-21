@@ -1,6 +1,6 @@
 package com.bta.api.configuration;
 
-import com.bta.api.provider.CredentialsProvider;
+import com.bta.api.entity.provider.CredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,20 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Set;
-
 @Configuration
 @EnableWebSecurity
 @Order(1)
 public class WebSecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Autowired
-    private CredentialsProvider emailPasswordProvider;
+    CredentialsProvider emailPasswordProvider;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -40,27 +33,6 @@ public class WebSecurityConfig {
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(emailPasswordProvider);
         return authenticationManagerBuilder.build();
-    }
-
-    @Bean
-    public UserDetailsService users() throws Exception {
-        // The builder will ensure the passwords are encoded before saving in memory
-        UserDetails customer = User.builder()
-                .username("customer")
-                .password("{noop}password")
-                .roles("CUSTOMER")
-                .build();
-        UserDetails employee = User.builder()
-                .username("employee")
-                .password("{noop}password")
-                .roles("EMPLOYEE")
-                .build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}password")
-                .roles("ADMIN, EMPLOYEE, CUSTOMER")
-                .build();
-        return new InMemoryUserDetailsManager(customer, employee, admin);
     }
 
     @Bean

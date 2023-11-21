@@ -1,10 +1,10 @@
-package com.bta.api.entity;
+package com.bta.api.entity.independent;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.dto.RoleDto;
+import com.bta.api.entity.relationship.Permission;
+import com.bta.api.entity.dto.RoleDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

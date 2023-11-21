@@ -1,12 +1,9 @@
-package com.bta.api.dto;
+package com.bta.api.entity.dto;
 
-import java.util.List;
 import java.util.Set;
 
 import com.bta.api.base.BaseDto;
-import com.bta.api.base.BaseEntity;
-import com.bta.api.entity.Menu;
-import com.bta.api.entity.Permission;
+import com.bta.api.entity.relationship.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

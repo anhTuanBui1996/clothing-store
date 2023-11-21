@@ -1,2 +1,4 @@
-package com.bta.api.controller.client;public class AuthController {
+package com.bta.api.controller.client;
+
+public class AuthController {
 }

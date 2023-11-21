@@ -1,18 +1,19 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.dto.*;
-import com.bta.api.entity.User;
+import com.bta.api.entity.dto.UserDto;
+import com.bta.api.entity.dto.UserEntityDto;
+import com.bta.api.entity.independent.Users;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.service.UserCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/admin/user")
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/forAdmin/")
-    public ResponseEntity<List<User>> getAllUserEntity() {
+    public ResponseEntity<List<Users>> getAllUserEntity() {
         try {
             return new ResponseEntity<>(userService.getAllEntity(), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/forAdmin/")
-    public ResponseEntity<List<User>> updateAllUserEntity(@RequestBody List<UserEntityDto> dtos) {
+    public ResponseEntity<List<Users>> updateAllUserEntity(@RequestBody List<UserEntityDto> dtos) {
         return new ResponseEntity<>(userService.saveEntityCollection(dtos), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 

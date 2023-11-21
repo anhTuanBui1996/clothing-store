@@ -3,13 +3,13 @@ import {
   Paper,
   TextField,
   Typography,
-  Link,
   Button,
   CircularProgress,
   Box,
   Snackbar,
   Alert,
   AlertColor,
+  Link,
 } from "@mui/material";
 import {
   ChangeEvent,
@@ -280,11 +280,22 @@ export default function SignIn() {
             >
               Or
             </Typography>
-            <Button variant="contained" color="inherit" className="bg-[#fff]">
+            <Button
+              LinkComponent={"a"}
+              href="http://localhost:8082/oauth2/authorization/google"
+              variant="contained"
+              color="inherit"
+              className="bg-[#fff]"
+            >
               Sign in with Google
               <FcGoogle size="15px" style={{ marginLeft: "8px" }} />
             </Button>
-            <Button variant="contained" className="bg-[#1976d2]">
+            <Button
+              LinkComponent={"a"}
+              href="http://localhost:8082/oauth2/authorization/facebook"
+              variant="contained"
+              className="bg-[#1976d2]"
+            >
               Sign in with Facebook
               <FaFacebook size="15px" style={{ marginLeft: "8px" }} />
             </Button>
@@ -296,7 +307,9 @@ export default function SignIn() {
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
-        <Alert severity={snackbarSeverity} onClose={handleCloseSnackbar}>{snackbarMessage}</Alert>
+        <Alert severity={snackbarSeverity} onClose={handleCloseSnackbar}>
+          {snackbarMessage}
+        </Alert>
       </Snackbar>
     </>
   );

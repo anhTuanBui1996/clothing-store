@@ -1,10 +1,9 @@
-package com.bta.api.entity;
+package com.bta.api.entity.relationship;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import com.bta.api.entity.composites.RoleMenuKey;
+import com.bta.api.entity.independent.Menu;
+import com.bta.api.entity.independent.Roles;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,15 +14,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Permission {
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("id")
-	@JoinColumn(name = "roles")
-    Roles roles;
+	@EmbeddedId
+	private RoleMenuKey id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("id")
+	@MapsId("roleId")
+	@JoinColumn(name = "role")
+	private Roles roles;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@MapsId("menuId")
 	@JoinColumn(name = "menu")
-	Menu menu;
+	private Menu menu;
 
 	private boolean canCreate = false;
 	private boolean canRead = false;

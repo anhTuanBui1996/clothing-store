@@ -1,4 +1,4 @@
-package com.bta.api.enums;
+package com.bta.api.entity.enums;
 
 public enum Provider {
     LOCAL, GOOGLE

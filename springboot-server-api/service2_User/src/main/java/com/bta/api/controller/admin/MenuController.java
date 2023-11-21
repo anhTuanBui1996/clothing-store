@@ -1,6 +1,6 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.dto.MenuDto;
+import com.bta.api.entity.dto.MenuDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.service.MenuCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;
