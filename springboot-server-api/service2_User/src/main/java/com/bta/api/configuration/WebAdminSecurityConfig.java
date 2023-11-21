@@ -2,6 +2,7 @@ package com.bta.api.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,35 +17,48 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@Order(1)
 public class WebSecurityConfig {
 
-    public static final String LOGIN_URL = "/login";
+    public static final String LOGIN_ADMIN_URL = "http://localhost:3000/login";
     public static final String LOGOUT_URL = "/logout";
-    public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
-    public static final String DEFAULT_SUCCESS_URL = LOGIN_URL + "?success";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.antMatcher("/admin*")
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((auth) -> auth
-                        .anyRequest().authenticated()
-                )
+                .authorizeRequests()
                 .formLogin(form -> form
-                        .loginPage(LOGIN_URL)
-                        .loginProcessingUrl(LOGIN_URL)
-                        .failureUrl(LOGIN_FAIL_URL)
+                        .loginPage(LOGIN_ADMIN_URL)
+                        .loginProcessingUrl(LOGIN_ADMIN_URL)
+                        .failureUrl(LOGIN_ADMIN_URL + "?error")
                         .usernameParameter(USERNAME)
                         .passwordParameter(PASSWORD)
-                        .defaultSuccessUrl(DEFAULT_SUCCESS_URL))
+                )
                 .logout(logout -> logout
                         .logoutUrl(LOGOUT_URL)
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl(LOGIN_URL + "?logout"))
+                        .logoutSuccessUrl(LOGIN_ADMIN_URL + "?logout"))
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("http://localhost:3001/**").hasRole("USER")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage(LOGIN_CLIENT_URL)
+                        .loginProcessingUrl(LOGIN_CLIENT_URL)
+                        .failureUrl(LOGIN_CLIENT_URL + "?error")
+                        .usernameParameter(USERNAME)
+                        .passwordParameter(PASSWORD)
+                )
+                .logout(logout -> logout
+                        .logoutUrl(LOGOUT_URL)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl(LOGIN_CLIENT_URL + "?logout"))
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

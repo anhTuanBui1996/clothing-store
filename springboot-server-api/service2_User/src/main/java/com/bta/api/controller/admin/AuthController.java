@@ -25,15 +25,6 @@ public class AuthController {
     @Autowired
     UserCRUDService userService;
 
-    @PostMapping(path = "/credentials/register/")
-    public ResponseEntity<UserDto> registerNewUser(@RequestBody RegisterUserDto dto) {
-        try {
-            return new ResponseEntity<>(userService.registerNewUser(dto), HttpStatusCode.valueOf(HttpStatus.OK.value()));
-        } catch (UserServiceCustomException ex) {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_MODIFIED.value()));
-        }
-    }
-
     @PostMapping(path = "/credentials")
     public ResponseEntity<UserDto> loginByCredentials(@RequestBody LoginUserDto dto) {
         try {
@@ -47,6 +38,15 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
         } catch (UserServiceCustomException ex) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.UNAUTHORIZED.value()));
+        }
+    }
+
+    @PostMapping(path = "/credentials/register/")
+    public ResponseEntity<UserDto> registerNewUser(@RequestBody RegisterUserDto dto) {
+        try {
+            return new ResponseEntity<>(userService.registerNewUser(dto), HttpStatusCode.valueOf(HttpStatus.OK.value()));
+        } catch (UserServiceCustomException ex) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.NOT_MODIFIED.value()));
         }
     }
 
