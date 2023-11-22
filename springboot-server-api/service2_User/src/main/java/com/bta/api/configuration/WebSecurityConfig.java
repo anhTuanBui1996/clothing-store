@@ -1,6 +1,6 @@
 package com.bta.api.configuration;
 
-import com.bta.api.entity.provider.CredentialsProvider;
+import com.bta.api.provider.CredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,13 +11,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +24,11 @@ public class WebSecurityConfig {
     CredentialsProvider emailPasswordProvider;
 
     @Bean
+    public JwtAuthenticationFilterChain jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilterChain();
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -36,19 +37,33 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/auth/credentials/**").permitAll()
+                        .requestMatchers("/admin/auth/login").permitAll()
+                        .requestMatchers("/admin/auth/logout").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/client/**").hasRole("CLIENT")
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginProcessingUrl("/admin/auth/login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .failureForwardUrl("/admin/auth/login?error=true")
+                        .successForwardUrl("/admin/auth/login?success=true")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("admin/auth/logout")
+                        .clearAuthentication(true)
+                        .deleteCookies("jwt")
+                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                )
                 .oauth2Login(Customizer.withDefaults())
-                .logout(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
+        http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

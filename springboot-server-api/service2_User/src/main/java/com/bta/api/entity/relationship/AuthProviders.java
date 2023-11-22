@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Providers {
+public class AuthProviders {
 
     @EmbeddedId
     private ProviderUserKey providerUserKey;

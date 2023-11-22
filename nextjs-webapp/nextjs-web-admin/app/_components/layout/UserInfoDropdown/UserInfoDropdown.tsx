@@ -11,6 +11,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { signOut } from "@/app/_dataModels/service/AuthService";
 
 export default function UserInfoDropdown() {
   const router = useRouter();
@@ -22,7 +23,12 @@ export default function UserInfoDropdown() {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => setAnchorEl(null);
-  const handleLogout = () => router.replace("/login");
+  const handleLogout = async () => {
+    const res = await signOut();
+    if (res.ok) {
+      router.replace("/login?signout=true");
+    }
+  };
 
   return (
     <>

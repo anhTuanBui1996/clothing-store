@@ -1,4 +1,4 @@
-package com.bta.api.entity.provider;
+package com.bta.api.provider;
 
 import com.bta.api.service.UserCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;

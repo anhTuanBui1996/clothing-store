@@ -20,7 +20,6 @@ public class UserDto extends BaseDto {
 	private String lastName;
 	private boolean isMale;
 	private Date dob;
-	private String citizenId;
 
 	private Set<RoleDto> roles;
 

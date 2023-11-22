@@ -1,17 +1,17 @@
 package com.bta.api.entity.independent;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.entity.composites.ProviderUserKey;
 import com.bta.api.entity.dto.RegisterUserDto;
 import com.bta.api.entity.dto.RoleDto;
 import com.bta.api.entity.dto.UserDto;
 import com.bta.api.entity.dto.UserEntityDto;
-import com.bta.api.entity.relationship.Providers;
+import com.bta.api.entity.relationship.AuthProviders;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -23,12 +23,16 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = @Index(columnList = "email", unique = true))
 public class Users extends BaseEntity<Users, UserDto> implements UserDetails, OAuth2User {
 
     @Transient
     private OAuth2User oauth2User;
 
+    @NaturalId
+    @Column(unique = true)
     private String email;
+
     private String password;
     private String firstName;
     private String lastName;
@@ -40,7 +44,7 @@ public class Users extends BaseEntity<Users, UserDto> implements UserDetails, OA
     private Set<Roles> roles;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Providers> providers;
+    private Set<AuthProviders> providers;
 
     private boolean enabled;
 
@@ -89,7 +93,6 @@ public class Users extends BaseEntity<Users, UserDto> implements UserDetails, OA
         email = userDto.getEmail();
         isMale = userDto.isMale();
         dob = userDto.getDob();
-        citizenId = userDto.getCitizenId();
         firstName = userDto.getFirstName();
         lastName = userDto.getLastName();
         roles.clear();

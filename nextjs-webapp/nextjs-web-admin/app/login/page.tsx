@@ -18,7 +18,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   signInWithCredentials,
   LoginInfo,
@@ -31,7 +31,10 @@ const philosopher = Philosopher({ subsets: ["latin"], weight: "700" });
 
 export default function SignIn() {
   const router = useRouter();
+  const searchs = useSearchParams();
 
+  const isError = searchs.get("error");
+  const isSignOut = searchs.get("signout");
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
   const [isValidated, setValidated] = useState<boolean | undefined>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
@@ -106,7 +109,6 @@ export default function SignIn() {
           setValidated(true);
         }
       }
-      setValidated(true);
     }
   };
 
@@ -120,18 +122,29 @@ export default function SignIn() {
     setValidated(undefined);
     const result = await signInWithCredentials(user);
     if (result?.ok) {
-      if (result?.json() === null) {
+      if ((await result?.json()) === null) {
         setValidated(false);
       } else {
         setValidated(true);
       }
     }
-    setValidated(true);
   };
   //#endregion
 
+  // Error and SignOut listeners
   useEffect(() => {
-    if (isValidated) router.push("/");
+    if (isError) {
+      handleOpenSnackbar("error", "Some errors occur, please try again!");
+    }
+    if (isSignOut) {
+      handleOpenSnackbar("info", "Sign out successfully!");
+    }
+  }, [isError, isSignOut]);
+
+  // Refresh the page will activate the middleware
+  useEffect(() => {
+    if (isValidated === true) router.refresh();
+    else if (isValidated === false) router.replace("/login?error=true");
   }, [isValidated]);
 
   return (
