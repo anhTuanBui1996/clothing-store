@@ -1,4 +1,4 @@
-package com.bta.api.controller.admin;
+package com.bta.api.controller;
 
 import com.bta.api.entity.dto.LoginUserDto;
 import com.bta.api.entity.independent.Users;
@@ -17,8 +17,8 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/auth")
-public class AuthAdminController {
+@RequestMapping("/auth")
+public class AuthenticationController {
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -42,7 +42,6 @@ public class AuthAdminController {
     }
 
     @GetMapping("/logout")
-    @ResponseBody
     public ResponseEntity<?> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         logoutHandler.logout(request, response, authentication);
         return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.OK.value()));

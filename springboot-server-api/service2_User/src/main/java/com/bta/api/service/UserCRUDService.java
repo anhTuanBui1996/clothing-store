@@ -10,11 +10,13 @@ import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,16 +26,10 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class UserCRUDService implements CRUDService<UserDto>, UserDetailsService {
+public class UserCRUDService implements CRUDService<UserDto> {
 
-    @Value("${spring.security.user.name}")
-    private String adminUserName;
-
-    @Value("${spring.security.user.password}")
-    private String adminPassword;
-
-    @Value("${spring.security.user.roles}")
-    private String adminRole;
+    @Autowired
+    InMemoryUserDetailsManager userDetailsManager;
 
     @Autowired
     UserRepository usersRepository;
@@ -108,10 +104,9 @@ public class UserCRUDService implements CRUDService<UserDto>, UserDetailsService
         return result.get();
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals(adminUserName)) {
-            return User.builder().username(adminUserName).password(adminPassword).roles(adminRole).build();
+    public UserDetails getUserByUsername(String username) throws UsernameNotFoundException {
+        if (userDetailsManager.userExists(username)) {
+            return userDetailsManager.loadUserByUsername(username);
         }
         List<Users> users = usersRepository.findByEmail(username);
         if (users.isEmpty()) {
@@ -128,7 +123,7 @@ public class UserCRUDService implements CRUDService<UserDto>, UserDetailsService
     }
 
     public boolean saveUserPassword(ChangeUserPasswordDto dto) throws UsernameNotFoundException {
-        Users users = (Users) loadUserByUsername(dto.getEmail());
+        Users users = (Users) getUserByUsername(dto.getEmail());
         if (passwordEncoder.encode(dto.getOldPassword()).equals(users.getPassword())) {
             users.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             usersRepository.save(users);

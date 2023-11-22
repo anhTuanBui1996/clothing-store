@@ -4,7 +4,7 @@ export interface AuthInfo {
 }
 
 export async function getAuthentication() {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/auth/validate`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/auth/validate`, {
     method: "GET",
     cache: "default",
     mode: "no-cors",
@@ -18,7 +18,7 @@ export interface LoginInfo {
 }
 
 export async function signInWithCredentials(loginInfo: LoginInfo) {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/auth/login`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/auth/login`, {
     method: "POST",
     cache: "default",
     mode: "no-cors",
@@ -31,7 +31,7 @@ export async function signInWithCredentials(loginInfo: LoginInfo) {
 }
 
 export async function signOut() {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/auth/logout`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/auth/logout`, {
     method: "GET",
     cache: "default",
     mode: "no-cors",
