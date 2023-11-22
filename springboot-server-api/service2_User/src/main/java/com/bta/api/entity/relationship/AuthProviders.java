@@ -20,6 +20,4 @@ public class Providers {
     @MapsId("userId")
     private Users users;
 
-    private String token;
-
 }

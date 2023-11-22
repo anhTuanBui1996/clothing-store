@@ -28,8 +28,7 @@ public class CredentialsProvider implements AuthenticationProvider {
 
         UserDetails user = userService.loadUserByUsername(username);
         if (user != null) {
-            if (BCrypt.checkpw(password, passwordEncoder.encode(user.getPassword()))
-                    || (username.equals("admin") && password.equals(user.getPassword()))) {
+            if (BCrypt.checkpw(password, passwordEncoder.encode(user.getPassword())) || password.equals(user.getPassword())) {
                 return createSuccessfulAuthentication(authentication, user);
             }
         }
@@ -37,9 +36,7 @@ public class CredentialsProvider implements AuthenticationProvider {
     }
 
     private Authentication createSuccessfulAuthentication(final Authentication authentication, final UserDetails user) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), authentication.getCredentials(), user.getAuthorities());
-        token.setDetails(authentication.getDetails());
-        return token;
+        return new UsernamePasswordAuthenticationToken(user.getUsername(), authentication.getCredentials(), user.getAuthorities());
     }
 
     @Override
