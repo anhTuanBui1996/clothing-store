@@ -15,10 +15,10 @@ public class Service2Application {
 	
 	@Autowired
     @Lazy
-    private EurekaClient eurekaClient;
+    public EurekaClient eurekaClient;
 
     @Value("${spring.application.name}")
-    private String appName;
+    public String appName;
 
 
 	public static void main(String[] args) {
