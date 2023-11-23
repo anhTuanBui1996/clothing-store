@@ -3,7 +3,7 @@ package com.bta.api.entity.dto;
 import java.util.Set;
 
 import com.bta.api.base.BaseDto;
-import com.bta.api.entity.relationship.Permission;
+import com.bta.api.entity.dependencies.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,9 +1,9 @@
-package com.bta.api.entity.independent;
+package com.bta.api.entity.owner;
 
 import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.entity.relationship.Permission;
+import com.bta.api.entity.dependencies.Permission;
 import com.bta.api.entity.dto.MenuDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

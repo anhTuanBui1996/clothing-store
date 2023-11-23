@@ -1,7 +1,6 @@
 package com.bta.api.entity.composites;
 
-import com.bta.api.entity.independent.Menu;
-import com.bta.api.entity.independent.Roles;
+import com.bta.api.entity.enums.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,9 +15,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class RoleMenuKey implements Serializable {
+public class ProviderUserKey implements Serializable {
 
-    private UUID roleId;
-    private UUID menuId;
+    private UUID userId;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
 }
