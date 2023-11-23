@@ -1,10 +1,9 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.entity.dto.UserDto;
-import com.bta.api.entity.dto.UserEntityDto;
-import com.bta.api.entity.independent.Users;
+import com.bta.api.entities.dto.UsersDto;
+import com.bta.api.entities.dto.UserEntityDto;
 import com.bta.api.exception.UserServiceCustomException;
-import com.bta.api.service.UserCRUDService;
+import com.bta.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,10 +19,10 @@ import java.util.UUID;
 public class UserController {
 
     @Autowired
-    UserCRUDService userService;
+    UserService userService;
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable("id") UUID id) {
+    public ResponseEntity<UsersDto> getUserById(@PathVariable("id") UUID id) {
         try {
             return new ResponseEntity<>(userService.getById(id), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<UserDto>> getAllUser() {
+    public ResponseEntity<List<UsersDto>> getAllUser() {
         try {
             return new ResponseEntity<>(userService.getAll(), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/")
-    public ResponseEntity<List<UserDto>> updateAllUser(@RequestBody List<UserDto> dtos) {
+    public ResponseEntity<List<UsersDto>> updateAllUser(@RequestBody List<UsersDto> dtos) {
         return new ResponseEntity<>(userService.saveCollection(dtos), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 

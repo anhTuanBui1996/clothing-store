@@ -1,6 +1,5 @@
 package com.bta.api.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +7,7 @@ import com.bta.api.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.entity.Brand;
+import com.bta.api.entities.Brand;
 
 @Service
 public class BrandService {

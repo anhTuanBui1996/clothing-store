@@ -3,7 +3,7 @@ package com.bta.api.controller;
 import java.util.List;
 
 import com.bta.api.service.CategoryService;
-import com.bta.api.entity.Category;
+import com.bta.api.entities.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

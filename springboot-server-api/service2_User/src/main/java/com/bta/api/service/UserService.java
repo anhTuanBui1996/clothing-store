@@ -1,15 +1,13 @@
 package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entity.dto.ChangeUserPasswordDto;
-import com.bta.api.entity.dto.RegisterUserDto;
-import com.bta.api.entity.dto.UserDto;
-import com.bta.api.entity.dto.UserEntityDto;
-import com.bta.api.entity.independent.Users;
+import com.bta.api.entities.dto.ChangeUserPasswordDto;
+import com.bta.api.entities.dto.RegisterUserDto;
+import com.bta.api.entities.dto.UsersDto;
+import com.bta.api.entities.dto.UserEntityDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +24,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class UserCRUDService implements CRUDService<UserDto> {
+public class UserService implements CRUDService<UsersDto>, UserDetailsService {
 
     @Autowired
     InMemoryUserDetailsManager userDetailsManager;
@@ -37,11 +35,31 @@ public class UserCRUDService implements CRUDService<UserDto> {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password("password")
+                .roles("ADMIN", "USER", "CLIENT")
+                .build();
+        UserDetails user = User.builder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        UserDetails client = User.builder()
+                .username("client")
+                .password("password")
+                .roles("CLIENT")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin);
+    }
+
     @Override
-    public List<UserDto> getAll() {
-        List<UserDto> userDtos = new ArrayList<>();
-        usersRepository.findAll().forEach(user -> userDtos.add(user.toDto()));
-        return userDtos;
+    public List<UsersDto> getAll() {
+        List<UsersDto> usersDtos = new ArrayList<>();
+        usersRepository.findAll().forEach(user -> usersDtos.add(user.toDto()));
+        return usersDtos;
     }
 
     public List<Users> getAllEntity() {
@@ -51,25 +69,25 @@ public class UserCRUDService implements CRUDService<UserDto> {
     }
 
     @Override
-    public UserDto getById(UUID id) {
+    public UsersDto getById(UUID id) {
         return usersRepository.findById(id)
                 .orElseThrow(() -> new UserServiceCustomException("Users with given Id not found", "USER_NOT_FOUND")).toDto();
     }
 
     @Override
-    public UserDto save(UserDto dto) {
+    public UsersDto save(UsersDto dto) {
         return usersRepository.save(new Users().applyChanges(dto)).toDto();
     }
 
     @Override
-    public List<UserDto> saveCollection(List<UserDto> dtos) {
+    public List<UsersDto> saveCollection(List<UsersDto> dtos) {
         List<Users> users = new ArrayList<>();
-        dtos.forEach((UserDto dto) -> {
+        dtos.forEach((UsersDto dto) -> {
             users.add(new Users().applyChanges(dto));
         });
-        List<UserDto> userDtos = new ArrayList<>();
-        usersRepository.saveAll(users).forEach(user -> userDtos.add(user.toDto()));
-        return userDtos;
+        List<UsersDto> usersDtos = new ArrayList<>();
+        usersRepository.saveAll(users).forEach(user -> usersDtos.add(user.toDto()));
+        return usersDtos;
     }
 
     public List<Users> saveEntityCollection(List<UserEntityDto> dtos) {
@@ -115,7 +133,7 @@ public class UserCRUDService implements CRUDService<UserDto> {
         return users.get(0);
     }
 
-    public UserDto registerNewUser(RegisterUserDto dto) throws UserServiceCustomException {
+    public UsersDto registerNewUser(RegisterUserDto dto) throws UserServiceCustomException {
         if (usersRepository.existsById(dto.getId())) {
             throw new UserServiceCustomException("Duplicate user creation, please try again", "DUPLICATE_USER_CREATION");
         }
@@ -132,4 +150,8 @@ public class UserCRUDService implements CRUDService<UserDto> {
         return false;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
+    }
 }

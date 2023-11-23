@@ -1,6 +1,6 @@
-package com.bta.api.entity.composites;
+package com.bta.api.entities.composites;
 
-import com.bta.api.entity.enums.Provider;
+import com.bta.api.entities.enums.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

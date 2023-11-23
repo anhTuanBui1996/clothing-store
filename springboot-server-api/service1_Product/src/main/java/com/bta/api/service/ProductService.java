@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.entity.Product;
+import com.bta.api.entities.Product;
 import com.bta.api.exception.ProductServiceCustomException;
 import com.bta.api.repository.ProductRepository;
 

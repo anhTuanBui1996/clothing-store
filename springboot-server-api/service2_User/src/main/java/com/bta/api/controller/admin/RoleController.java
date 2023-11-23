@@ -1,8 +1,8 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.entity.dto.RoleDto;
+import com.bta.api.entities.dto.RolesDto;
 import com.bta.api.exception.UserServiceCustomException;
-import com.bta.api.service.RoleCRUDService;
+import com.bta.api.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,10 +18,10 @@ import java.util.UUID;
 public class RoleController {
 
     @Autowired
-    RoleCRUDService roleService;
+    RoleService roleService;
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<RoleDto> getRole(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<RolesDto> getRole(@PathVariable(name = "id") UUID id) {
         try {
             return new ResponseEntity<>(roleService.getById(id), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
@@ -30,7 +30,7 @@ public class RoleController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<RoleDto>> getAllRole() {
+    public ResponseEntity<List<RolesDto>> getAllRole() {
         try {
             return new ResponseEntity<>(roleService.getAll(), HttpStatusCode.valueOf(HttpStatus.FOUND.value()));
         } catch (UserServiceCustomException ex) {
@@ -39,7 +39,7 @@ public class RoleController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<RoleDto> updateRole(@PathVariable(name = "id") UUID id, @RequestBody RoleDto dto) {
+    public ResponseEntity<RolesDto> updateRole(@PathVariable(name = "id") UUID id, @RequestBody RolesDto dto) {
         dto.setId(id);
         try {
             return new ResponseEntity<>(roleService.save(dto), HttpStatusCode.valueOf(HttpStatus.OK.value()));
@@ -49,7 +49,7 @@ public class RoleController {
     }
 
     @PutMapping(path = "/")
-    public ResponseEntity<List<RoleDto>> updateAllRole(@RequestBody List<RoleDto> dtos) {
+    public ResponseEntity<List<RolesDto>> updateAllRole(@RequestBody List<RolesDto> dtos) {
         return new ResponseEntity<>(roleService.saveCollection(dtos), HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 

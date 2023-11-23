@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.bta.api.entity.Product;
+import com.bta.api.entities.Product;
 
 public interface ProductRepository extends CrudRepository<Product, UUID> {
 

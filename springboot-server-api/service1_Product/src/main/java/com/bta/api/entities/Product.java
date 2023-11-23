@@ -1,4 +1,4 @@
-package com.bta.api.entity;
+package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
 import jakarta.persistence.*;

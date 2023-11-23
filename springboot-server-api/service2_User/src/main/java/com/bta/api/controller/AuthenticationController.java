@@ -1,7 +1,6 @@
 package com.bta.api.controller;
 
-import com.bta.api.entity.dto.LoginUserDto;
-import com.bta.api.entity.independent.Users;
+import com.bta.api.entities.dto.LoginUserDto;
 import com.bta.api.provider.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

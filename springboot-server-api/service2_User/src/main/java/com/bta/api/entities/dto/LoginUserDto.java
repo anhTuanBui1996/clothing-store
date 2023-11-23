@@ -1,4 +1,4 @@
-package com.bta.api.entity.dto;
+package com.bta.api.entities.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

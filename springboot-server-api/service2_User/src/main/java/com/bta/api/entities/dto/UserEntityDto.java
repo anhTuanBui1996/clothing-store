@@ -1,4 +1,4 @@
-package com.bta.api.entity.dto;
+package com.bta.api.entities.dto;
 
 import com.bta.api.base.BaseDto;
 import lombok.AllArgsConstructor;
@@ -23,5 +23,5 @@ public class UserEntityDto extends BaseDto {
     private Date dob;
     private String citizenId;
 
-    private Set<RoleDto> roles;
+    private Set<RolesDto> roles;
 }

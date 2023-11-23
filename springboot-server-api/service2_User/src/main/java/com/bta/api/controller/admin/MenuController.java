@@ -1,8 +1,8 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.entity.dto.MenuDto;
+import com.bta.api.entities.dto.MenuDto;
 import com.bta.api.exception.UserServiceCustomException;
-import com.bta.api.service.MenuCRUDService;
+import com.bta.api.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class MenuController {
 
     @Autowired
-    MenuCRUDService menuService;
+    MenuService menuService;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable UUID id) {

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Permission {
+public class Permissions {
 
     @EmbeddedId
     private RoleMenuKey id;

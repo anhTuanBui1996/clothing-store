@@ -1,4 +1,4 @@
-package com.bta.api.entity.composites;
+package com.bta.api.entities.composites;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
 package com.bta.api.provider;
 
-import com.bta.api.entity.independent.Users;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

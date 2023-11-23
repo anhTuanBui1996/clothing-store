@@ -1,6 +1,7 @@
 package com.bta.api.entities.dto;
 
 import com.bta.api.base.BaseDto;
+import com.bta.api.entities.dependencies.Permissions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,11 +13,11 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDto extends BaseDto {
+public class RolesDto extends BaseDto {
 
     private String roleName;
     private String description;
-    private Set<Permission> permissions;
-    private Set<UserDto> users;
+    private Set<Permissions> permissions;
+    private Set<UsersDto> users;
 
 }

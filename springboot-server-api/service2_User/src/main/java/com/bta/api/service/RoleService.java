@@ -4,18 +4,18 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entity.independent.Roles;
+import com.bta.api.entities.owner.Roles;
 import com.bta.api.repository.PermissionRepository;
 import com.bta.api.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.entity.dto.RoleDto;
+import com.bta.api.entities.dto.RolesDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.UserRepository;
 
 @Service
-public class RoleCRUDService implements CRUDService<RoleDto> {
+public class RoleService implements CRUDService<RolesDto> {
 
     @Autowired
     RoleRepository roleRepository;
@@ -27,31 +27,31 @@ public class RoleCRUDService implements CRUDService<RoleDto> {
     UserRepository usersRepository;
 
     @Override
-    public List<RoleDto> getAll() {
-        List<RoleDto> roleDtos = new ArrayList<>();
-        roleRepository.findAll().forEach(role -> roleDtos.add(role.toDto()));
-        return roleDtos;
+    public List<RolesDto> getAll() {
+        List<RolesDto> rolesDtos = new ArrayList<>();
+        roleRepository.findAll().forEach(role -> rolesDtos.add(role.toDto()));
+        return rolesDtos;
     }
 
     @Override
-    public RoleDto getById(UUID id) {
+    public RolesDto getById(UUID id) {
         return roleRepository.findById(id).orElseThrow(() -> new UserServiceCustomException("Roles with given Id not found", "ROLE_NOT_FOUND")).toDto();
     }
 
     @Override
-    public RoleDto save(RoleDto dto) {
+    public RolesDto save(RolesDto dto) {
         return roleRepository.save(new Roles().applyChanges(dto)).toDto();
     }
 
     @Override
-    public List<RoleDto> saveCollection(List<RoleDto> dtos) {
+    public List<RolesDto> saveCollection(List<RolesDto> dtos) {
         List<Roles> roles = new ArrayList<>();
-        dtos.forEach((RoleDto dto) -> {
+        dtos.forEach((RolesDto dto) -> {
             roles.add(new Roles().applyChanges(dto));
         });
-        List<RoleDto> roleDtos = new ArrayList<>();
-        roleRepository.saveAll(roles).forEach(role -> roleDtos.add(role.toDto()));
-        return roleDtos;
+        List<RolesDto> rolesDtos = new ArrayList<>();
+        roleRepository.saveAll(roles).forEach(role -> rolesDtos.add(role.toDto()));
+        return rolesDtos;
     }
 
     @Override

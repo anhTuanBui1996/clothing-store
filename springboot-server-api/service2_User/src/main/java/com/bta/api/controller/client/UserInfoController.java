@@ -1,9 +1,9 @@
 package com.bta.api.controller.client;
 
-import com.bta.api.entity.dto.ChangeUserPasswordDto;
-import com.bta.api.entity.dto.RegisterUserDto;
-import com.bta.api.entity.dto.UserDto;
-import com.bta.api.service.UserCRUDService;
+import com.bta.api.entities.dto.ChangeUserPasswordDto;
+import com.bta.api.entities.dto.RegisterUserDto;
+import com.bta.api.entities.dto.UsersDto;
+import com.bta.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserInfoController {
 
     @Autowired
-    UserCRUDService userService;
+    UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerNewUser(RegisterUserDto dto) {
-        UserDto user = userService.registerNewUser(dto);
+    public ResponseEntity<UsersDto> registerNewUser(RegisterUserDto dto) {
+        UsersDto user = userService.registerNewUser(dto);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(HttpStatus.OK.value()));
         }
@@ -36,8 +36,8 @@ public class UserInfoController {
     }
 
     @PostMapping("/updateInfo")
-    public ResponseEntity<UserDto> updateUserInfo(UserDto dto) {
-        UserDto user = userService.save(dto);
+    public ResponseEntity<UsersDto> updateUserInfo(UsersDto dto) {
+        UsersDto user = userService.save(dto);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(HttpStatus.OK.value()));
         }

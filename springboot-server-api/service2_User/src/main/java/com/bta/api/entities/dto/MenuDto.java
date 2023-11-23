@@ -1,9 +1,9 @@
-package com.bta.api.entity.dto;
+package com.bta.api.entities.dto;
 
 import java.util.Set;
 
 import com.bta.api.base.BaseDto;
-import com.bta.api.entity.dependencies.Permission;
+import com.bta.api.entities.dependencies.Permissions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,6 +18,6 @@ public class MenuDto extends BaseDto {
 	private String menuCode;
 	private String menuName;
 	private String description;
-	private Set<Permission> permissions;
+	private Set<Permissions> permissions;
 
 }

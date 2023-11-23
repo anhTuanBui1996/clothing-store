@@ -1,7 +1,6 @@
 package com.bta.api.entities.dependencies;
 
 import com.bta.api.entities.composites.ProviderUserKey;
-import com.bta.api.entities.owner.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthProviders {
+public class Providers {
 
     @EmbeddedId
     private ProviderUserKey providerUserKey;

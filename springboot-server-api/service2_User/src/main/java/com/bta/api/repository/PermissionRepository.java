@@ -1,6 +1,5 @@
 package com.bta.api.repository;
 
-import com.bta.api.entity.relationship.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

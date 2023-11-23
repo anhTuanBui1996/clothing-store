@@ -8,13 +8,13 @@ import com.bta.api.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.entity.dto.MenuDto;
-import com.bta.api.entity.independent.Menu;
+import com.bta.api.entities.dto.MenuDto;
+import com.bta.api.entities.owner.Menu;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.PermissionRepository;
 
 @Service
-public class MenuCRUDService implements CRUDService<MenuDto> {
+public class MenuService implements CRUDService<MenuDto> {
 
     @Autowired
     MenuRepository menuRepository;

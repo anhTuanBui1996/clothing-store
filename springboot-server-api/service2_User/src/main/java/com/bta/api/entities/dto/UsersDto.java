@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto extends BaseDto {
+public class UsersDto extends BaseDto {
 
 	private String email;
 	private String firstName;
@@ -21,6 +21,6 @@ public class UserDto extends BaseDto {
 	private boolean isMale;
 	private Date dob;
 
-	private Set<RoleDto> roles;
+	private Set<RolesDto> roles;
 
 }

@@ -1,16 +1,15 @@
-package com.bta.api.entity.owner;
+package com.bta.api.entities.owner;
 
 import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.entity.dependencies.Permission;
-import com.bta.api.entity.dto.RoleDto;
+import com.bta.api.entities.dependencies.Permissions;
+import com.bta.api.entities.dto.RolesDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Data
@@ -18,37 +17,25 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"roleName"}))
-public class Roles extends BaseEntity<Roles, RoleDto> {
+public class Roles extends BaseEntity<RolesDto> {
 
+    private String roleCode;
     private String roleName;
     private String description;
 
     @OneToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Permission> permissions;
+    private Set<Permissions> permissions;
 
-    @ManyToMany
+    @OneToMany
     private Set<Users> users;
 
     @Override
-    public String getAuthority() {
-        return roleName;
-    }
-
-    public Roles applyChanges(RoleDto roleDto) {
-        id = roleDto.getId();
-        roleName = roleDto.getRoleName();
-        description = roleDto.getDescription();
-        permissions = roleDto.getPermissions();
-        return this;
-    }
-
-    @Override
-    public RoleDto toDto() {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setRoleName(roleName);
-        roleDto.setDescription(description);
-        roleDto.setPermissions(permissions);
-        return roleDto;
+    public RolesDto toDto() {
+        RolesDto rolesDto = new RolesDto();
+        rolesDto.setRoleName(roleName);
+        rolesDto.setDescription(description);
+        rolesDto.setPermissions(permissions);
+        return rolesDto;
     }
 
 }

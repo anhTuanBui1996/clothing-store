@@ -1,4 +1,4 @@
-package com.bta.api.entity;
+package com.bta.api.entities;
 
 import java.util.List;
 

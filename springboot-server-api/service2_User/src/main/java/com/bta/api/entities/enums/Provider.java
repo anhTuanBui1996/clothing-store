@@ -1,5 +1,5 @@
 package com.bta.api.entities.enums;
 
-public enum Providers {
+public enum Provider {
     CREDENTIALS, GOOGLE, FACEBOOK
 }

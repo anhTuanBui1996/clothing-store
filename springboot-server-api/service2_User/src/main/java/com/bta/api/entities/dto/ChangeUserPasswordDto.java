@@ -1,9 +1,7 @@
-package com.bta.api.entity.dto;
+package com.bta.api.entities.dto;
 
-import com.bta.api.base.BaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data

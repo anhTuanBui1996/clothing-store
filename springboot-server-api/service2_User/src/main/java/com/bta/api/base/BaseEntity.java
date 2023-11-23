@@ -18,7 +18,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class BaseEntity<E extends BaseEntity<E, D>, D extends BaseDto> {
+public abstract class BaseEntity<D> {
 
 	@Id
 	@UuidGenerator
@@ -35,8 +35,6 @@ public abstract class BaseEntity<E extends BaseEntity<E, D>, D extends BaseDto> 
 
 	@LastModifiedBy
 	protected String lastModifiedBy;
-
-	public abstract E applyChanges(D dto);
 
 	public abstract D toDto();
 
