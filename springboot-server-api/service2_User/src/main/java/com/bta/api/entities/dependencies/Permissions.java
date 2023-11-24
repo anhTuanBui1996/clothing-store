@@ -27,9 +27,7 @@ public class Permissions {
     @JoinColumn(name = "menu")
     private Menu menu;
 
-    private boolean canCreate = false;
-    private boolean canRead = false;
-    private boolean canUpdate = false;
-    private boolean canDelete = false;
+    private boolean canView = false;
+    private boolean canModified = false;
 
 }

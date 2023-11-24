@@ -10,7 +10,7 @@ import com.bta.api.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.entities.dto.RolesDto;
+import com.bta.api.models.dto.RolesDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.repository.UserRepository;
 

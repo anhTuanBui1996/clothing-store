@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.entities.dependencies.Permissions;
-import com.bta.api.entities.dto.RolesDto;
+import com.bta.api.models.dto.RolesDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,9 +25,6 @@ public class Roles extends BaseEntity<RolesDto> {
 
     @OneToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Permissions> permissions;
-
-    @OneToMany
-    private Set<Users> users;
 
     @Override
     public RolesDto toDto() {

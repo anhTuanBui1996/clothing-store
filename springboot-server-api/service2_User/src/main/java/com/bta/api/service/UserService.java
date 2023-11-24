@@ -1,15 +1,12 @@
 package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entities.dto.ChangeUserPasswordDto;
-import com.bta.api.entities.dto.RegisterUserDto;
-import com.bta.api.entities.dto.UsersDto;
-import com.bta.api.entities.dto.UserEntityDto;
-import com.bta.api.exception.UserServiceCustomException;
+import com.bta.api.models.dto.ChangeUserPasswordDto;
+import com.bta.api.models.dto.RegisterUserDto;
+import com.bta.api.models.dto.UsersDto;
+import com.bta.api.entities.owner.Users;
 import com.bta.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,10 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -35,24 +29,10 @@ public class UserService implements CRUDService<UsersDto>, UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("password")
-                .roles("ADMIN", "USER", "CLIENT")
-                .build();
-        UserDetails user = User.builder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-        UserDetails client = User.builder()
-                .username("client")
-                .password("password")
-                .roles("CLIENT")
-                .build();
-        return new InMemoryUserDetailsManager(user, admin);
+    private Users applyChangesFromDto(UsersDto dto) {
+        Optional<Users> foundUsers = usersRepository.findById(dto.getId());
+        Users users = foundUsers.orElseGet(Users::new);
+        users.setUsername();
     }
 
     @Override
@@ -71,7 +51,7 @@ public class UserService implements CRUDService<UsersDto>, UserDetailsService {
     @Override
     public UsersDto getById(UUID id) {
         return usersRepository.findById(id)
-                .orElseThrow(() -> new UserServiceCustomException("Users with given Id not found", "USER_NOT_FOUND")).toDto();
+                .orElseThrow(() -> new UsernameNotFoundException("Users not found: " + id)).toDto();
     }
 
     @Override
@@ -126,7 +106,7 @@ public class UserService implements CRUDService<UsersDto>, UserDetailsService {
         if (userDetailsManager.userExists(username)) {
             return userDetailsManager.loadUserByUsername(username);
         }
-        List<Users> users = usersRepository.findByEmail(username);
+        List<Users> users = usersRepository.findByUsername(username);
         if (users.isEmpty()) {
             throw new UsernameNotFoundException("Username not found");
         }

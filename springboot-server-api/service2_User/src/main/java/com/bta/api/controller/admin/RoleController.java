@@ -1,6 +1,6 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.entities.dto.RolesDto;
+import com.bta.api.models.dto.RolesDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

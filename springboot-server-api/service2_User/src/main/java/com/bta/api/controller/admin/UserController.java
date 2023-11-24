@@ -1,7 +1,6 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.entities.dto.UsersDto;
-import com.bta.api.entities.dto.UserEntityDto;
+import com.bta.api.models.dto.UsersDto;
 import com.bta.api.exception.UserServiceCustomException;
 import com.bta.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

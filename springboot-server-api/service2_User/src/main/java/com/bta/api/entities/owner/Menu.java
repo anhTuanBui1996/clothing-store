@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.entities.dependencies.Permissions;
-import com.bta.api.entities.dto.MenuDto;
+import com.bta.api.models.dto.MenuDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

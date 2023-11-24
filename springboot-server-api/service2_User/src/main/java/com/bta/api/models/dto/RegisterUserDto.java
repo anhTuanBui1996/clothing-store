@@ -1,4 +1,4 @@
-package com.bta.api.models;
+package com.bta.api.models.dto;
 
 import com.bta.api.base.BaseDto;
 import lombok.AllArgsConstructor;
