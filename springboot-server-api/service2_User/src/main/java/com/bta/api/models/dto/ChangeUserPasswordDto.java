@@ -1,4 +1,4 @@
-package com.bta.api.entities.dto;
+package com.bta.api.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginUserDto {
+public class ChangeUserPasswordDto {
 
     private String email;
-    private String password;
+    private String oldPassword;
+    private String newPassword;
 
 }

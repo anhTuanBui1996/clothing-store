@@ -1,4 +1,4 @@
-package com.bta.api.entities.dto;
+package com.bta.api.models;
 
 import java.util.Set;
 
@@ -18,6 +18,5 @@ public class MenuDto extends BaseDto {
 	private String menuCode;
 	private String menuName;
 	private String description;
-	private Set<Permissions> permissions;
 
 }

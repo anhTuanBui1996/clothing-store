@@ -1,7 +1,6 @@
-package com.bta.api.entities.dto;
+package com.bta.api.models;
 
 import java.util.Date;
-import java.util.Set;
 
 import com.bta.api.base.BaseDto;
 import lombok.AllArgsConstructor;
@@ -21,6 +20,6 @@ public class UsersDto extends BaseDto {
 	private boolean isMale;
 	private Date dob;
 
-	private Set<RolesDto> roles;
+	private String authorities;
 
 }

@@ -1,4 +1,4 @@
-package com.bta.api.entities.dto;
+package com.bta.api.models;
 
 import com.bta.api.base.BaseDto;
 import com.bta.api.entities.dependencies.Permissions;
@@ -17,7 +17,5 @@ public class RolesDto extends BaseDto {
 
     private String roleName;
     private String description;
-    private Set<Permissions> permissions;
-    private Set<UsersDto> users;
 
 }
