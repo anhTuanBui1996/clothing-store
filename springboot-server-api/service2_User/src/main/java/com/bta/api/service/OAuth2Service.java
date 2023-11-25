@@ -11,4 +11,5 @@ public class OAuth2Service implements OAuth2UserService<OAuth2User> {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         return null;
     }
+
 }

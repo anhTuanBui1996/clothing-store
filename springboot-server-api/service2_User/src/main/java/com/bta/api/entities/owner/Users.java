@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(indexes = @Index(columnList = "email", unique = true))
+@Table(indexes = @Index(columnList = "username", unique = true))
 public class Users extends BaseEntity<UsersDto> {
 
     @NaturalId
