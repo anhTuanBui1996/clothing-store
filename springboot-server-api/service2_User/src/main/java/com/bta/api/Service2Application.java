@@ -33,18 +33,6 @@ public class Service2Application {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    CommandLineRunner runner(UserRepository userRepository) {
-        return args -> {
-            userRepository.save(Users.builder()
-                    .username("admin").email("admin").authorities("ROLE_ADMIN,ROLE_USER")
-                    .password(passwordEncoder().encode("password")).build());
-            userRepository.save(Users.builder()
-                    .username("user").email("user").authorities("ROLE_USER")
-                    .password(passwordEncoder().encode("password")).build());
-        };
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(Service2Application.class, args);
     }

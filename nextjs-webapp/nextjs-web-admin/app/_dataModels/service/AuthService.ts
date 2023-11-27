@@ -4,7 +4,7 @@ export interface AuthInfo {
 }
 
 export async function getAuthentication() {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/auth/validate`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/validate`, {
     method: "GET",
     cache: "default",
     mode: "no-cors",
@@ -18,20 +18,20 @@ export interface LoginInfo {
 }
 
 export async function signInWithCredentials(loginInfo: LoginInfo) {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/auth/login`, {
+  const formData = new FormData();
+  formData.append("username", loginInfo.username);
+  formData.append("password", loginInfo.password);
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/login`, {
     method: "POST",
     cache: "default",
     mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(loginInfo),
+    body: formData,
   });
   return result;
 }
 
 export async function signOut() {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/auth/logout`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/logout`, {
     method: "GET",
     cache: "default",
     mode: "no-cors",

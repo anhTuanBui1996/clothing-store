@@ -1,19 +1,20 @@
 package com.bta.api.models.dto;
 
-import java.util.Date;
-
-import com.bta.api.base.BaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.Date;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsersDto extends BaseDto {
+public class UsersDto {
 
+	private UUID id;
+
+	private String username;
 	private String email;
 	private String firstName;
 	private String lastName;

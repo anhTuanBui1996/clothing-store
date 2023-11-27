@@ -1,54 +1,51 @@
 package com.bta.api.controller;
 
-import com.bta.api.models.dto.LoginUserDto;
-import com.bta.api.provider.JwtTokenProvider;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.bta.api.models.dto.ChangeUserPasswordDto;
+import com.bta.api.models.dto.RegisterUserDto;
+import com.bta.api.models.dto.UsersDto;
+import com.bta.api.service.UserService;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthenticationController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    JwtTokenProvider tokenProvider;
-
-    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-
-    @PostMapping("/login")
-    @ResponseBody
-    public ResponseEntity<String> loginWithCredentials(@RequestBody LoginUserDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.generateToken((Users) authentication.getPrincipal());
-        return new ResponseEntity<>(jwt, HttpStatusCode.valueOf(HttpStatus.OK.value()));
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<?> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
-        logoutHandler.logout(request, response, authentication);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.OK.value()));
-    }
+    UserService userService;
 
     @GetMapping("/validate")
     public ResponseEntity<?> testValidate() {
-        return new ResponseEntity<>(HttpStatusCode.valueOf(HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+//    For client user
+    @PostMapping("/register")
+    public ResponseEntity<UsersDto> registerNewUser(RegisterUserDto dto) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerNewUser(dto));
+        } catch (EntityExistsException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changeUserPassword(ChangeUserPasswordDto dto) {
+        try {
+            if (userService.saveUserPassword(dto)) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
 
 }

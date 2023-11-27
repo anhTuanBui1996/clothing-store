@@ -1,19 +1,15 @@
 package com.bta.api.models.dto;
 
-import com.bta.api.base.BaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterUserDto extends BaseDto {
+public class RegisterUserDto {
 
     private String email;
     private String password;
@@ -22,7 +18,6 @@ public class RegisterUserDto extends BaseDto {
     private boolean isMale;
     private Date dob;
     private String citizenId;
-
-    private Set<RolesDto> roles;
+    private String phoneNumber;
 
 }

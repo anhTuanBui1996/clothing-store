@@ -1,6 +1,7 @@
 package com.bta.api.entities.dependencies;
 
 import com.bta.api.entities.composites.ProviderUserKey;
+import com.bta.api.entities.owner.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,6 @@ public class Providers {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
-    private Users users;
+    private Users user;
 
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public interface CRUDService<D> {
+public interface CRUDService<E, D> {
 
 	abstract List<D> getAll();
 
@@ -16,6 +16,8 @@ public interface CRUDService<D> {
 
 	abstract boolean delete (UUID id);
 
-	abstract boolean deleteCollection(Set<UUID> ids);
+	abstract List<UUID> deleteCollection(Set<UUID> ids);
+
+	abstract E applyChangesFromDto(D dto);
 
 }

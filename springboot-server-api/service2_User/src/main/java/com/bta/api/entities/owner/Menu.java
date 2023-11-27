@@ -34,7 +34,6 @@ public class Menu extends BaseEntity<MenuDto> {
 		menuDto.setMenuCode(menuCode);
 		menuDto.setMenuName(menuName);
 		menuDto.setDescription(description);
-		menuDto.setPermissions(permissions);
         return menuDto;
     }
 }

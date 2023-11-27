@@ -18,7 +18,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, redirect } from "next/navigation";
 import {
   signInWithCredentials,
   LoginInfo,
@@ -30,13 +30,12 @@ import { FaFacebook } from "react-icons/fa";
 const philosopher = Philosopher({ subsets: ["latin"], weight: "700" });
 
 export default function SignIn() {
-  const router = useRouter();
   const searchs = useSearchParams();
 
   const isError = searchs.get("error");
   const isSignOut = searchs.get("signout");
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
-  const [isValidated, setValidated] = useState<boolean | undefined>(false);
+  const [isValidating, setValidated] = useState<boolean | undefined>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     AlertColor | undefined
@@ -83,10 +82,6 @@ export default function SignIn() {
       handleOpenSnackbar("error", "Email and Password can not be empty!");
       return false;
     }
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(user.username)) {
-      handleOpenSnackbar("error", "Incorrected Email format!");
-      return false;
-    }
     return true;
   };
   //#endregion
@@ -100,13 +95,13 @@ export default function SignIn() {
       if (!handleValidateCredentials()) {
         return;
       }
-      setValidated(undefined);
+      setValidated(true);
       const result = await signInWithCredentials(user);
       if (result?.ok) {
-        if (result?.json() === null) {
+        if ((await result?.json()) === null) {
           setValidated(false);
         } else {
-          setValidated(true);
+          redirect("/");
         }
       }
     }
@@ -119,13 +114,13 @@ export default function SignIn() {
     if (!handleValidateCredentials()) {
       return;
     }
-    setValidated(undefined);
+    setValidated(true);
     const result = await signInWithCredentials(user);
     if (result?.ok) {
       if ((await result?.json()) === null) {
         setValidated(false);
       } else {
-        setValidated(true);
+        redirect("/");
       }
     }
   };
@@ -137,15 +132,9 @@ export default function SignIn() {
       handleOpenSnackbar("error", "Some errors occur, please try again!");
     }
     if (isSignOut) {
-      handleOpenSnackbar("info", "Sign out successfully!");
+      handleOpenSnackbar("info", "Sign out!");
     }
   }, [isError, isSignOut]);
-
-  // Refresh the page will activate the middleware
-  useEffect(() => {
-    if (isValidated === true) router.refresh();
-    else if (isValidated === false) router.replace("/login?error=true");
-  }, [isValidated]);
 
   return (
     <>
@@ -163,8 +152,7 @@ export default function SignIn() {
             width: 400,
             minWidth: 400,
             height: "70%",
-            minHeight: 400,
-            maxHeight: 550,
+            minHeight: 550,
             margin: "auto",
             borderRadius: "2%",
             textAlign: "center",
@@ -254,16 +242,14 @@ export default function SignIn() {
             <div className="login flex-col justify-between align-middle">
               <Button
                 className="bg-[#2e7d32]"
-                disabled={isValidated === undefined}
+                disabled={isValidating}
                 variant="contained"
                 color="success"
                 fullWidth
-                onClick={handleCredentialsLoginClick}
-                endIcon={
-                  isValidated === undefined && (
-                    <CircularProgress size={"12px"} />
-                  )
+                onClick={
+                  !isValidating ? handleCredentialsLoginClick : undefined
                 }
+                endIcon={isValidating && <CircularProgress size={"12px"} />}
               >
                 SIGN IN
               </Button>

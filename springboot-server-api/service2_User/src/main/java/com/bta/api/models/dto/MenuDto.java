@@ -1,19 +1,17 @@
 package com.bta.api.models.dto;
 
-import java.util.Set;
-
-import com.bta.api.base.BaseDto;
-import com.bta.api.entities.dependencies.Permissions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuDto extends BaseDto {
+public class MenuDto {
+
+	private UUID id;
 
 	private String menuCode;
 	private String menuName;

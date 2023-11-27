@@ -2,11 +2,13 @@ package com.bta.api.entities.owner;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.models.dto.UsersDto;
+import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -14,8 +16,15 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(indexes = @Index(columnList = "username", unique = true))
+@Table(indexes = {
+        @Index(columnList = "username", unique = true),
+        @Index(columnList = "email", unique = true),
+        @Index(columnList = "phoneNumber", unique = true)
+})
 public class Users extends BaseEntity<UsersDto> {
+
+    @Transient
+    RoleRepository roleRepository;
 
     @NaturalId
     @Column(unique = true)
@@ -29,7 +38,12 @@ public class Users extends BaseEntity<UsersDto> {
     private Date dob;
     private String citizenId;
     private String phoneNumber;
-    private String authorities;
+
+    @ManyToMany
+    @JoinTable(name = "authorities",
+            joinColumns = @JoinColumn(name = "user"),
+            inverseJoinColumns = @JoinColumn(name = "role"))
+    private Set<Roles> authorities;
 
     @Override
     public UsersDto toDto() {
@@ -40,7 +54,16 @@ public class Users extends BaseEntity<UsersDto> {
         userDto.setDob(dob);
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
-        userDto.setAuthorities(authorities);
+        userDto.setAuthorities(String.join(",",
+                authorities.stream().map(Roles::getRoleCode).toList()));
         return userDto;
+    }
+
+    public Set<Roles> getAuthoritiesFromDto(String authorities) {
+        return Arrays.stream(authorities.split(","))
+                .map(s -> roleRepository
+                        .findByRoleCode(s)
+                        .orElseThrow(() -> new EntityNotFoundException("Role not found: roleCode=" + s)))
+                .collect(Collectors.toSet());
     }
 }

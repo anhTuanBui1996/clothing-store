@@ -1,7 +1,7 @@
 import BaseReponse from "../core/BaseResponse";
 
 export async function getAllMenu(): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {
     method: "GET",
     mode: "no-cors",
     cache: "no-store",
@@ -11,7 +11,7 @@ export async function getAllMenu(): Promise<BaseReponse> {
 
 export async function getMenuById(id: string): Promise<BaseReponse> {
   const result = await fetch(
-    `${process.env.USER_SERVICE_ORIGIN}/menu/{${id}}`,
+    `${process.env.USER_SERVICE_ORIGIN}/admin/menu/{${id}}`,
     {
       method: "GET",
       mode: "no-cors",
@@ -22,8 +22,8 @@ export async function getMenuById(id: string): Promise<BaseReponse> {
 }
 
 export async function createNewMenu(menu: any): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
-    method: "POST",
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {
+    method: "PUT",
     mode: "no-cors",
     cache: "no-store",
     body: JSON.stringify(menu),
@@ -37,7 +37,7 @@ export async function createNewMenu(menu: any): Promise<BaseReponse> {
 }
 
 export async function updateExistingMenu(menu: any): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
+  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {
     method: "PUT",
     mode: "no-cors",
     cache: "no-store",

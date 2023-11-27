@@ -1,5 +1,6 @@
 package com.bta.api.provider;
 
+import com.bta.api.entities.owner.Users;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,12 +13,12 @@ public class JwtTokenProvider {
 
     private final String JWT_SECRET = "btaApiServer";
 
-    public String generateToken(Users userDetails) {
+    public String generateToken(Users users) {
         Date now = new Date();
         long JWT_EXPIRATION = 604800000L;
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
         return Jwts.builder()
-                .setSubject(userDetails.getId().toString())
+                .setSubject(users.getId().toString())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)

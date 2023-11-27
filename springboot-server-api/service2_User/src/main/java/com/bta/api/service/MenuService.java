@@ -1,26 +1,35 @@
 package com.bta.api.service;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.bta.api.base.CRUDService;
+import com.bta.api.entities.owner.Menu;
+import com.bta.api.models.dto.MenuDto;
 import com.bta.api.repository.MenuRepository;
+import com.bta.api.repository.PermissionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.models.dto.MenuDto;
-import com.bta.api.entities.owner.Menu;
-import com.bta.api.exception.UserServiceCustomException;
-import com.bta.api.repository.PermissionRepository;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class MenuService implements CRUDService<MenuDto> {
+public class MenuService implements CRUDService<Menu, MenuDto> {
 
     @Autowired
     MenuRepository menuRepository;
 
     @Autowired
     PermissionRepository permissionRepository;
+
+    @Override
+    public Menu applyChangesFromDto(MenuDto dto) {
+        Optional<Menu> foundMenu = menuRepository.findById(dto.getId());
+        Menu menu = foundMenu.orElseGet(Menu::new);
+        menu.setMenuCode(dto.getMenuCode());
+        menu.setMenuName(dto.getMenuName());
+        menu.setDescription(dto.getDescription());
+        return menu;
+    }
 
 	@Override
     public List<MenuDto> getAll() {
@@ -32,19 +41,20 @@ public class MenuService implements CRUDService<MenuDto> {
 	@Override
     public MenuDto getById(UUID id) {
         return menuRepository.findById(id)
-                .orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND")).toDto();
+                .orElseThrow(() -> new EntityNotFoundException("Menu not found: id=" + id))
+                .toDto();
     }
 
     @Override
     public MenuDto save(MenuDto dto) {
-        return menuRepository.save(new Menu().applyChanges(dto)).toDto();
+        return menuRepository.save(applyChangesFromDto(dto)).toDto();
     }
 
     @Override
     public List<MenuDto> saveCollection(List<MenuDto> dtos) {
         List<Menu> menus = new ArrayList<>();
         dtos.forEach((MenuDto dto) -> {
-            menus.add(new Menu().applyChanges(dto));
+            menus.add(applyChangesFromDto(dto));
         });
         List<MenuDto> menuDtos = new ArrayList<>();
 		menuRepository.saveAll(menus).forEach(menu -> menuDtos.add(menu.toDto()));
@@ -52,9 +62,9 @@ public class MenuService implements CRUDService<MenuDto> {
     }
 
 	@Override
-    public boolean delete(UUID rowId) {
-        Menu menu = menuRepository.findById(rowId)
-                .orElseThrow(() -> new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND"));
+    public boolean delete(UUID id) {
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Menu not found: id=" + id));
         if (menu != null) {
             menuRepository.delete(menu);
             return true;
@@ -63,16 +73,15 @@ public class MenuService implements CRUDService<MenuDto> {
     }
 
     @Override
-    public boolean deleteCollection(Set<UUID> ids) {
-		AtomicBoolean result = new AtomicBoolean(true);
-        ids.forEach((UUID id) -> {
+    public List<UUID> deleteCollection(Set<UUID> ids) {
+		List<UUID> result = new ArrayList<>(ids);
+        result.forEach((UUID id) -> {
             if (!menuRepository.existsById(id)) {
-				result.set(false);
-                throw new UserServiceCustomException("Menu with given Id not found", "MENU_NOT_FOUND");
+				result.remove(id);
             }
         });
         menuRepository.deleteAllById(ids);
-        return result.get();
+        return result;
     }
 
 }

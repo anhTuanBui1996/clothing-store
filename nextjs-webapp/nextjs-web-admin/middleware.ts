@@ -8,8 +8,6 @@ export async function middleware(request: NextRequest) {
     const result = await getAuthentication();
     if (result.ok && result.status === 200) {
       return NextResponse.next();
-    } else {
-      return NextResponse.redirect(new URL("/login?error=true", request.url));
     }
   } catch (err) {
     return NextResponse.redirect(new URL("/login?error=true", request.url));
@@ -26,6 +24,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|images|login*).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|images|login).*)",
   ],
 };

@@ -1,13 +1,13 @@
 package com.bta.api.models.implement;
 
 import com.bta.api.entities.owner.Users;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
 
+@Builder
 public class UserDetailsImpl implements UserDetails {
 
     public UserDetailsImpl(Users users) {
@@ -18,7 +18,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(dbUsers.getAuthorities().split(",")).map(SimpleGrantedAuthority::new).toList();
+        return dbUsers.getAuthorities().stream().map(AuthorityImpl::new).toList();
     }
 
     @Override

@@ -1,12 +1,18 @@
 package com.bta.api.provider;
 
+import com.bta.api.entities.owner.Users;
+import com.bta.api.models.implement.UserDetailsImpl;
+import com.bta.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -14,23 +20,26 @@ import org.springframework.stereotype.Component;
 public class CredentialsProvider implements AuthenticationProvider {
 
     @Autowired
-    UserDetailsService userService;
+    UserRepository userRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
+        String name = authentication.getName();
+        String credential = authentication.getCredentials().toString();
 
-        UserDetails user = userService.loadUserByUsername(username);
-        if (user != null) {
-            if (passwordEncoder.matches(password, passwordEncoder.encode(user.getPassword()))) {
-                return createSuccessfulAuthentication(authentication, user);
+        Users foundUser = userRepository.findByUsername(name).orElseGet(() ->
+                userRepository.findByEmail(name).orElseGet(() ->
+                        userRepository.findByPhoneNumber(name).orElseThrow(() ->
+                                new UsernameNotFoundException("User not found by login"))));
+        if (foundUser != null) {
+            if (passwordEncoder.matches(credential, foundUser.getPassword())) {
+                return createSuccessfulAuthentication(authentication, new UserDetailsImpl(foundUser));
             }
         }
-        return null;
+        throw new AuthenticationCredentialsNotFoundException("Incorrect credentials with name=" + name);
     }
 
     private Authentication createSuccessfulAuthentication(final Authentication authentication, final UserDetails user) {
@@ -41,4 +50,5 @@ public class CredentialsProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
+
 }
