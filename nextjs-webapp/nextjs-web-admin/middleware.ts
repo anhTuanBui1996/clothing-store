@@ -6,11 +6,18 @@ import { getAuthentication } from "./app/_dataModels/service/AuthService";
 export async function middleware(request: NextRequest) {
   try {
     const result = await getAuthentication();
-    if (result.ok && result.status === 200) {
+    if (result?.ok && result.status === 200) {
       return NextResponse.next();
+    } else {
+      const loginWithReturnUrl = new URL("/login", request.url);
+      loginWithReturnUrl.searchParams.set("returnPage", request.nextUrl.pathname);
+      return NextResponse.redirect(loginWithReturnUrl);
     }
   } catch (err) {
-    return NextResponse.redirect(new URL("/login?error=true", request.url));
+    const loginWithReturnUrlErrored = new URL("/login", request.url);
+    loginWithReturnUrlErrored.searchParams.set("returnPage", request.nextUrl.pathname);
+    loginWithReturnUrlErrored.searchParams.set("error", "true");
+    return NextResponse.redirect(loginWithReturnUrlErrored);
   }
 }
 

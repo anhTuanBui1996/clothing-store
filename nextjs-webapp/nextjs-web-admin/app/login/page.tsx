@@ -35,7 +35,7 @@ export default function SignIn() {
   const isError = searchs.get("error");
   const isSignOut = searchs.get("signout");
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
-  const [isValidating, setValidated] = useState<boolean | undefined>(false);
+  const [isValidating, setValidating] = useState<boolean | undefined>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     AlertColor | undefined
@@ -95,11 +95,12 @@ export default function SignIn() {
       if (!handleValidateCredentials()) {
         return;
       }
-      setValidated(true);
+      setValidating(true);
       const result = await signInWithCredentials(user);
-      if (result?.ok) {
-        if ((await result?.json()) === null) {
-          setValidated(false);
+      if (result?.ok && result?.status === 304) {
+        const resultBody = await result?.json();
+        if (resultBody === null) {
+          setValidating(false);
         } else {
           redirect("/");
         }
@@ -114,11 +115,13 @@ export default function SignIn() {
     if (!handleValidateCredentials()) {
       return;
     }
-    setValidated(true);
+    setValidating(true);
     const result = await signInWithCredentials(user);
-    if (result?.ok) {
-      if ((await result?.json()) === null) {
-        setValidated(false);
+    console.log(result);
+    if (result?.ok && result?.status === 304) {
+      const resultBody = await result?.json();
+      if (resultBody === null) {
+        setValidating(false);
       } else {
         redirect("/");
       }
@@ -150,9 +153,7 @@ export default function SignIn() {
         <Paper
           sx={{
             width: 400,
-            minWidth: 400,
-            height: "70%",
-            minHeight: 550,
+            height: 550,
             margin: "auto",
             borderRadius: "2%",
             textAlign: "center",
