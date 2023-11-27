@@ -96,15 +96,18 @@ export default function SignIn() {
         return;
       }
       setValidating(true);
-      const result = await signInWithCredentials(user);
-      if (result?.ok && result?.status === 304) {
-        const resultBody = await result?.json();
-        if (resultBody === null) {
-          setValidating(false);
-        } else {
-          redirect("/");
+      signInWithCredentials(user).then((resp: Response) => {
+        if (resp.ok) {
+          if (resp.status === 200) {
+            const resultBody = resp.json();
+            if (resultBody === null) {
+              setValidating(false);
+            } else {
+              redirect("/");
+            }
+          }
         }
-      }
+      });
     }
   };
 
@@ -116,16 +119,18 @@ export default function SignIn() {
       return;
     }
     setValidating(true);
-    const result = await signInWithCredentials(user);
-    console.log(result);
-    if (result?.ok && result?.status === 304) {
-      const resultBody = await result?.json();
-      if (resultBody === null) {
-        setValidating(false);
-      } else {
-        redirect("/");
+    signInWithCredentials(user).then((resp: Response) => {
+      if (resp.ok) {
+        if (resp.status === 200) {
+          const resultBody = resp.json();
+          if (resultBody === null) {
+            setValidating(false);
+          } else {
+            redirect("/");
+          }
+        }
       }
-    }
+    });
   };
   //#endregion
 

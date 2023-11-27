@@ -18,14 +18,17 @@ export interface LoginInfo {
 }
 
 export async function signInWithCredentials(loginInfo: LoginInfo) {
+  const form = new FormData();
+  form.append("username", loginInfo.username);
+  form.append("password", loginInfo.password);
   const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/login`, {
     method: "POST",
     cache: "default",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(loginInfo),
+    mode: "cors",
+    credentials: "include",
+    keepalive: true,
+    redirect: "follow",
+    body: form,
   });
   return result;
 }

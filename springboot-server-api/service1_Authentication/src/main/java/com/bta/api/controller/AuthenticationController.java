@@ -37,28 +37,6 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginByCredentials(@RequestBody LoginUserDto dto) {
-        Authentication loginInfo = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
-        try {
-            Authentication result = authenticationManager.authenticate(loginInfo);
-            if (result.isAuthenticated()) {
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(result.getDetails());
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect password");
-        } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
-        if (authentication != null) {
-            logoutHandler.logout(request, response, authentication);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
 
 //    For client user
     @PostMapping("/register")

@@ -3,6 +3,7 @@ package com.bta.api.configuration;
 import com.bta.api.provider.CredentialsProvider;
 import com.bta.api.provider.InMemoryProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -36,17 +37,18 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/logout").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/login*").permitAll()
+                        .requestMatchers("/logout*").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/client/**").hasAnyRole("ADMIN,CLIENT")
                         .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager())
+                .formLogin(Customizer.withDefaults())
+                .logout(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
