@@ -47,8 +47,8 @@ public class WebSecurityConfig {
                 )
                 .authenticationManager(authenticationManager())
                 .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults())
                 .oauth2Login(Customizer.withDefaults())
+                .logout(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

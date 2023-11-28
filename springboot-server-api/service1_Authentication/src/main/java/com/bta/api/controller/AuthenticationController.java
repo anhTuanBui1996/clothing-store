@@ -1,21 +1,14 @@
 package com.bta.api.controller;
 
 import com.bta.api.models.dto.ChangeUserPasswordDto;
-import com.bta.api.models.dto.LoginUserDto;
 import com.bta.api.models.dto.RegisterUserDto;
 import com.bta.api.models.dto.UsersDto;
 import com.bta.api.service.CredentialsService;
 import jakarta.persistence.EntityExistsException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +19,6 @@ public class AuthenticationController {
 
     @Autowired
     CredentialsService credentialsService;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-
-    @GetMapping("/validate")
-    public ResponseEntity<?> testValidate() {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
 
 //    For client user
     @PostMapping("/register")

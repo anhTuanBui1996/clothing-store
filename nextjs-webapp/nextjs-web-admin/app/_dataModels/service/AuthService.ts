@@ -4,7 +4,7 @@ export interface AuthInfo {
 }
 
 export async function getAuthentication() {
-  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/validate`, {
+  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/`, {
     method: "GET",
     cache: "default",
     mode: "no-cors",
@@ -23,11 +23,14 @@ export async function signInWithCredentials(loginInfo: LoginInfo) {
   form.append("password", loginInfo.password);
   const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/login`, {
     method: "POST",
-    cache: "default",
-    mode: "cors",
-    credentials: "include",
     keepalive: true,
+    cache: "default",
+    mode: "no-cors",
     redirect: "follow",
+    headers: {
+      Accept: "*/*",
+      "Accept-Encoding": "gzip, deflate, br",
+    },
     body: form,
   });
   return result;
@@ -35,7 +38,7 @@ export async function signInWithCredentials(loginInfo: LoginInfo) {
 
 export async function signOut() {
   const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/logout`, {
-    method: "POST",
+    method: "GET",
     cache: "default",
     mode: "no-cors",
   });
