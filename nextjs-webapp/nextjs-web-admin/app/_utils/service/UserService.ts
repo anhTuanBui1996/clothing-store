@@ -1,4 +1,4 @@
-import BaseReponse from "../core/BaseResponse";
+import BaseReponse from "../../_dataModels/core/BaseResponse";
 
 export async function getAllMenu(): Promise<BaseReponse> {
   const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {

@@ -12,7 +12,7 @@ import {
   deleteExistingMenu,
   updateAllMenus,
   deleteAllMenus,
-} from "@/app/_dataModels/service/UserService";
+} from "@/app/_utils/service/UserService";
 import BaseResponse from "@/app/_dataModels/core/BaseResponse";
 
 export default function Page() {

@@ -22,7 +22,7 @@ import { useRouter, useSearchParams, redirect } from "next/navigation";
 import {
   signInWithCredentials,
   LoginInfo,
-} from "@/app/_dataModels/service/AuthService";
+} from "@/app/_utils/service/AuthService";
 import { Philosopher } from "next/font/google";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -31,6 +31,7 @@ const philosopher = Philosopher({ subsets: ["latin"], weight: "700" });
 
 export default function SignIn() {
   const searchs = useSearchParams();
+  const router = useRouter();
 
   const isError = searchs.get("error");
   const isSignOut = searchs.get("signout");
@@ -96,18 +97,24 @@ export default function SignIn() {
         return;
       }
       setValidating(true);
-      signInWithCredentials(user).then((resp: Response) => {
-        if (resp.ok) {
-          if (resp.status === 200) {
-            const resultBody = resp.json();
-            if (resultBody === null) {
-              setValidating(false);
-            } else {
-              redirect("/");
-            }
-          }
-        }
-      });
+      fetch(`${process.env.AUTH_SERVICE_ORIGIN}/auth/login`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "*/*",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          username: user.username,
+          password: user.password,
+        }),
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((ex) => console.log(ex));
     }
   };
 
@@ -119,18 +126,15 @@ export default function SignIn() {
       return;
     }
     setValidating(true);
-    signInWithCredentials(user).then((resp: Response) => {
-      if (resp.ok) {
-        if (resp.status === 200) {
-          const resultBody = resp.json();
-          if (resultBody === null) {
-            setValidating(false);
-          } else {
-            redirect("/");
-          }
-        }
-      }
-    });
+    // signInWithCredentials(user).then((resp: Response) => {
+    //   console.log(resp);
+    //   if (resp.status === 200) {
+    //     redirect("/");
+    //   } else {
+    //     setValidating(false);
+    //     router.replace("/login?error=true");
+    //   }
+    // });
   };
   //#endregion
 
