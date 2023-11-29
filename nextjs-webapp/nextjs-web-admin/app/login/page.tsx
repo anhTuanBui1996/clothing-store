@@ -97,24 +97,14 @@ export default function SignIn() {
         return;
       }
       setValidating(true);
-      fetch(`${process.env.AUTH_SERVICE_ORIGIN}/auth/login`, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          Accept: "*/*",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          username: user.username,
-          password: user.password,
-        }),
-      })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((ex) => console.log(ex));
+      const resp = await signInWithCredentials(user);
+      if (resp?.status === 200) {
+        setValidating(false);
+        router.replace("/");
+      } else {
+        setValidating(false);
+        handleOpenSnackbar("error", "Login failed, please try again!");
+      }
     }
   };
 
@@ -126,15 +116,14 @@ export default function SignIn() {
       return;
     }
     setValidating(true);
-    // signInWithCredentials(user).then((resp: Response) => {
-    //   console.log(resp);
-    //   if (resp.status === 200) {
-    //     redirect("/");
-    //   } else {
-    //     setValidating(false);
-    //     router.replace("/login?error=true");
-    //   }
-    // });
+    const resp = await signInWithCredentials(user);
+    if (resp?.status === 200) {
+      setValidating(false);
+      // router.replace("/");
+    } else {
+      setValidating(false);
+      handleOpenSnackbar("error", "Login failed, please try again!");
+    }
   };
   //#endregion
 
@@ -142,11 +131,17 @@ export default function SignIn() {
   useEffect(() => {
     if (isError) {
       handleOpenSnackbar("error", "Some errors occur, please try again!");
+      if (isValidating) {
+        setValidating(false);
+      }
     }
     if (isSignOut) {
       handleOpenSnackbar("info", "Sign out!");
+      if (isValidating) {
+        setValidating(false);
+      }
     }
-  }, [isError, isSignOut]);
+  }, [isError, isSignOut, isValidating]);
 
   return (
     <>
