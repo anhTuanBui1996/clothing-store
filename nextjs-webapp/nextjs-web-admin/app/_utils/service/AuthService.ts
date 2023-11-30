@@ -4,9 +4,14 @@ export interface AuthInfo {
 }
 
 export async function getAuthentication() {
+  const jwtToken = localStorage.getItem("jwtToken");
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwtToken}`)
   const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin`, {
     method: "GET",
     mode: "cors",
+    credentials: "include",
+    headers,
   });
   return result;
 }
@@ -30,14 +35,14 @@ export async function signInWithCredentials(loginInfo: LoginInfo) {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Credentials": "true",
-          "Access-Control-Allow-Methods": "*"
+          "Access-Control-Allow-Methods": "*",
         },
         body: JSON.stringify(loginInfo),
       }
     );
     return result;
   } catch (ex) {
-    console.log(ex);
+    console.error(ex);
   }
 }
 

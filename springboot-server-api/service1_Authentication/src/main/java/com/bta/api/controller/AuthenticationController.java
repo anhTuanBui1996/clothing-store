@@ -1,10 +1,13 @@
 package com.bta.api.controller;
 
+import com.bta.api.entities.owner.Users;
 import com.bta.api.models.dto.ChangeUserPasswordDto;
 import com.bta.api.models.dto.LoginUserDto;
 import com.bta.api.models.dto.RegisterUserDto;
 import com.bta.api.models.dto.UsersDto;
+import com.bta.api.models.implement.UserDetailsImpl;
 import com.bta.api.service.CredentialsService;
+import com.bta.api.service.JwtTokenService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,12 +20,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,6 +34,9 @@ public class AuthenticationController {
 
     @Autowired
     CredentialsService credentialsService;
+
+    @Autowired
+    JwtTokenService jwtTokenService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -47,12 +54,15 @@ public class AuthenticationController {
             SecurityContextHolder.setContext(context);
             securityContextRepository.saveContext(context, request, response);
             if (authentication.isAuthenticated()) {
-                return ResponseEntity.status(HttpStatus.OK).build();
+                String jwtToken = jwtTokenService.generateToken(authentication.getName());
+                return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

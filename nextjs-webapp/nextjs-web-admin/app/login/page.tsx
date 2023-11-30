@@ -18,7 +18,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter, useSearchParams, redirect } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   signInWithCredentials,
   LoginInfo,
@@ -32,7 +32,6 @@ const philosopher = Philosopher({ subsets: ["latin"], weight: "700" });
 export default function SignIn() {
   const searchs = useSearchParams();
   const router = useRouter();
-
   const isError = searchs.get("error");
   const isSignOut = searchs.get("signout");
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
@@ -100,7 +99,8 @@ export default function SignIn() {
       const resp = await signInWithCredentials(user);
       if (resp?.status === 200) {
         setValidating(false);
-        router.replace("/");
+        const returnPage = searchs.get("returnPage");
+        router.replace(returnPage || "/");
       } else {
         setValidating(false);
         handleOpenSnackbar("error", "Login failed, please try again!");
@@ -117,9 +117,10 @@ export default function SignIn() {
     }
     setValidating(true);
     const resp = await signInWithCredentials(user);
-    if (resp?.status === 200) {
+    if (resp?.ok && resp?.status === 200) {
+      localStorage.setItem("jwtToken", await resp.text());
       setValidating(false);
-      // router.replace("/");
+      router.replace("/");
     } else {
       setValidating(false);
       handleOpenSnackbar("error", "Login failed, please try again!");

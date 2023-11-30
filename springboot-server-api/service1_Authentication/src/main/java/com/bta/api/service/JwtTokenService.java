@@ -1,38 +1,46 @@
-package com.bta.api.provider;
+package com.bta.api.service;
 
-import com.bta.api.entities.owner.Users;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 import java.util.Date;
-import java.util.UUID;
+
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 @Component
 @Slf4j
-public class JwtTokenProvider {
+public class JwtTokenService {
 
-    private final String JWT_SECRET = "btaApiServer";
+    @Value("${jwt.secret}")
+    String JWT_SECRET;
 
-    public String generateToken(Users users) {
+    @Value("${jwt.expiration}")
+    String JWT_EXPIRATION;
+
+    public String generateToken(String username) {
         Date now = new Date();
-        long JWT_EXPIRATION = 604800000L;
-        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+        Date expiryDate = new Date(now.getTime() + Long.parseLong(JWT_EXPIRATION));
         return Jwts.builder()
-                .setSubject(users.getId().toString())
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 
-    public UUID getUserIdFromJWT(String token) {
+    public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(JWT_SECRET)
                 .parseClaimsJws(token)
                 .getBody();
 
-        return UUID.fromString(claims.getSubject());
+        return claims.getSubject();
     }
 
     public boolean validateToken(String authToken) {

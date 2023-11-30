@@ -37,4 +37,8 @@ public class OAuth2UserImpl implements OAuth2User {
         return oAuth2User.getAttribute("email");
     }
 
+    public String getPhoneNumber() {
+        return oAuth2User.getAttribute("phoneNumber");
+    }
+
 }

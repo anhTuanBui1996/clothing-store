@@ -1,5 +1,6 @@
 package com.bta.api.provider;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -9,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class InMemoryProvider implements AuthenticationProvider {
 
     InMemoryUserDetailsManager memoryUserDetailsManager() {
@@ -44,13 +47,17 @@ public class InMemoryProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        UserDetails user = memoryUserDetailsManager().loadUserByUsername(username);
-        if (user != null) {
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return createSuccessfulAuthentication(authentication, user);
+        try {
+            UserDetails user = memoryUserDetailsManager().loadUserByUsername(username);
+            if (user != null) {
+                if (passwordEncoder.matches(password, user.getPassword())) {
+                    return createSuccessfulAuthentication(authentication, user);
+                }
             }
+        } catch (UsernameNotFoundException ex) {
+            log.info("User not found, go to next authentication: name=" + username);
         }
-        throw new AuthenticationCredentialsNotFoundException("Incorrect credentials with name=" + username);
+        return new UsernamePasswordAuthenticationToken(username, null);
     }
 
     private Authentication createSuccessfulAuthentication(final Authentication authentication, final UserDetails user) {

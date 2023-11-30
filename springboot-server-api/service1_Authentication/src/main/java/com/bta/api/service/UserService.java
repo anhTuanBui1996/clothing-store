@@ -1,35 +1,19 @@
 package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entities.owner.Roles;
 import com.bta.api.entities.owner.Users;
-import com.bta.api.models.dto.ChangeUserPasswordDto;
-import com.bta.api.models.dto.RegisterUserDto;
 import com.bta.api.models.dto.UsersDto;
 import com.bta.api.repository.UserRepository;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.random.RandomGenerator;
 
 @Service
-public class UserService implements CRUDService<Users, UsersDto>, UserDetailsService {
+public class UserService implements CRUDService<Users, UsersDto> {
 
     @Autowired
     UserRepository usersRepository;
@@ -106,9 +90,4 @@ public class UserService implements CRUDService<Users, UsersDto>, UserDetailsSer
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: username=" + username));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usersRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found: username=" + username));
-    }
 }

@@ -33,7 +33,7 @@ public class CredentialsProvider implements AuthenticationProvider {
         Users foundUser = userRepository.findByUsername(name).orElseGet(() ->
                 userRepository.findByEmail(name).orElseGet(() ->
                         userRepository.findByPhoneNumber(name).orElseThrow(() ->
-                                new UsernameNotFoundException("User not found by login"))));
+                                new UsernameNotFoundException("User not found by login: name=" + name))));
         if (foundUser != null) {
             if (passwordEncoder.matches(credential, foundUser.getPassword())) {
                 return createSuccessfulAuthentication(authentication, new UserDetailsImpl(foundUser));
