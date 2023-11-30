@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -27,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.random.RandomGenerator;
 
 @Service
-public class UserService implements CRUDService<Users, UsersDto> {
+public class UserService implements CRUDService<Users, UsersDto>, UserDetailsService {
 
     @Autowired
     UserRepository usersRepository;
@@ -104,4 +106,9 @@ public class UserService implements CRUDService<Users, UsersDto> {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: username=" + username));
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return usersRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found: username=" + username));
+    }
 }

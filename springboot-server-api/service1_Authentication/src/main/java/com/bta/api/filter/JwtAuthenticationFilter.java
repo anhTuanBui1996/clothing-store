@@ -25,10 +25,10 @@ import java.util.UUID;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
-    private JwtTokenProvider tokenProvider;
+    JwtTokenProvider tokenProvider;
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -44,7 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
@@ -57,7 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        // Kiểm tra xem header Authorization có chứa thông tin jwt không
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

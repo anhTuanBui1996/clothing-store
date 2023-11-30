@@ -40,19 +40,23 @@ public class AuthenticationController {
     public ResponseEntity<?> loginWithCredentials(@RequestBody LoginUserDto dto, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
                 dto.getUsername(), dto.getPassword());
-        Authentication authentication = authenticationManager.authenticate(token);
         try {
+            Authentication authentication = authenticationManager.authenticate(token);
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(authentication);
             SecurityContextHolder.setContext(context);
             securityContextRepository.saveContext(context, request, response);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            if (authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 
-//    For client user
+    //    For client user
     @PostMapping("/register")
     public ResponseEntity<UsersDto> registerNewUser(@RequestBody RegisterUserDto dto) {
         try {

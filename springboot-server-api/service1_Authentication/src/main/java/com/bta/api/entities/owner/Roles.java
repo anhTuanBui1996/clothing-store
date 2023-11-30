@@ -7,6 +7,7 @@ import com.bta.api.entities.dependencies.Permissions;
 import com.bta.api.models.dto.RolesDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Data
@@ -15,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"roleName"}))
-public class Roles extends BaseEntity<RolesDto> {
+public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
 
     private String roleCode;
     private String roleName;
@@ -35,4 +36,8 @@ public class Roles extends BaseEntity<RolesDto> {
         return rolesDto;
     }
 
+    @Override
+    public String getAuthority() {
+        return roleCode;
+    }
 }

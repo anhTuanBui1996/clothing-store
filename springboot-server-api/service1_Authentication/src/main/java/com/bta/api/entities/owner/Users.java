@@ -6,6 +6,7 @@ import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class Users extends BaseEntity<UsersDto> {
     private String phoneNumber;
 
     @ManyToMany
-    @JoinTable(name = "authorities",
+    @JoinTable(name = "Authorities",
             joinColumns = @JoinColumn(name = "user"),
             inverseJoinColumns = @JoinColumn(name = "role"))
     private Set<Roles> authorities;
@@ -66,4 +67,10 @@ public class Users extends BaseEntity<UsersDto> {
                         .orElseThrow(() -> new EntityNotFoundException("Role not found: roleCode=" + s)))
                 .collect(Collectors.toSet());
     }
+
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
+
 }
