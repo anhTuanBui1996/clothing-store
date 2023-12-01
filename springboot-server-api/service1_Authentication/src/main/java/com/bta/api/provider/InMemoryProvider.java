@@ -2,6 +2,7 @@ package com.bta.api.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,7 @@ import java.util.Set;
 @Slf4j
 public class InMemoryProvider implements AuthenticationProvider {
 
+    @Bean
     InMemoryUserDetailsManager memoryUserDetailsManager() {
         Set<UserDetails> defaultUsers = new HashSet<>();
         defaultUsers.add(User.builder()

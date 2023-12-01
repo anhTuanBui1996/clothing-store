@@ -17,21 +17,23 @@ import {
   MouseEvent,
   useEffect,
   useState,
+  useContext,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  signInWithCredentials,
-  LoginInfo,
-} from "@/app/_utils/service/AuthService";
+import useAuth, { LoginInfo } from "@/app/_utils/service/AuthService";
 import { Philosopher } from "next/font/google";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { SessionContext } from "../_components/layout/SessionContext/SessionContext";
 
 const philosopher = Philosopher({ subsets: ["latin"], weight: "700" });
 
 export default function SignIn() {
   const searchs = useSearchParams();
   const router = useRouter();
+  const { signInWithCredentials } = useAuth();
+  const { setJwtToken } = useContext(SessionContext);
+
   const isError = searchs.get("error");
   const isSignOut = searchs.get("signout");
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
@@ -118,9 +120,10 @@ export default function SignIn() {
     setValidating(true);
     const resp = await signInWithCredentials(user);
     if (resp?.ok && resp?.status === 200) {
-      localStorage.setItem("jwtToken", await resp.text());
+      const token = await resp.text();
+      localStorage.setItem("jwtToken", token);
       setValidating(false);
-      router.replace("/");
+      router.push(`/?token=${token}`);
     } else {
       setValidating(false);
       handleOpenSnackbar("error", "Login failed, please try again!");

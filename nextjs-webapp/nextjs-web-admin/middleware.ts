@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAuthentication } from "./app/_utils/service/AuthService";
+import useAuth from "./app/_utils/service/AuthService";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   try {
-    const result = await getAuthentication();
-    if (result.ok && result.status === 200) {
+    const { getAuthentication } = useAuth();
+    const token = request.nextUrl.searchParams.get("token");
+    const result = await getAuthentication(token || "");
+    if (result?.ok && result?.status === 200) {
+      request.nextUrl.searchParams.delete("token");
       return NextResponse.next();
     } else {
       const loginWithReturnUrl = new URL("/login", request.url);

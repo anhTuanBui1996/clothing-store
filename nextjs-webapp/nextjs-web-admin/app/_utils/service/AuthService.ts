@@ -1,19 +1,23 @@
-export interface AuthInfo {
-  token: string;
-  session: string;
-}
-
-export async function getAuthentication() {
-  const jwtToken = localStorage.getItem("jwtToken");
-  const headers = new Headers();
-  headers.append("Authorization", `Bearer ${jwtToken}`)
-  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin`, {
-    method: "GET",
-    mode: "cors",
-    credentials: "include",
-    headers,
-  });
-  return result;
+async function getAuthentication(token: string) {
+  try {
+    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin`, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+      headers: {
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "*",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return result;
+  } catch (ex) {
+    console.error(ex);
+  }
 }
 
 export interface LoginInfo {
@@ -21,7 +25,7 @@ export interface LoginInfo {
   password: string;
 }
 
-export async function signInWithCredentials(loginInfo: LoginInfo) {
+async function signInWithCredentials(loginInfo: LoginInfo) {
   try {
     const result = await fetch(
       `${process.env.AUTH_SERVICE_ORIGIN}/auth/login`,
@@ -46,11 +50,19 @@ export async function signInWithCredentials(loginInfo: LoginInfo) {
   }
 }
 
-export async function signOut() {
+async function signOut() {
   const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/logout`, {
     method: "GET",
     cache: "default",
     mode: "no-cors",
   });
   return result;
+}
+
+export default function useAuth() {
+  return {
+    getAuthentication,
+    signInWithCredentials,
+    signOut,
+  };
 }

@@ -11,9 +11,10 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "@/app/_utils/service/AuthService";
+import useAuth from "@/app/_utils/service/AuthService";
 
 export default function UserInfoDropdown() {
+  const { signOut } = useAuth();
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -26,6 +27,7 @@ export default function UserInfoDropdown() {
   const handleLogout = async () => {
     const res = await signOut();
     if (res.ok && res.status === 200) {
+      localStorage.removeItem("jwtToken");
       router.replace("/login?signout=true");
     }
   };
