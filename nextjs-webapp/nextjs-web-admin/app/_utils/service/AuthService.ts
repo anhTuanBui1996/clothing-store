@@ -8,9 +8,8 @@ async function getAuthentication(token: string) {
         Accept: "*/*",
         "Accept-Encoding": "gzip, deflate, br",
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "*",
         Authorization: `Bearer ${token}`,
       },
     });
@@ -37,7 +36,6 @@ async function signInWithCredentials(loginInfo: LoginInfo) {
           Accept: "*/*",
           "Accept-Encoding": "gzip, deflate, br",
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Credentials": "true",
           "Access-Control-Allow-Methods": "*",
         },
@@ -51,12 +49,17 @@ async function signInWithCredentials(loginInfo: LoginInfo) {
 }
 
 async function signOut() {
-  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/logout`, {
-    method: "GET",
-    cache: "default",
-    mode: "no-cors",
-  });
-  return result;
+  try {
+    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/auth/logout`, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+      redirect: "manual",
+    });
+    return result;
+  } catch (ex) {
+    console.error(ex);
+  }
 }
 
 export default function useAuth() {

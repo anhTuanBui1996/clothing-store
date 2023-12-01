@@ -15,6 +15,7 @@ import { CssBaseline, Typography } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { unprotectedRoutes } from "@/app/_utils/constants";
+import PageLoadingProvider from "../PageLoadingProvider/PageLoadingProvider";
 
 const drawerWidth = 240;
 

@@ -9,9 +9,11 @@ import com.bta.api.models.implement.UserDetailsImpl;
 import com.bta.api.service.CredentialsService;
 import com.bta.api.service.JwtTokenService;
 import jakarta.persistence.EntityExistsException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,12 +23,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,6 +42,7 @@ public class AuthenticationController {
     AuthenticationManager authenticationManager;
 
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
+    private final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @PostMapping("/login")
     public ResponseEntity<?> loginWithCredentials(@RequestBody LoginUserDto dto, HttpServletRequest request, HttpServletResponse response) {
@@ -55,7 +56,7 @@ public class AuthenticationController {
             securityContextRepository.saveContext(context, request, response);
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtTokenService.generateToken(authentication.getName());
-                return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+                return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, jwtToken).body(jwtToken);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -64,6 +65,12 @@ public class AuthenticationController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+        logoutHandler.logout(request, response, authentication);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //    For client user

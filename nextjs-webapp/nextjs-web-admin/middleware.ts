@@ -17,7 +17,6 @@ export async function middleware(request: NextRequest) {
         "returnPage",
         request.nextUrl.pathname
       );
-      loginWithReturnUrl.searchParams.set("signout", "true");
       return NextResponse.redirect(loginWithReturnUrl);
     }
   } catch (err) {
@@ -26,7 +25,6 @@ export async function middleware(request: NextRequest) {
       "returnPage",
       request.nextUrl.pathname
     );
-    loginWithReturnUrlErrored.searchParams.set("error", "true");
     return NextResponse.redirect(loginWithReturnUrlErrored);
   }
 }

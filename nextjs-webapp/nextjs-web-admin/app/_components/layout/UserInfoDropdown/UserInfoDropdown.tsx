@@ -26,9 +26,9 @@ export default function UserInfoDropdown() {
   const handleCloseMenu = () => setAnchorEl(null);
   const handleLogout = async () => {
     const res = await signOut();
-    if (res.ok && res.status === 200) {
+    if (res?.ok && res?.status === 200) {
       localStorage.removeItem("jwtToken");
-      router.replace("/login?signout=true");
+      router.replace("/login?signout");
     }
   };
 
@@ -72,7 +72,7 @@ export default function UserInfoDropdown() {
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText>Log Out</ListItemText>
+          <ListItemText>Sign Out</ListItemText>
         </MenuItem>
       </Menu>
     </>
