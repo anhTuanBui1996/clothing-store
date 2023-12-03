@@ -6,11 +6,26 @@ import useAuth from "./app/_utils/service/AuthService";
 export async function middleware(request: NextRequest) {
   try {
     const { getAuthentication } = useAuth();
-    const token = request.nextUrl.searchParams.get("token");
-    const result = await getAuthentication(token || "");
+    const url = request.nextUrl;
+    const tokenFromSearchParams = url.searchParams.get("token");
+    const tokenFromCookies = request.cookies.get("jwt")?.value;
+    const result = await getAuthentication(
+      tokenFromSearchParams || tokenFromCookies || ""
+    );
     if (result?.ok && result?.status === 200) {
-      request.nextUrl.searchParams.delete("token");
-      return NextResponse.next();
+      if (url.searchParams.has("token")) {
+        url.searchParams.delete("token");
+      }
+      if (tokenFromSearchParams) {
+        const response = NextResponse.redirect(url);
+        // if (!response.cookies.has("jwt")) {
+        //   response.cookies.set("jwt", tokenFromSearchParams);
+        // }
+        return response;
+      } else {
+        const response = NextResponse.next();
+        return response;
+      }
     } else {
       const loginWithReturnUrl = new URL("/login", request.url);
       loginWithReturnUrl.searchParams.set(

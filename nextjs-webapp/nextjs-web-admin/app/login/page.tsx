@@ -25,9 +25,12 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/PageLoadingProvider";
 import { NextFontContext } from "../_components/layout/NextFontProvider/NextFontProvider";
+import { CookiesContext } from "../_components/layout/CookiesProvider/CookiesProvider";
 
 async function checkTokenValid() {
-  const jwtToken = localStorage.getItem("jwtToken");
+  const headers = import("next/headers");
+  const cookies = (await headers).cookies;
+  const jwtToken = cookies().get("jwt")?.value;
   const { getAuthentication } = useAuth();
   const res = await getAuthentication(jwtToken || "");
   if (!res?.ok) {
@@ -44,13 +47,18 @@ export default function Login() {
   const { signInWithCredentials } = useAuth();
   const { philosopher } = useContext(NextFontContext);
   const { setLoading } = useContext(PageLoadingContext);
+  const { cookies } = useContext(CookiesContext);
 
   useEffect(() => {
     checkTokenValid()
       .then((status) => {
         if (status === 200) {
-          const token = localStorage.getItem("jwtToken");
-          router.push(`/?token=${token}`);
+          if (cookies) {
+            if (cookies().has("jwt")) {
+              const token = cookies().get("jwt");
+              router.replace(`/?token=${token}`);
+            }
+          }
         }
       })
       .catch(() => {
@@ -132,15 +140,14 @@ export default function Login() {
       const resp = await signInWithCredentials(user);
       if (resp?.status === 200) {
         const token = await resp.text();
-        localStorage.setItem("jwtToken", token);
         setValidating(false);
         const returnPage = searchs.get("returnPage");
-        router.push(
+        router.replace(
           `${
             pathname === "/login" ||
             returnPage === "/login" ||
             returnPage === null
-              ? "/"
+              ? "/?token=${token}"
               : returnPage
           }?token=${token}`
         );
@@ -162,15 +169,14 @@ export default function Login() {
     signInWithCredentials(user).then(async (resp) => {
       if (resp?.ok && resp?.status === 200) {
         const token = await resp.text();
-        localStorage.setItem("jwtToken", token);
         setValidating(false);
         const returnPage = searchs.get("returnPage");
-        router.push(
+        router.replace(
           `${
             pathname === "/login" ||
             returnPage === "/login" ||
             returnPage === null
-              ? "/"
+              ? `/?token=${token}`
               : returnPage
           }`
         );

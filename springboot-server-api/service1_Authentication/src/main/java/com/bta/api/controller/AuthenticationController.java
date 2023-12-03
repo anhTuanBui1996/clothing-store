@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,17 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.Date;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
+
+    @Value("${jwt.expiration}")
+    String JWT_EXPIRATION;
 
     @Autowired
     CredentialsService credentialsService;
@@ -56,7 +65,12 @@ public class AuthenticationController {
             securityContextRepository.saveContext(context, request, response);
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtTokenService.generateToken(authentication.getName());
-                return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, jwtToken).body(jwtToken);
+                Cookie jwtCookie = new Cookie("jwt", URLEncoder.encode(jwtToken, StandardCharsets.UTF_8));
+                jwtCookie.setMaxAge((int) (new Date().getTime() / 1000) + Integer.parseInt(JWT_EXPIRATION));
+                jwtCookie.setSecure(true);
+                jwtCookie.setHttpOnly(true);
+                response.addCookie(jwtCookie);
+                return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }

@@ -55,6 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                         inMemoryUser, inMemoryUser.getPassword(), inMemoryUser.getAuthorities());
                         authentication.setDetails(inMemoryUser);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                        filterChain.doFilter(request, response);
+                        return;
                     }
                 } catch (UsernameNotFoundException ex) {
                     log.error("User not found in memory on JWT filter: username=" + username);
@@ -68,17 +71,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                         databaseUser, databaseUser.getPassword(), databaseUser.getAuthorities());
                         authentication.setDetails(databaseUser);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                        filterChain.doFilter(request, response);
+                        return;
                     }
                 } catch (UsernameNotFoundException ex) {
                     log.error("User not found in database on JWT filter: username=" + username);
                 }
-
-                response.addHeader(HttpHeaders.AUTHORIZATION, jwt);
             }
         } catch (Exception ex) {
             log.error("Failed on set user authentication", ex);
         }
-
 
         filterChain.doFilter(request, response);
     }

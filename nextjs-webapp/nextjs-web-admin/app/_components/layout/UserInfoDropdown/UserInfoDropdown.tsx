@@ -27,7 +27,6 @@ export default function UserInfoDropdown() {
   const handleLogout = async () => {
     const res = await signOut();
     if (res?.ok && res?.status === 200) {
-      localStorage.removeItem("jwtToken");
       router.replace("/login?signout");
     }
   };

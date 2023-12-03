@@ -28,13 +28,13 @@ public class InMemoryProvider implements AuthenticationProvider {
         Set<UserDetails> defaultUsers = new HashSet<>();
         defaultUsers.add(User.builder()
                 .username("admin")
-                .password("$2a$10$rkpRCbASS3kF0pHkR76iked5svu2EsXpWy8G7y/Rps9bE09vG3Cvq")
+                .password("$2a$10$rkpRCbASS3kF0pHkR76iked5svu2EsXpWy8G7y/Rps9bE09vG3Cvq") //"password"
                 .roles("ADMIN", "CLIENT")
                 .build()
         );
         defaultUsers.add(User.builder()
                 .username("client")
-                .password("$2a$10$rkpRCbASS3kF0pHkR76iked5svu2EsXpWy8G7y/Rps9bE09vG3Cvq")
+                .password("$2a$10$rkpRCbASS3kF0pHkR76iked5svu2EsXpWy8G7y/Rps9bE09vG3Cvq") //"password"
                 .roles("CLIENT")
                 .build()
         );

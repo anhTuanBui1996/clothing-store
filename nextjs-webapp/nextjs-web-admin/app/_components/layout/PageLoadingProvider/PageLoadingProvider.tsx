@@ -1,6 +1,10 @@
 "use client";
-import { Backdrop, CircularProgress } from "@mui/material";
 import React from "react";
+import dynamic from "next/dynamic";
+const Backdrop = dynamic(() => import("@mui/material/Backdrop"));
+const CircularProgress = dynamic(
+  () => import("@mui/material/CircularProgress")
+);
 
 export const PageLoadingContext = React.createContext({
   isLoading: true,
@@ -16,7 +20,7 @@ const PageLoadingProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <PageLoadingContext.Provider value={value}>
       {children}
-      <Backdrop component={"div"} open={isLoading} sx={{ zIndex: 1202 }}>
+      <Backdrop open={isLoading} sx={{ zIndex: 1202 }}>
         <CircularProgress />
       </Backdrop>
     </PageLoadingContext.Provider>

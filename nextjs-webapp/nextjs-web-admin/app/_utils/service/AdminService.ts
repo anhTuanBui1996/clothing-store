@@ -1,31 +1,35 @@
 import BaseReponse from "../../_dataModels/core/BaseResponse";
 
-export async function getAllMenu(): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {
-    method: "GET",
-    mode: "no-cors",
-    cache: "no-store",
-  });
-  return await result.json();
+export async function getAllMenu(): Promise<any> {
+  try {
+    const result = await fetch(
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      {
+        method: "GET",
+        mode: "cors",
+      }
+    );
+    return await result.json();
+  } catch (ex) {
+    console.error(ex);
+  }
 }
 
 export async function getMenuById(id: string): Promise<BaseReponse> {
   const result = await fetch(
-    `${process.env.USER_SERVICE_ORIGIN}/admin/menu/{${id}}`,
+    `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/{${id}}`,
     {
       method: "GET",
-      mode: "no-cors",
-      cache: "no-store",
+      mode: "cors",
     }
   );
   return await result.json();
 }
 
 export async function createNewMenu(menu: any): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {
+  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`, {
     method: "PUT",
-    mode: "no-cors",
-    cache: "no-store",
+    mode: "cors",
     body: JSON.stringify(menu),
     headers: {
       "Content-Type": "application/json",
@@ -37,10 +41,9 @@ export async function createNewMenu(menu: any): Promise<BaseReponse> {
 }
 
 export async function updateExistingMenu(menu: any): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/admin/menu/`, {
+  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`, {
     method: "PUT",
-    mode: "no-cors",
-    cache: "no-store",
+    mode: "cors",
     body: JSON.stringify(menu),
     headers: {
       "Content-Type": "application/json",
@@ -52,10 +55,9 @@ export async function updateExistingMenu(menu: any): Promise<BaseReponse> {
 }
 
 export async function updateAllMenus(menus: any[]): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
+  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/menu/`, {
     method: "PUT",
-    mode: "no-cors",
-    cache: "no-store",
+    mode: "cors",
     body: JSON.stringify(menus),
     headers: {
       "Content-Type": "application/json",
@@ -67,19 +69,17 @@ export async function updateAllMenus(menus: any[]): Promise<BaseReponse> {
 }
 
 export async function deleteExistingMenu(id: string): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/${id}`, {
+  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/menu/${id}`, {
     method: "DELETE",
-    mode: "no-cors",
-    cache: "no-store",
+    mode: "cors",
   });
   return await result.json();
 }
 
 export async function deleteAllMenus(ids: string[]): Promise<BaseReponse> {
-  const result = await fetch(`${process.env.USER_SERVICE_ORIGIN}/menu/`, {
+  const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/menu/`, {
     method: "DELETE",
-    mode: "no-cors",
-    cache: "no-store",
+    mode: "cors",
     body: JSON.stringify(ids),
     headers: {
       "Content-Type": "application/json",
