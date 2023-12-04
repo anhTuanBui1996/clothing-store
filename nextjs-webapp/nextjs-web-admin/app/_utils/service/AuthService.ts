@@ -50,12 +50,15 @@ async function signInWithCredentials(loginInfo: LoginInfo) {
 
 async function signOut() {
   try {
-    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/auth/logout`, {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-      redirect: "manual",
-    });
+    const result = await fetch(
+      `${process.env.AUTH_SERVICE_ORIGIN}/auth/logout`,
+      {
+        method: "GET",
+        mode: "cors",
+        credentials: "include",
+        redirect: "manual",
+      }
+    );
     return result;
   } catch (ex) {
     console.error(ex);

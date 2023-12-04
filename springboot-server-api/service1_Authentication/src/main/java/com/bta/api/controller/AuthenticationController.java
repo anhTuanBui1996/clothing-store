@@ -65,11 +65,6 @@ public class AuthenticationController {
             securityContextRepository.saveContext(context, request, response);
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtTokenService.generateToken(authentication.getName());
-                Cookie jwtCookie = new Cookie("jwt", URLEncoder.encode(jwtToken, StandardCharsets.UTF_8));
-                jwtCookie.setMaxAge((int) (new Date().getTime() / 1000) + Integer.parseInt(JWT_EXPIRATION));
-                jwtCookie.setSecure(true);
-                jwtCookie.setHttpOnly(true);
-                response.addCookie(jwtCookie);
                 return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

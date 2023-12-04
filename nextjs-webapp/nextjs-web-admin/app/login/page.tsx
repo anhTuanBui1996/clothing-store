@@ -26,18 +26,7 @@ import { FaFacebook } from "react-icons/fa";
 import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/PageLoadingProvider";
 import { NextFontContext } from "../_components/layout/NextFontProvider/NextFontProvider";
 import { CookiesContext } from "../_components/layout/CookiesProvider/CookiesProvider";
-
-async function checkTokenValid() {
-  const headers = import("next/headers");
-  const cookies = (await headers).cookies;
-  const jwtToken = cookies().get("jwt")?.value;
-  const { getAuthentication } = useAuth();
-  const res = await getAuthentication(jwtToken || "");
-  if (!res?.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.status;
-}
+import { checkTokenValid } from "./action";
 
 export default function Login() {
   const [initialLoaded, setInitialLoaded] = useState(false);
@@ -53,15 +42,17 @@ export default function Login() {
     checkTokenValid()
       .then((status) => {
         if (status === 200) {
+          console.log(cookies)
           if (cookies) {
-            if (cookies().has("jwt")) {
-              const token = cookies().get("jwt");
+            if (cookies.has("jwt")) {
+              const token = cookies.get("jwt");
               router.replace(`/?token=${token}`);
             }
           }
         }
       })
-      .catch(() => {
+      .catch((ex) => {
+        console.log(ex);
         const isSignOut = searchs.has("signout");
         if (!isSignOut) {
           handleOpenSnackbar("error", "Error orcured, please login again!");

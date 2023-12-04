@@ -27,12 +27,16 @@ export async function middleware(request: NextRequest) {
         return response;
       }
     } else {
-      const loginWithReturnUrl = new URL("/login", request.url);
+      const loginWithReturnUrl = new URL("/login", url);
       loginWithReturnUrl.searchParams.set(
         "returnPage",
         request.nextUrl.pathname
       );
-      return NextResponse.redirect(loginWithReturnUrl);
+      const response = NextResponse.redirect(loginWithReturnUrl);
+      if (response.cookies.has("jwt")) {
+        response.cookies.delete("jwt");
+      }
+      return response;
     }
   } catch (err) {
     const loginWithReturnUrlErrored = new URL("/login", request.url);

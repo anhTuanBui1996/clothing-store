@@ -15,7 +15,7 @@ import { CssBaseline, Typography } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { unprotectedRoutes } from "@/app/_utils/constants";
-import PageLoadingProvider from "../PageLoadingProvider/PageLoadingProvider";
+import { CookiesContext } from "../CookiesProvider/CookiesProvider";
 
 const drawerWidth = 240;
 
@@ -67,8 +67,10 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function RootLayoutMenu({
+  cookies,
   children,
 }: {
+  cookies: any;
   children: React.ReactNode;
 }) {
   const theme = useTheme();
@@ -94,53 +96,63 @@ export default function RootLayoutMenu({
     setOpen(false);
   };
 
-  return isInUnprotectedRoutes ? (
-    <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
-      {children}
-    </Box>
-  ) : (
-    <>
-      <CssBaseline />
-      <TopHeaderBar isDrawerOpened={open} handleDrawerOpen={handleDrawerOpen} />
-      <Drawer
-        className="animate__animated animate__slideInLeft"
-        variant="permanent"
-        elevation={20}
-        open={open}
-        sx={{
-          flexGrow: 0,
-          boxShadow:
-            "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
-        }}
-      >
-        <DrawerHeader>
-          <Link href={"/"} style={{ display: "flex", alignItems: "center" }}>
-            <Image
-              alt="logo"
-              src={`/images/retina-logo1.png`}
-              width={250}
-              height={256}
-              style={{ width: "40px", height: "40px" }}
-            />{" "}
-            <Typography variant="h6" noWrap component="div" marginLeft={2}>
-              BTAWebApp
-            </Typography>
-          </Link>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <Routes isDrawerOpened={open} />
-      </Drawer>
-      <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
-        <DrawerHeader />
-        {children}
-      </Box>
-    </>
+  return (
+    <CookiesContext.Provider value={{ cookies }}>
+      {isInUnprotectedRoutes ? (
+        <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
+          {children}
+        </Box>
+      ) : (
+        <>
+          <CssBaseline />
+          <TopHeaderBar
+            isDrawerOpened={open}
+            handleDrawerOpen={handleDrawerOpen}
+          />
+          <Drawer
+            className="animate__animated animate__slideInLeft"
+            variant="permanent"
+            elevation={20}
+            open={open}
+            sx={{
+              flexGrow: 0,
+              boxShadow:
+                "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
+            }}
+          >
+            <DrawerHeader>
+              <Link
+                href={"/"}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Image
+                  alt="logo"
+                  src={`/images/retina-logo1.png`}
+                  width={250}
+                  height={256}
+                  style={{ width: "40px", height: "40px" }}
+                />{" "}
+                <Typography variant="h6" noWrap component="div" marginLeft={2}>
+                  BTAWebApp
+                </Typography>
+              </Link>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <Routes isDrawerOpened={open} />
+          </Drawer>
+          <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
+            <DrawerHeader />
+            {children}
+          </Box>
+        </>
+      )}
+    </CookiesContext.Provider>
   );
 }

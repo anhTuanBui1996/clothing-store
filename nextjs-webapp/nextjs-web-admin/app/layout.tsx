@@ -6,6 +6,7 @@ import "./globals.css";
 import { Box } from "@mui/material";
 import CustomThemeProvider from "@/app/_components/layout/CustomThemeProvider/CustomThemeProvider";
 import NextFontProvider from "./_components/layout/NextFontProvider/NextFontProvider";
+import { cookies } from "next/headers";
 const PageLoadingProvider = dynamic(
   () => import("./_components/layout/PageLoadingProvider/PageLoadingProvider")
 );
@@ -34,7 +35,7 @@ export default function RootLayout({
                   background: "inherit",
                 }}
               >
-                <RootLayoutMenu>{children}</RootLayoutMenu>
+                <RootLayoutMenu cookies={cookies()}>{children}</RootLayoutMenu>
               </Box>
             </PageLoadingProvider>
           </NextFontProvider>
