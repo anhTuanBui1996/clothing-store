@@ -148,7 +148,7 @@ export default function Login() {
             returnPage === "/login" ||
             returnPage === null
               ? "/?token=${token}"
-              : returnPage
+              : `${returnPage}?token=${token}`
           }?token=${token}`
         );
       } else {
@@ -177,7 +177,7 @@ export default function Login() {
             returnPage === "/login" ||
             returnPage === null
               ? `/?token=${token}`
-              : returnPage
+              : `${returnPage}?token=${token}`
           }`
         );
       } else {

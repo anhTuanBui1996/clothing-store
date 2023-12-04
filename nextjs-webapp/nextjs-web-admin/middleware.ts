@@ -18,9 +18,9 @@ export async function middleware(request: NextRequest) {
       }
       if (tokenFromSearchParams) {
         const response = NextResponse.redirect(url);
-        // if (!response.cookies.has("jwt")) {
-        //   response.cookies.set("jwt", tokenFromSearchParams);
-        // }
+        if (!response.cookies.has("jwt")) {
+          response.cookies.set("jwt", tokenFromSearchParams);
+        }
         return response;
       } else {
         const response = NextResponse.next();
