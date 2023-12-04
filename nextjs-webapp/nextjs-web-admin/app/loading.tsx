@@ -1,14 +1,14 @@
 import React from "react";
 import dynamic from "next/dynamic";
-const Box = dynamic(() => import("@mui/material/Box"));
+const Backdrop = dynamic(() => import("@mui/material/Backdrop"));
 const CircularProgress = dynamic(
   () => import("@mui/material/CircularProgress")
 );
 
 export default function Loading() {
   return (
-    <Box width={"100vw"} height={"100vh"}>
+    <Backdrop open>
       <CircularProgress sx={{ margin: "auto" }} />
-    </Box>
+    </Backdrop>
   );
 }

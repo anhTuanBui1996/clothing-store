@@ -97,7 +97,7 @@ export default function RootLayoutMenu({
   };
 
   return (
-    <CookiesContext.Provider value={{ cookies }}>
+    <CookiesContext.Provider value={cookies}>
       {isInUnprotectedRoutes ? (
         <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
           {children}

@@ -27,7 +27,7 @@ export default function UserInfoDropdown() {
   const handleLogout = async () => {
     const res = await signOut();
     if (res?.ok && res?.status === 200) {
-      router.replace("/login?signout");
+      router.replace("/login?signout", { scroll: false });
     }
   };
 

@@ -1,18 +1,20 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import DataTableEditor from "@/app/_components/common/DataTableEditor/DataTableEditor";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { gridCols } from "@/app/_dataModels/entity/userService/Menu";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import useAdminService from "@/app/_utils/service/AdminService";
-import { getCookie } from "cookies-next";
+import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
 
 export default function Page() {
   const columns = gridCols;
   const [rows, setInitialRows] = React.useState<GridValidRowModel[] | null>(
     null
   );
+  const cookies = useContext(CookiesContext);
+
   const {
     getAllMenu,
     createNewMenu,
@@ -20,7 +22,7 @@ export default function Page() {
     updateAllMenus,
     deleteExistingMenu,
     deleteAllMenus,
-  } = useAdminService(getCookie("jwt"));
+  } = useAdminService(cookies.find((c) => c.name === "jwt")?.value);
 
   React.useEffect(() => {
     getAllMenu()

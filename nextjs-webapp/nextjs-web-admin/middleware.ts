@@ -7,25 +7,11 @@ export async function middleware(request: NextRequest) {
   try {
     const { getAuthentication } = useAuth();
     const url = request.nextUrl;
-    const tokenFromSearchParams = url.searchParams.get("token");
     const tokenFromCookies = request.cookies.get("jwt")?.value;
-    const result = await getAuthentication(
-      tokenFromSearchParams || tokenFromCookies || ""
-    );
+    const result = await getAuthentication(tokenFromCookies || "");
     if (result?.ok && result?.status === 200) {
-      if (url.searchParams.has("token")) {
-        url.searchParams.delete("token");
-      }
-      if (tokenFromSearchParams) {
-        const response = NextResponse.redirect(url);
-        if (!response.cookies.has("jwt")) {
-          response.cookies.set("jwt", tokenFromSearchParams);
-        }
-        return response;
-      } else {
-        const response = NextResponse.next();
-        return response;
-      }
+      const response = NextResponse.next();
+      return response;
     } else {
       const loginWithReturnUrl = new URL("/login", url);
       loginWithReturnUrl.searchParams.set(

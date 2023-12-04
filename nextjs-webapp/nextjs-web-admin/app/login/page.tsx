@@ -26,44 +26,39 @@ import { FaFacebook } from "react-icons/fa";
 import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/PageLoadingProvider";
 import { NextFontContext } from "../_components/layout/NextFontProvider/NextFontProvider";
 import { CookiesContext } from "../_components/layout/CookiesProvider/CookiesProvider";
-import { checkTokenValid } from "./action";
 
 export default function Login() {
   const [initialLoaded, setInitialLoaded] = useState(false);
   const searchs = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { signInWithCredentials } = useAuth();
+  const cookies = useContext(CookiesContext);
+  const jwtValue = cookies.find((c) => c.name === "jwt")?.value;
+  const { getAuthentication, signInWithCredentials } = useAuth();
   const { philosopher } = useContext(NextFontContext);
   const { setLoading } = useContext(PageLoadingContext);
-  const { cookies } = useContext(CookiesContext);
 
   useEffect(() => {
-    checkTokenValid()
-      .then((status) => {
-        if (status === 200) {
-          console.log(cookies)
-          if (cookies) {
-            if (cookies.has("jwt")) {
-              const token = cookies.get("jwt");
-              router.replace(`/?token=${token}`);
-            }
+    jwtValue &&
+      getAuthentication(jwtValue)
+        .then((status) => {
+          if (status?.ok && status.status === 200) {
+            router.replace("/", { scroll: false });
           }
-        }
-      })
-      .catch((ex) => {
-        console.log(ex);
-        const isSignOut = searchs.has("signout");
-        if (!isSignOut) {
-          handleOpenSnackbar("error", "Error orcured, please login again!");
-        } else {
-          handleOpenSnackbar("info", "Signed Out!");
-        }
-      })
-      .finally(() => {
-        setInitialLoaded(true);
-        setLoading(false);
-      });
+        })
+        .catch((ex) => {
+          console.log(ex);
+          const isSignOut = searchs.has("signout");
+          if (!isSignOut) {
+            handleOpenSnackbar("error", "Error orcured, please login again!");
+          } else {
+            handleOpenSnackbar("info", "Signed Out!");
+          }
+        })
+        .finally(() => {
+          setInitialLoaded(true);
+          setLoading(false);
+        });
   }, []);
 
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
@@ -130,17 +125,15 @@ export default function Login() {
       setValidating(true);
       const resp = await signInWithCredentials(user);
       if (resp?.status === 200) {
-        const token = await resp.text();
         setValidating(false);
         const returnPage = searchs.get("returnPage");
         router.replace(
-          `${
-            pathname === "/login" ||
+          pathname === "/login" ||
             returnPage === "/login" ||
             returnPage === null
-              ? "/?token=${token}"
-              : `${returnPage}?token=${token}`
-          }?token=${token}`
+            ? "/"
+            : `${returnPage}`,
+          { scroll: false }
         );
       } else {
         setValidating(false);
@@ -159,17 +152,15 @@ export default function Login() {
     setValidating(true);
     signInWithCredentials(user).then(async (resp) => {
       if (resp?.ok && resp?.status === 200) {
-        const token = await resp.text();
         setValidating(false);
         const returnPage = searchs.get("returnPage");
         router.replace(
-          `${
-            pathname === "/login" ||
+          pathname === "/login" ||
             returnPage === "/login" ||
             returnPage === null
-              ? `/?token=${token}`
-              : `${returnPage}?token=${token}`
-          }`
+            ? `/`
+            : `${returnPage}`,
+          { scroll: false }
         );
       } else {
         setValidating(false);

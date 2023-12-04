@@ -21,6 +21,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const rootCookies = cookies().getAll();
   return (
     <html lang="en">
       <body>
@@ -35,7 +36,9 @@ export default function RootLayout({
                   background: "inherit",
                 }}
               >
-                <RootLayoutMenu cookies={cookies()}>{children}</RootLayoutMenu>
+                <RootLayoutMenu cookies={rootCookies}>
+                  {children}
+                </RootLayoutMenu>
               </Box>
             </PageLoadingProvider>
           </NextFontProvider>

@@ -20,8 +20,8 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SellIcon from "@mui/icons-material/Sell";
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { usePathname } from "next/navigation";
 
 type RouteItemProps = {
@@ -85,7 +85,7 @@ export default function Routes({
           }
         >
           {routeGroup.itemLinks.map((routeItem: RouteItemProps) => (
-            <Link href={routeItem.path} key={routeItem.path}>
+            <Link href={routeItem.path} key={routeItem.path} scroll={false}>
               <Tooltip title={routeItem.text} placement="right">
                 <ListItem
                   key={routeItem.path}
