@@ -1,4 +1,6 @@
-async function getAuthentication(token: string) {
+"use server";
+
+export async function getAuthentication(token?: string) {
   try {
     const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin`, {
       method: "GET",
@@ -13,7 +15,7 @@ async function getAuthentication(token: string) {
         Authorization: `Bearer ${token}`,
       },
     });
-    return result;
+    return result.status;
   } catch (ex) {
     console.error(ex);
   }
@@ -24,7 +26,7 @@ export interface LoginInfo {
   password: string;
 }
 
-async function signInWithCredentials(loginInfo: LoginInfo) {
+export async function signInWithCredentials(loginInfo: LoginInfo) {
   try {
     const result = await fetch(
       `${process.env.AUTH_SERVICE_ORIGIN}/auth/login`,
@@ -48,7 +50,7 @@ async function signInWithCredentials(loginInfo: LoginInfo) {
   }
 }
 
-async function signOut() {
+export async function signOut() {
   try {
     const result = await fetch(
       `${process.env.AUTH_SERVICE_ORIGIN}/auth/logout`,
@@ -63,12 +65,4 @@ async function signOut() {
   } catch (ex) {
     console.error(ex);
   }
-}
-
-export default function useAuth() {
-  return {
-    getAuthentication,
-    signInWithCredentials,
-    signOut,
-  };
 }

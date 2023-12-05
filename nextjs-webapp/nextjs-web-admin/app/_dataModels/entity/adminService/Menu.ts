@@ -1,6 +1,5 @@
-import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
-import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 
 /**
  * Extended types
@@ -8,6 +7,12 @@ import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
  * * syntax "referenceSelect:tableName:1|n", example "referenceSelect:User:1"
  */
 export const gridCols: GridColDef[] = gridDefaults.concat([
+  {
+    field: "menuCode",
+    headerName: "Menu Code",
+    type: "string",
+    editable: true,
+  },
   {
     field: "menuName",
     headerName: "Menu Name",
@@ -20,16 +25,5 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "string",
     width: 350,
     editable: true,
-  },
-  {
-    field: "permissions",
-    headerName: "Permissions",
-    headerAlign: "left",
-    align: "right",
-    type: "referenceSelect:Permission:n",
-    width: 150,
-    editable: true,
-    renderCell: RenderCellForReferenceSelect,
-    renderEditCell: RenderCellForReferenceSelect,
   },
 ]);

@@ -16,6 +16,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { unprotectedRoutes } from "@/app/_utils/constants";
 import { CookiesContext } from "../CookiesProvider/CookiesProvider";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 const drawerWidth = 240;
 
@@ -67,11 +68,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function RootLayoutMenu({
-  cookies,
   children,
+  cookieArray,
 }: {
-  cookies: any;
   children: React.ReactNode;
+  cookieArray: RequestCookie[];
 }) {
   const theme = useTheme();
   const route = usePathname();
@@ -97,7 +98,7 @@ export default function RootLayoutMenu({
   };
 
   return (
-    <CookiesContext.Provider value={cookies}>
+    <CookiesContext.Provider value={cookieArray}>
       {isInUnprotectedRoutes ? (
         <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
           {children}

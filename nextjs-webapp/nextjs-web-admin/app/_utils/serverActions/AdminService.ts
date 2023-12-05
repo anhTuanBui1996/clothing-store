@@ -12,7 +12,8 @@ function useAdminService(token?: string) {
   const getMenuById = async (id: string) => await findMenuById(id, token);
   const createNewMenu = async (menu: any) => await createMenu(menu, token);
   const updateExistingMenu = async (menu: any) => await updateMenu(menu, token);
-  const updateAllMenus = async (menus: any[]) => await updateMenus(menus, token);
+  const updateAllMenus = async (menus: any[]) =>
+    await updateMenus(menus, token);
   const deleteExistingMenu = async (id: string) => await deleteMenu(id, token);
   const deleteAllMenus = async (ids: string[]) => await deleteMenus(ids, token);
   return {
@@ -89,7 +90,7 @@ async function updateMenu(menu: any, token: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/${menu.id}`,
       {
         method: "PUT",
         mode: "cors",
@@ -107,12 +108,15 @@ async function updateMenus(menus: any[], token: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
-    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/menu/`, {
-      method: "PUT",
-      mode: "cors",
-      body: JSON.stringify(menus),
-      headers,
-    });
+    const result = await fetch(
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      {
+        method: "PUT",
+        mode: "cors",
+        body: JSON.stringify(menus),
+        headers,
+      }
+    );
     return await result.json();
   } catch (ex) {
     console.error(ex);
@@ -124,7 +128,7 @@ async function deleteMenu(id: string, token: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/menu/${id}`,
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/${id}`,
       {
         method: "DELETE",
         mode: "cors",
@@ -141,12 +145,15 @@ async function deleteMenus(ids: string[], token: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
-    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/menu/`, {
-      method: "DELETE",
-      mode: "cors",
-      body: JSON.stringify(ids),
-      headers,
-    });
+    const result = await fetch(
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      {
+        method: "DELETE",
+        mode: "cors",
+        body: JSON.stringify(ids),
+        headers,
+      }
+    );
     return await result.json();
   } catch (ex) {
     console.error(ex);

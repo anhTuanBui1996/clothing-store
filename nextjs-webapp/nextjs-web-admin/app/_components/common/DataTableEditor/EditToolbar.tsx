@@ -27,7 +27,6 @@ import GridBackdrop, { GridBackdropProps } from "./toolbarItem/GridBackdrop";
 import AddRecordDropdownMenu, {
   DropdownMenuProps,
 } from "./toolbarItem/AddRecordDropdownMenu";
-import BaseReponse from "@/app/_dataModels/core/BaseResponse";
 import { useSnackbar } from "notistack";
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 
@@ -41,12 +40,12 @@ export interface EditToolbarProps {
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void;
   setRowsSelection: (newRowsSelection: GridInputRowSelectionModel) => void;
-  getPromise?: () => Promise<BaseReponse>;
-  createPromise?: (data: any) => Promise<BaseReponse>;
-  updatePromise?: (data: any) => Promise<BaseReponse>;
-  updateAllPromise?: (data: any[]) => Promise<BaseReponse>;
-  deletePromise?: (id: string) => Promise<BaseReponse>;
-  deleteAllPromise?: (id: string[]) => Promise<BaseReponse>;
+  getPromise?: () => Promise<any>;
+  createPromise?: (data: any) => Promise<any>;
+  updatePromise?: (data: any) => Promise<any>;
+  updateAllPromise?: (data: any[]) => Promise<any>;
+  deletePromise?: (id: string) => Promise<any>;
+  deleteAllPromise?: (id: string[]) => Promise<any>;
 }
 
 type ActionStatus = "idle" | "processing" | "success" | "fail";
@@ -221,16 +220,27 @@ export default function EditToolbar(props: EditToolbarProps) {
     if (isConfirm) {
       handleOpenBackdrop(false);
       handleOpenSnackbar("Refreshed data and discarded changes", "success");
-      getPromise
-        ? getPromise().then((obj: BaseReponse) =>
+      if (getPromise) {
+        getPromise()
+          .then((obj: any) =>
             setRows(
-              obj.dataResponse.map((v: any, i: number) => ({
+              obj.map((v: any, i: number) => ({
                 ...v,
                 lineNo: i + 1,
               }))
             )
           )
-        : setRows(() => initialRows);
+          .catch((ex) => {
+            console.error(ex);
+            handleOpenSnackbar("Get data failed...", "error");
+          })
+          .finally(() => {
+            setRows(() => initialRows);
+          });
+      } else {
+        setRows(() => initialRows);
+        console.error("No getter promise...");
+      }
       setRowsSelection([]);
       setDeletedRows(new Set<string>());
     }
@@ -261,23 +271,29 @@ export default function EditToolbar(props: EditToolbarProps) {
       if (deletedRows.size > 0) {
         setDeletedActionStatus("processing");
         deleteAllPromise &&
-          deleteAllPromise(Array.from(deletedRows)).then((obj: BaseReponse) => {
-            if (typeof obj.status === "string") {
-              setDeletedRows(new Set<string>());
-              if (obj.status.endsWith("Successfully")) {
-                setDeletedActionStatus("success");
+          deleteAllPromise(Array.from(deletedRows))
+            .then((obj: any) => {
+              if (obj) {
+                const arrayedObj = obj as any[];
+                if (arrayedObj.length === deletedRows.size) {
+                  setDeletedRows(new Set<string>());
+                  setDeletedActionStatus("success");
+                } else {
+                }
               } else {
                 setDeletedActionStatus("fail");
               }
-            } else {
+            })
+            .catch((ex) => {
+              console.error(ex);
+            })
+            .finally(() => {
               setDeletedActionStatus("fail");
-              console.log(obj);
-            }
-          });
+            });
       }
       if (rows.filter((row) => row.isUpdated).length > 0) {
         updateAllPromise &&
-          updateAllPromise(rows).then((obj: BaseReponse) => {
+          updateAllPromise(rows).then((obj: any) => {
             if (typeof obj.status === "string") {
               if (obj.status.endsWith("Successfully")) {
                 setUpdateddActionStatus("success");

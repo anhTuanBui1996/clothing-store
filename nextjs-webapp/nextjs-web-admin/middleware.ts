@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import useAuth from "./app/_utils/service/AuthService";
+import { getAuthentication } from "./app/_utils/serverActions/AuthService";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   try {
-    const { getAuthentication } = useAuth();
     const url = request.nextUrl;
     const tokenFromCookies = request.cookies.get("jwt")?.value;
     const result = await getAuthentication(tokenFromCookies || "");

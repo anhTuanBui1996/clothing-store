@@ -1,5 +1,5 @@
 import { Menu, Button, PopoverOrigin, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 export interface DropdownMenuProps {
   anchorEl: null | HTMLElement;
@@ -16,19 +16,40 @@ export interface DropdownMenuProps {
 
 export default function AddRecordDropdownMenu(props: DropdownMenuProps) {
   const { anchorEl, position, onOkClick, onClose } = props;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const open = Boolean(anchorEl);
-  const [value, setValue] = React.useState<number | undefined>(1);
+  const [value, setValue] = React.useState<string | undefined>("1");
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 352);
+    }
+  }, [open, inputRef.current]);
 
   const handleValueChanged = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | undefined
   ) => {
-    setValue(parseInt(e?.target.value || "1"));
+    setValue(e?.target.value);
   };
 
   const handleOkButtonClicked = () => {
     if (onOkClick) {
-      onOkClick(value);
+      value && onOkClick(parseInt(value));
+    }
+  };
+
+  const handleEnterKeyboardPressedWhenFocusingInput = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (onOkClick) {
+      if (e.key === "Enter") {
+        value && onOkClick(parseInt(value));
+      }
     }
   };
 
@@ -51,8 +72,11 @@ export default function AddRecordDropdownMenu(props: DropdownMenuProps) {
       transformOrigin={position?.transformOrigin}
     >
       <TextField
+        inputRef={inputRef}
         value={value}
         onChange={handleValueChanged}
+        onKeyUp={handleEnterKeyboardPressedWhenFocusingInput}
+        placeholder="1"
         label="Amount"
         variant="outlined"
         type="number"

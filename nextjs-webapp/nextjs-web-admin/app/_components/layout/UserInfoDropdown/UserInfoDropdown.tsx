@@ -11,10 +11,9 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { useRouter } from "next/navigation";
-import useAuth from "@/app/_utils/service/AuthService";
+import { signOut } from "@/app/_utils/serverActions/AuthService";
 
 export default function UserInfoDropdown() {
-  const { signOut } = useAuth();
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

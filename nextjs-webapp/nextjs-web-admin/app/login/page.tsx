@@ -20,7 +20,11 @@ import {
   useContext,
 } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import useAuth, { LoginInfo } from "@/app/_utils/service/AuthService";
+import {
+  LoginInfo,
+  getAuthentication,
+  signInWithCredentials,
+} from "@/app/_utils/serverActions/AuthService";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/PageLoadingProvider";
@@ -34,35 +38,33 @@ export default function Login() {
   const pathname = usePathname();
   const cookies = useContext(CookiesContext);
   const jwtValue = cookies.find((c) => c.name === "jwt")?.value;
-  const { getAuthentication, signInWithCredentials } = useAuth();
   const { philosopher } = useContext(NextFontContext);
   const { setLoading } = useContext(PageLoadingContext);
 
   useEffect(() => {
-    jwtValue &&
-      getAuthentication(jwtValue)
-        .then((status) => {
-          if (status?.ok && status.status === 200) {
-            router.replace("/", { scroll: false });
-          }
-        })
-        .catch((ex) => {
-          console.log(ex);
-          const isSignOut = searchs.has("signout");
-          if (!isSignOut) {
-            handleOpenSnackbar("error", "Error orcured, please login again!");
-          } else {
-            handleOpenSnackbar("info", "Signed Out!");
-          }
-        })
-        .finally(() => {
-          setInitialLoaded(true);
-          setLoading(false);
-        });
+    getAuthentication(jwtValue)
+      .then((status) => {
+        if (status === 200) {
+          router.replace("/", { scroll: false });
+        }
+      })
+      .catch((ex) => {
+        console.log(ex);
+        const isSignOut = searchs.has("signout");
+        if (!isSignOut) {
+          handleOpenSnackbar("error", "Error orcured, please login again!");
+        } else {
+          handleOpenSnackbar("info", "Signed Out!");
+        }
+      })
+      .finally(() => {
+        setInitialLoaded(true);
+        setLoading(false);
+      });
   }, []);
 
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
-  const [isValidating, setValidating] = useState<boolean | undefined>(false);
+  const [isValidating, setValidating] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     AlertColor | undefined
@@ -102,7 +104,10 @@ export default function Login() {
   };
 
   const handleValidateCredentials = () => {
-    if (user.username === "admin" && user.password === "password") {
+    if (
+      (user.username === "admin" || user.username === "client") &&
+      user.password === "password"
+    ) {
       return true;
     }
     if (user.username === "" || user.password === "") {
@@ -220,7 +225,7 @@ export default function Login() {
             <TextField
               id="username"
               name="username"
-              label="Email"
+              label="Username/Email/Phone"
               variant="outlined"
               color="success"
               sx={{
