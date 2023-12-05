@@ -10,6 +10,11 @@ import {
   Alert,
   AlertColor,
   Link,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import {
   ChangeEvent,
@@ -27,9 +32,12 @@ import {
 } from "@/app/_utils/serverActions/AuthService";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/PageLoadingProvider";
 import { NextFontContext } from "../_components/layout/NextFontProvider/NextFontProvider";
 import { CookiesContext } from "../_components/layout/CookiesProvider/CookiesProvider";
+import { setCookie } from "../_utils/cookieDispatcher";
 
 export default function Login() {
   const [initialLoaded, setInitialLoaded] = useState(false);
@@ -49,7 +57,7 @@ export default function Login() {
         }
       })
       .catch((ex) => {
-        console.log(ex);
+        console.error(ex);
         const isSignOut = searchs.has("signout");
         if (!isSignOut) {
           handleOpenSnackbar("error", "Error orcured, please login again!");
@@ -65,6 +73,7 @@ export default function Login() {
 
   const [user, setUser] = useState<LoginInfo>({ username: "", password: "" });
   const [isValidating, setValidating] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     AlertColor | undefined
@@ -103,6 +112,14 @@ export default function Login() {
     setUser((user: LoginInfo) => ({ ...user, password: e.target.value }));
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
+
   const handleValidateCredentials = () => {
     if (
       (user.username === "admin" || user.username === "client") &&
@@ -120,34 +137,38 @@ export default function Login() {
 
   //#region Login handlers
   const handleKeyUpPasswordField = async (
-    e: KeyboardEvent<HTMLDivElement> | undefined
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement> | undefined
   ) => {
     e?.preventDefault();
     if (e?.key === "Enter") {
       if (!handleValidateCredentials()) {
         return;
       }
-      setValidating(true);
-      const resp = await signInWithCredentials(user);
-      if (resp?.status === 200) {
-        setValidating(false);
-        const returnPage = searchs.get("returnPage");
-        router.replace(
-          pathname === "/login" ||
-            returnPage === "/login" ||
-            returnPage === null
-            ? "/"
-            : `${returnPage}`,
-          { scroll: false }
-        );
-      } else {
-        setValidating(false);
-        handleOpenSnackbar("error", "Login failed, please try again!");
-      }
+      signInWithCredentials(user)
+        .then((token) => {
+          if (token) {
+            setValidating(false);
+            const returnPage = searchs.get("returnPage");
+            router.replace(
+              pathname === "/login" ||
+                returnPage === "/login" ||
+                returnPage === null
+                ? `/`
+                : `${returnPage}`,
+              { scroll: false }
+            );
+          } else {
+            setValidating(false);
+            handleOpenSnackbar("error", "Login failed, please try again!");
+          }
+        })
+        .catch((ex) => {
+          console.error(ex);
+        });
     }
   };
 
-  const handleCredentialsLoginClick = async (
+  const handleCredentialsLoginClick = (
     e: MouseEvent<HTMLButtonElement> | undefined
   ) => {
     e?.preventDefault();
@@ -155,23 +176,35 @@ export default function Login() {
       return;
     }
     setValidating(true);
-    signInWithCredentials(user).then(async (resp) => {
-      if (resp?.ok && resp?.status === 200) {
-        setValidating(false);
-        const returnPage = searchs.get("returnPage");
-        router.replace(
-          pathname === "/login" ||
-            returnPage === "/login" ||
-            returnPage === null
-            ? `/`
-            : `${returnPage}`,
-          { scroll: false }
-        );
-      } else {
-        setValidating(false);
-        handleOpenSnackbar("error", "Login failed, please try again!");
-      }
-    });
+    signInWithCredentials(user)
+      .then((token) => {
+        if (token) {
+          setCookie("jwt", token, {
+            domain: "localhost",
+            path: "/",
+            httpOnly: true,
+          })
+            .then(() => {
+              setValidating(false);
+              const returnPage = searchs.get("returnPage");
+              router.replace(
+                pathname === "/login" ||
+                  returnPage === "/login" ||
+                  returnPage === null
+                  ? `/`
+                  : `${returnPage}`,
+                { scroll: false }
+              );
+            })
+            .catch((ex) => console.error(ex));
+        } else {
+          setValidating(false);
+          handleOpenSnackbar("error", "Login failed, please try again!");
+        }
+      })
+      .catch((ex) => {
+        console.error(ex);
+      });
   };
   //#endregion
 
@@ -223,7 +256,7 @@ export default function Login() {
               </Typography>
             </Typography>
             <TextField
-              id="username"
+              id="outlined-username"
               name="username"
               label="Username/Email/Phone"
               variant="outlined"
@@ -235,21 +268,40 @@ export default function Login() {
               onChange={handleChangUsernameInput}
               required
             />
-            <TextField
-              id="password"
-              name="password"
-              label="Password"
+            <FormControl
+              sx={{ mb: 1, width: "100%" }}
               variant="outlined"
               color="success"
-              type="password"
-              sx={{
-                marginBottom: "10px",
-                width: "100%",
-              }}
-              onChange={handleChangePasswordInput}
-              onKeyUp={handleKeyUpPasswordField}
               required
-            />
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                name="password"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                onKeyUp={handleKeyUpPasswordField}
+                onChange={handleChangePasswordInput}
+              />
+            </FormControl>
             <div className="login-control flex-col justify-between align-middle w-full">
               <div className="non-login flex justify-between mb-5">
                 <Link
@@ -287,7 +339,11 @@ export default function Login() {
                   onClick={
                     !isValidating ? handleCredentialsLoginClick : undefined
                   }
-                  endIcon={isValidating && <CircularProgress size={"12px"} />}
+                  endIcon={
+                    isValidating ? (
+                      <CircularProgress size={"12px"} />
+                    ) : undefined
+                  }
                 >
                   SIGN IN
                 </Button>

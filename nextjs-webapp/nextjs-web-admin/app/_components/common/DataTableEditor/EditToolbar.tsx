@@ -48,7 +48,7 @@ export interface EditToolbarProps {
   deleteAllPromise?: (id: string[]) => Promise<any>;
 }
 
-type ActionStatus = "idle" | "processing" | "success" | "fail";
+type ActionStatus = "idle" | "processing" | "success" | "warning" | "fail";
 
 export default function EditToolbar(props: EditToolbarProps) {
   const {
@@ -85,7 +85,7 @@ export default function EditToolbar(props: EditToolbarProps) {
   //#region CRUD action statuses
   const [deletedActionStatus, setDeletedActionStatus] =
     useState<ActionStatus>("idle");
-  const [updatedActionStatus, setUpdateddActionStatus] =
+  const [updatedActionStatus, setUpdatedActionStatus] =
     useState<ActionStatus>("idle");
   //#endregion
 
@@ -183,9 +183,14 @@ export default function EditToolbar(props: EditToolbarProps) {
         updatedActionStatus === "fail"
       ) {
         handleOpenSnackbar("Save changes failed", "error");
+      } else if (
+        deletedActionStatus === "warning" ||
+        updatedActionStatus === "warning"
+      ) {
+        handleOpenSnackbar("Save changes not successful completely", "warning");
       }
       setDeletedActionStatus("idle");
-      setUpdateddActionStatus("idle");
+      setUpdatedActionStatus("idle");
     }
   }, [deletedActionStatus, updatedActionStatus]);
   //#endregion
@@ -275,10 +280,21 @@ export default function EditToolbar(props: EditToolbarProps) {
             .then((obj: any) => {
               if (obj) {
                 const arrayedObj = obj as any[];
-                if (arrayedObj.length === deletedRows.size) {
-                  setDeletedRows(new Set<string>());
-                  setDeletedActionStatus("success");
+                if (arrayedObj.length > 0) {
+                  if (arrayedObj.length === deletedRows.size) {
+                    setDeletedRows(new Set<string>());
+                    setDeletedActionStatus("success");
+                  } else {
+                    console.warn(
+                      "Deleted and Commit rows is not equal",
+                      `commited rows: ${deletedRows.size}`,
+                      `deleted rows: ${arrayedObj.length}`
+                    );
+                    setDeletedActionStatus("warning");
+                  }
                 } else {
+                  console.error("No rows was deleted");
+                  setDeletedActionStatus("fail");
                 }
               } else {
                 setDeletedActionStatus("fail");
@@ -286,26 +302,40 @@ export default function EditToolbar(props: EditToolbarProps) {
             })
             .catch((ex) => {
               console.error(ex);
-            })
-            .finally(() => {
               setDeletedActionStatus("fail");
             });
       }
-      if (rows.filter((row) => row.isUpdated).length > 0) {
+      const updatedRows = rows.filter((row) => row.isUpdated);
+      if (updatedRows.length > 0) {
+        setUpdatedActionStatus("processing");
         updateAllPromise &&
-          updateAllPromise(rows).then((obj: any) => {
-            if (typeof obj.status === "string") {
-              if (obj.status.endsWith("Successfully")) {
-                setUpdateddActionStatus("success");
+          updateAllPromise(rows)
+            .then((obj: any) => {
+              if (obj) {
+                const arrayedObj = obj as any[];
+                if (arrayedObj.length > 0) {
+                  if (arrayedObj.length === updatedRows.length) {
+                    setUpdatedActionStatus("success");
+                  } else {
+                    console.warn(
+                      "Updated and Commit rows is not equal",
+                      `commited rows: ${updatedRows.length}`,
+                      `updated rows: ${arrayedObj.length}`
+                    );
+                    setUpdatedActionStatus("warning");
+                  }
+                } else {
+                  console.error("No rows was updated");
+                  setUpdatedActionStatus("fail");
+                }
               } else {
-                setDeletedActionStatus("fail");
+                setUpdatedActionStatus("fail");
               }
-              handleRevertHistory();
-            } else {
-              setDeletedActionStatus("fail");
-              console.log(obj);
-            }
-          });
+            })
+            .catch((ex) => {
+              console.log(ex);
+              setUpdatedActionStatus("fail");
+            });
       }
     }
   };

@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl;
     const tokenFromCookies = request.cookies.get("jwt")?.value;
     const result = await getAuthentication(tokenFromCookies || "");
-    if (result?.ok && result?.status === 200) {
+    if (result === 200) {
       const response = NextResponse.next();
       return response;
     } else {

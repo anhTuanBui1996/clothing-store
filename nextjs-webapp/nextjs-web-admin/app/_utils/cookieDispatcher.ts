@@ -14,9 +14,9 @@ export async function setCookie(
   value: string,
   options?: Partial<ResponseCookie> | undefined
 ) {
-  return cookies().set(name, value, options);
+  return cookies().set(name, value, options).has(name);
 }
 
 export async function deleteCookie(name: string) {
-  return cookies().delete(name);
+  cookies().delete(name);
 }

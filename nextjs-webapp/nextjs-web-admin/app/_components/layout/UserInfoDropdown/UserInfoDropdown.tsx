@@ -12,6 +12,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "@/app/_utils/serverActions/AuthService";
+import { deleteCookie } from "@/app/_utils/cookieDispatcher";
 
 export default function UserInfoDropdown() {
   const router = useRouter();
@@ -25,8 +26,12 @@ export default function UserInfoDropdown() {
   const handleCloseMenu = () => setAnchorEl(null);
   const handleLogout = async () => {
     const res = await signOut();
-    if (res?.ok && res?.status === 200) {
-      router.replace("/login?signout", { scroll: false });
+    if (res === 200) {
+      deleteCookie("jwt")
+        .then(() => {
+          router.replace("/login?signout", { scroll: false });
+        })
+        .catch((ex) => console.error(ex));
     }
   };
 

@@ -13,7 +13,6 @@ import {
 import { GridInputRowSelectionModel } from "@mui/x-data-grid";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
 import EditToolbar from "./EditToolbar";
-import BaseReponse from "@/app/_dataModels/core/BaseResponse";
 import { SnackbarProvider } from "notistack";
 
 export default function DataTableEditor({
@@ -28,12 +27,12 @@ export default function DataTableEditor({
 }: {
   initialRows: GridRowsProp;
   columns: GridColDef[];
-  getPromise?: () => Promise<BaseReponse>;
-  createPromise?: (data: any) => Promise<BaseReponse>;
-  updatePromise?: (data: any) => Promise<BaseReponse>;
-  updateAllPromise?: (data: any[]) => Promise<BaseReponse>;
-  deletePromise?: (id: string) => Promise<BaseReponse>;
-  deleteAllPromise?: (id: string[]) => Promise<BaseReponse>;
+  getPromise?: () => Promise<any>;
+  createPromise?: (data: any) => Promise<any>;
+  updatePromise?: (data: any) => Promise<any>;
+  updateAllPromise?: (data: any[]) => Promise<any>;
+  deletePromise?: (id: string) => Promise<any>;
+  deleteAllPromise?: (id: string[]) => Promise<any>;
 }) {
   const mappedRows: GridRowsProp = React.useMemo(
     () =>

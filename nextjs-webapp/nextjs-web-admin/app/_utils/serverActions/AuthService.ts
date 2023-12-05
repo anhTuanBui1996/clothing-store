@@ -10,6 +10,7 @@ export async function getAuthentication(token?: string) {
         Accept: "*/*",
         "Accept-Encoding": "gzip, deflate, br",
         "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "*",
         "Access-Control-Allow-Headers": "*",
         Authorization: `Bearer ${token}`,
@@ -26,7 +27,7 @@ export interface LoginInfo {
   password: string;
 }
 
-export async function signInWithCredentials(loginInfo: LoginInfo) {
+export async function signInWithCredentials(loginInfo?: LoginInfo) {
   try {
     const result = await fetch(
       `${process.env.AUTH_SERVICE_ORIGIN}/auth/login`,
@@ -34,17 +35,20 @@ export async function signInWithCredentials(loginInfo: LoginInfo) {
         method: "POST",
         mode: "cors",
         credentials: "include",
+        cache: "no-store",
         headers: {
           Accept: "*/*",
           "Accept-Encoding": "gzip, deflate, br",
           "Content-Type": "application/json",
           "Access-Control-Allow-Credentials": "true",
           "Access-Control-Allow-Methods": "*",
+          "Access-Control-Allow-Headers": "*",
         },
         body: JSON.stringify(loginInfo),
       }
     );
-    return result;
+    const jwtToken = await result.text();
+    return jwtToken;
   } catch (ex) {
     console.error(ex);
   }
@@ -59,9 +63,14 @@ export async function signOut() {
         mode: "cors",
         credentials: "include",
         redirect: "manual",
+        headers: {
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Methods": "*",
+          "Access-Control-Allow-Headers": "*",
+        },
       }
     );
-    return result;
+    return result.status;
   } catch (ex) {
     console.error(ex);
   }

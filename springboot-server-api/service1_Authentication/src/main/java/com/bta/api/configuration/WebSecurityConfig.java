@@ -1,6 +1,7 @@
 package com.bta.api.configuration;
 
 import com.bta.api.filter.JwtAuthenticationFilter;
+import com.bta.api.models.implement.AuditorAwareImpl;
 import com.bta.api.provider.CredentialsProvider;
 import com.bta.api.provider.InMemoryProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class WebSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public AuditorAwareImpl auditorProvider(){
+        return new AuditorAwareImpl();
     }
 
     @Bean
