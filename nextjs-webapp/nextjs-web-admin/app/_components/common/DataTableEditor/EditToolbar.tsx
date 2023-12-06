@@ -163,38 +163,6 @@ export default function EditToolbar(props: EditToolbarProps) {
   };
   //#endregion
 
-  // Background effect async
-  //#region Backdrop for CRUD actions
-  useEffect(() => {
-    if (
-      deletedActionStatus === "processing" ||
-      updatedActionStatus === "processing"
-    ) {
-      handleOpenBackdrop(false);
-    } else {
-      handleCloseBackdrop();
-      if (
-        deletedActionStatus === "success" &&
-        updatedActionStatus === "success"
-      ) {
-        handleOpenSnackbar("Save changes successfully", "success");
-      } else if (
-        deletedActionStatus === "fail" ||
-        updatedActionStatus === "fail"
-      ) {
-        handleOpenSnackbar("Save changes failed", "error");
-      } else if (
-        deletedActionStatus === "warning" ||
-        updatedActionStatus === "warning"
-      ) {
-        handleOpenSnackbar("Save changes not successful completely", "warning");
-      }
-      setDeletedActionStatus("idle");
-      setUpdatedActionStatus("idle");
-    }
-  }, [deletedActionStatus, updatedActionStatus]);
-  //#endregion
-
   //#region Rows changes event listener
   const [saveChangesDisabled, setSaveChangesDisabled] = useState(false);
   useEffect(() => {
@@ -227,21 +195,19 @@ export default function EditToolbar(props: EditToolbarProps) {
       handleOpenSnackbar("Refreshed data and discarded changes", "success");
       if (getPromise) {
         getPromise()
-          .then((obj: any) =>
-            setRows(
+          .then((obj: any) => {
+            setRows((oldRows) =>
               obj.map((v: any, i: number) => ({
                 ...v,
                 lineNo: i + 1,
               }))
-            )
-          )
+            );
+          })
           .catch((ex) => {
             console.error(ex);
             handleOpenSnackbar("Get data failed...", "error");
           })
-          .finally(() => {
-            setRows(() => initialRows);
-          });
+          .finally(() => handleCloseBackdrop());
       } else {
         setRows(() => initialRows);
         console.error("No getter promise...");
@@ -250,7 +216,6 @@ export default function EditToolbar(props: EditToolbarProps) {
       setDeletedRows(new Set<string>());
     }
     handleCloseDialog();
-    handleCloseBackdrop();
   };
   //#endregion
 
@@ -309,7 +274,7 @@ export default function EditToolbar(props: EditToolbarProps) {
       if (updatedRows.length > 0) {
         setUpdatedActionStatus("processing");
         updateAllPromise &&
-          updateAllPromise(rows)
+          updateAllPromise(updatedRows)
             .then((obj: any) => {
               if (obj) {
                 const arrayedObj = obj as any[];
@@ -337,6 +302,7 @@ export default function EditToolbar(props: EditToolbarProps) {
               setUpdatedActionStatus("fail");
             });
       }
+      handleCloseDialog();
     }
   };
   //#endregion
@@ -431,6 +397,43 @@ export default function EditToolbar(props: EditToolbarProps) {
     handleCloseDialog();
     handleCloseBackdrop();
   };
+  //#endregion
+
+  // Background effect async
+  //#region Backdrop for CRUD actions
+  useEffect(() => {
+    if (
+      deletedActionStatus === "processing" ||
+      updatedActionStatus === "processing"
+    ) {
+      handleOpenBackdrop(false);
+    } else {
+      handleCloseBackdrop();
+      if (
+        (deletedActionStatus === "success" &&
+          updatedActionStatus === "success") ||
+        ((deletedActionStatus === "success" ||
+          updatedActionStatus === "success") &&
+          (deletedActionStatus === "idle" || updatedActionStatus === "idle"))
+      ) {
+        handleRevertHistoryConfirmation(true);
+        handleOpenSnackbar("Save changes successfully", "success");
+      } else if (
+        deletedActionStatus === "fail" ||
+        updatedActionStatus === "fail"
+      ) {
+        handleOpenSnackbar("Save changes failed", "error");
+      } else if (
+        deletedActionStatus === "warning" ||
+        updatedActionStatus === "warning"
+      ) {
+        handleRevertHistoryConfirmation(true);
+        handleOpenSnackbar("Save changes not successful completely", "warning");
+      }
+      setDeletedActionStatus("idle");
+      setUpdatedActionStatus("idle");
+    }
+  }, [deletedActionStatus, updatedActionStatus]);
   //#endregion
 
   return (

@@ -38,6 +38,7 @@ async function findAllMenu(token: string): Promise<any> {
         method: "GET",
         mode: "cors",
         credentials: "include",
+        cache: "no-store",
         headers,
       }
     );
@@ -57,6 +58,7 @@ async function findMenuById(id: string, token: string): Promise<any> {
         method: "GET",
         mode: "cors",
         credentials: "include",
+        cache: "no-store",
         headers,
       }
     );
@@ -76,6 +78,7 @@ async function createMenu(menu: any, token: string): Promise<any> {
         method: "PUT",
         mode: "cors",
         body: JSON.stringify(menu),
+        cache: "no-store",
         headers,
       }
     );
@@ -95,6 +98,7 @@ async function updateMenu(menu: any, token: string): Promise<any> {
         method: "PUT",
         mode: "cors",
         body: JSON.stringify(menu),
+        cache: "no-store",
         headers,
       }
     );
@@ -114,6 +118,7 @@ async function updateMenus(menus: any[], token: string): Promise<any> {
         method: "PUT",
         mode: "cors",
         body: JSON.stringify(menus),
+        cache: "no-store",
         headers,
       }
     );
@@ -132,6 +137,7 @@ async function deleteMenu(id: string, token: string): Promise<any> {
       {
         method: "DELETE",
         mode: "cors",
+        cache: "no-store",
         headers,
       }
     );
@@ -151,6 +157,7 @@ async function deleteMenus(ids: string[], token: string): Promise<any> {
         method: "DELETE",
         mode: "cors",
         body: JSON.stringify(ids),
+        cache: "no-store",
         headers,
       }
     );
