@@ -412,9 +412,8 @@ export default function EditToolbar(props: EditToolbarProps) {
       if (
         (deletedActionStatus === "success" &&
           updatedActionStatus === "success") ||
-        ((deletedActionStatus === "success" ||
-          updatedActionStatus === "success") &&
-          (deletedActionStatus === "idle" || updatedActionStatus === "idle"))
+        (deletedActionStatus === "success" && updatedActionStatus === "idle") ||
+        (deletedActionStatus === "idle" && updatedActionStatus === "success")
       ) {
         handleRevertHistoryConfirmation(true);
         handleOpenSnackbar("Save changes successfully", "success");
