@@ -3,6 +3,7 @@ package com.bta.api.entities.dependencies;
 import com.bta.api.entities.composites.RoleMenuKey;
 import com.bta.api.entities.owner.Menu;
 import com.bta.api.entities.owner.Roles;
+import com.bta.api.models.dto.PermissionsDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,9 @@ public class Permissions {
 
     private boolean canView = false;
     private boolean canModified = false;
+
+    public PermissionsDto toDto() {
+        return new PermissionsDto(id.getRoleId(), id.getMenuId(), canModified, canView);
+    }
 
 }

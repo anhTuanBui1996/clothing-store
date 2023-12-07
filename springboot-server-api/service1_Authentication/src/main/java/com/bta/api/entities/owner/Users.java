@@ -6,6 +6,7 @@ import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
         @Index(columnList = "email", unique = true),
         @Index(columnList = "phoneNumber", unique = true)
 })
+@EntityListeners(AuditingEntityListener.class)
 public class Users extends BaseEntity<UsersDto> {
 
     @Transient

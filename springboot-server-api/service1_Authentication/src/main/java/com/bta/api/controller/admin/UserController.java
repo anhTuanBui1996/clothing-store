@@ -1,4 +1,4 @@
-package com.bta.api.controller;
+package com.bta.api.controller.admin;
 
 import com.bta.api.models.dto.UsersDto;
 import com.bta.api.service.UserService;

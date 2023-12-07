@@ -1,6 +1,7 @@
 import {
   DataGrid,
   GridCallbackDetails,
+  GridColDef,
   GridInputRowSelectionModel,
   GridRenderCellParams,
   GridRowId,
@@ -12,12 +13,41 @@ import InfoIcon from "@mui/icons-material/Info";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import React from "react";
 import { GridApiCommunity, GridStateColDef } from "@mui/x-data-grid/internals";
+import { CookiesContext } from "../../layout/CookiesProvider/CookiesProvider";
 
-export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
-  const { isEditable, colDef, api, id, value } = params;
+export function RenderCellForReferenceSelect({
+  params,
+  sourceSchema,
+  dataSource,
+  uploadMethod,
+}: {
+  params: GridRenderCellParams;
+  sourceSchema: GridColDef[];
+  dataSource: (token: string, options?: any) => Promise<any>;
+  uploadMethod: (token: string, options?: any) => Promise<any>;
+}): React.ReactNode {
+  const [_isMounted, setMounted] = React.useState(true);
+
+  const { isEditable, colDef, api, id } = params;
 
   const [openEditor, setOpenEditor] = React.useState(false);
   const [openViewer, setOpenViewer] = React.useState(false);
+  const [source, setSource] = React.useState([]);
+  const cookies = React.useContext(CookiesContext);
+  const token = cookies.find((c) => c.name === "jwt")?.value;
+
+  React.useEffect(() => {
+    if (token) {
+      dataSource(token, id)
+        .then((data) => {
+          _isMounted && setSource(data);
+        })
+        .catch((ex) => console.error(ex));
+    } else {
+      console.warn("No jwt found in cookies at ReferrenceSelect");
+    }
+    return () => setMounted(false);
+  });
 
   const handleOpenEditor = () => {
     setOpenEditor(true);
@@ -37,7 +67,6 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
       alignItems={"center"}
       gap={1}
     >
-      {value}
       <ButtonGroup variant="text">
         <Tooltip title="View">
           <Button color="info" onClick={handleOpenViewer}>
@@ -58,8 +87,15 @@ export function RenderCellForReferenceSelect(params: GridRenderCellParams) {
         onClose={handleCloseEditor}
         colDef={colDef}
         cellApi={api}
+        schema={sourceSchema}
+        source={source}
       />
-      <ReferenceSelectViewer open={openViewer} onClose={handleCloseViewer} />
+      <ReferenceSelectViewer
+        open={openViewer}
+        onClose={handleCloseViewer}
+        schema={sourceSchema}
+        source={source}
+      />
     </Box>
   );
 }
@@ -70,13 +106,18 @@ export function ReferenceSelectEditor({
   onClose,
   colDef,
   cellApi,
+  schema,
+  source,
 }: {
   idSelected: GridRowId;
   open: boolean;
   onClose: () => void;
   colDef: GridStateColDef;
   cellApi: GridApiCommunity;
+  schema: GridColDef[];
+  source: any[];
 }) {
+  // 1 is single, n is multiple selection
   const isMultiple = React.useMemo(() => {
     switch (colDef.type?.at(colDef.type?.length - 1)) {
       case "1":
@@ -158,9 +199,13 @@ export function ReferenceSelectEditor({
 export function ReferenceSelectViewer({
   open,
   onClose,
+  schema,
+  source,
 }: {
   open: boolean;
   onClose: () => void;
+  schema: GridColDef[];
+  source: any[];
 }) {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -189,13 +234,6 @@ export function ReferenceSelectViewer({
         ]}
         disableRowSelectionOnClick
       />
-      <Box display="flex" justifyContent="center">
-        <Tooltip title="Refresh">
-          <Button fullWidth>
-            <RefreshIcon />
-          </Button>
-        </Tooltip>
-      </Box>
     </Dialog>
   );
 }

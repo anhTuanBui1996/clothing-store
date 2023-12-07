@@ -1,13 +1,14 @@
 package com.bta.api.entities.owner;
 
-import java.util.Set;
-
 import com.bta.api.base.BaseEntity;
 import com.bta.api.entities.dependencies.Permissions;
 import com.bta.api.models.dto.RolesDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Set;
 
 @Entity
 @Data
@@ -16,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 @AllArgsConstructor
 @Builder
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"roleName"}))
+@EntityListeners(AuditingEntityListener.class)
 public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
 
     private String roleCode;
@@ -40,4 +42,5 @@ public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
     public String getAuthority() {
         return roleCode;
     }
+
 }

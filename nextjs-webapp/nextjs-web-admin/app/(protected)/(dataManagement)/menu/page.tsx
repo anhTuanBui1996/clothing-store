@@ -9,6 +9,8 @@ import useAdminService from "@/app/_utils/serverActions/AdminService";
 import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
 
 export default function Page() {
+  const [_isMounted, setMounted] = React.useState(true);
+
   const columns = gridCols;
   const [rows, setInitialRows] = React.useState<GridValidRowModel[] | null>(
     null
@@ -27,12 +29,13 @@ export default function Page() {
   React.useEffect(() => {
     getAllMenu()
       .then((res) => {
-        setInitialRows(res);
+        _isMounted && setInitialRows(res);
       })
       .catch((err) => {
         console.error(err);
-        setInitialRows([]);
+        _isMounted && setInitialRows([]);
       });
+    return () => setMounted(false);
   }, []);
 
   return (

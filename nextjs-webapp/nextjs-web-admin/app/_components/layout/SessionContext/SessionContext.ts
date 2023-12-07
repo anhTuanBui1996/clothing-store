@@ -26,23 +26,3 @@ export const SessionContext = React.createContext<SessionContextType>({
   jsessionId: undefined,
   jwtToken: undefined,
 });
-
-const SessionProvider = () => {
-  const [userInfo, setUserInfo] = React.useState<UserInfo>(undefined);
-  const [jsessionId, setJsessionId] = React.useState<string | undefined>(
-    undefined
-  );
-  const [jwtToken, setJwtToken] = React.useState<string | undefined>(undefined);
-  return SessionContext.Provider({
-    value: {
-      userInfo,
-      setUserInfo,
-      jsessionId,
-      setJsessionId,
-      jwtToken,
-      setJwtToken,
-    },
-  });
-};
-
-export default SessionProvider;

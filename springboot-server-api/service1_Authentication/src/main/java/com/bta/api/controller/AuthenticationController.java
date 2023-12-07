@@ -38,9 +38,6 @@ import java.util.Date;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    @Value("${jwt.expiration}")
-    String JWT_EXPIRATION;
-
     @Autowired
     CredentialsService credentialsService;
 

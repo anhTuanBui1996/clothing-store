@@ -1,5 +1,7 @@
-package com.bta.api.controller;
+package com.bta.api.controller.admin;
 
+import com.bta.api.entities.views.PermissionView;
+import com.bta.api.models.dto.PermissionsDto;
 import com.bta.api.models.dto.RolesDto;
 import com.bta.api.service.RoleService;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,6 +57,20 @@ public class RoleController {
     @DeleteMapping(path = "/")
     public ResponseEntity<List<UUID>> deleteAllRole(@RequestBody Set<UUID> ids) {
         return ResponseEntity.status(HttpStatus.OK).body(roleService.deleteCollection(ids));
+    }
+
+    @GetMapping(path = "/permission/{roleId}")
+    public ResponseEntity<List<PermissionView>> getPermissionOfRole(@PathVariable(name = "roleId") UUID id) {
+        return ResponseEntity.ok(roleService.getPermissionOfRole(id));
+    }
+
+    @PutMapping(path = "/permissions")
+    public ResponseEntity<List<PermissionsDto>> savePermissions(@RequestBody List<PermissionsDto> dtos) {
+        try {
+            return ResponseEntity.ok(roleService.savePermissions(dtos));
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
