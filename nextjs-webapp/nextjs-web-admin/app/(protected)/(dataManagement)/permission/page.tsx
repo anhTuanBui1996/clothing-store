@@ -1,3 +1,4 @@
+"use client";
 import DataTableEditor from "@/app/_components/common/DataTableEditor/DataTableEditor";
 import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
 import { gridCols } from "@/app/_dataModels/entity/adminService/Permissions";

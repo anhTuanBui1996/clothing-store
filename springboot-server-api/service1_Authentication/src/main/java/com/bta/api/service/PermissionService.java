@@ -7,16 +7,22 @@ import com.bta.api.entities.views.PermissionView;
 import com.bta.api.models.dto.PermissionsDto;
 import com.bta.api.repository.MenuRepository;
 import com.bta.api.repository.PermissionRepository;
+import com.bta.api.repository.PermissionViewRepository;
 import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
+@Service
 public class PermissionService {
+
+    @Autowired
+    PermissionViewRepository permissionViewRepository;
 
     @Autowired
     PermissionRepository permissionRepository;
@@ -27,12 +33,12 @@ public class PermissionService {
     @Autowired
     RoleRepository roleRepository;
 
-    public List<PermissionView> getAll() {
-        return permissionRepository.findAllPermissions();
+    public Collection<PermissionView> getAll() {
+        return permissionViewRepository.findAllPermissions();
     }
 
-    public List<PermissionView> getByRole(UUID roleId) {
-        return permissionRepository.findPermissionsByRoleId(roleId.toString());
+    public Collection<PermissionView> getByRole(UUID roleId) {
+        return permissionViewRepository.findPermissionsByRoleId(roleId.toString()).stream().toList();
     }
 
     public PermissionsDto save(PermissionsDto dto) {
@@ -54,10 +60,10 @@ public class PermissionService {
         permissions.setId(key);
         permissions.setCanModified(dto.isCanModified());
         permissions.setCanView(dto.isCanView());
-        permissions.setRoles(roleRepository.findById(dto.getRoleId()).orElseThrow(() ->
-                new EntityNotFoundException("Coundn't find Role when saving Permission: id=" + dto.getRoleId())));
+        permissions.setRole(roleRepository.findById(dto.getRoleId()).orElseThrow(() ->
+                new EntityNotFoundException("Couldn't find Role when saving Permission: id=" + dto.getRoleId())));
         permissions.setMenu(menuRepository.findById(dto.getMenuId()).orElseThrow(() ->
-                new EntityNotFoundException("Coundn't find Menu when saving Permission: id=" + dto.getMenuId())));
+                new EntityNotFoundException("Couldn't find Menu when saving Permission: id=" + dto.getMenuId())));
         return permissions;
     }
 

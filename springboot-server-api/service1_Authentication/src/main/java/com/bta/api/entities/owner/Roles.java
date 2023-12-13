@@ -24,7 +24,7 @@ public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
     private String roleName;
     private String description;
 
-    @OneToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Permissions> permissions;
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
@@ -33,6 +33,8 @@ public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
     @Override
     public RolesDto toDto() {
         RolesDto rolesDto = new RolesDto();
+        rolesDto.setId(id);
+        rolesDto.setRoleCode(roleCode);
         rolesDto.setRoleName(roleName);
         rolesDto.setDescription(description);
         return rolesDto;

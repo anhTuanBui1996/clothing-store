@@ -1,21 +1,22 @@
 package com.bta.api.entities.views;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.UuidGenerator;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PermissionView {
+public interface PermissionView {
 
-    private UUID role;
-    private String roleName;
-    private UUID menu;
-    private String menuName;
-    private boolean canModified;
-    private boolean canView;
+    @Value("#{target.id.role}")
+    UUID roleId();
+    @Value("#{target.role.roleName}")
+    String roleName();
+    @Value("#{target.id.menu}")
+    UUID menuId();
+    @Value("#{target.menu.menuName}")
+    String menuName();
+    boolean canModified();
+    boolean canView();
 
 }

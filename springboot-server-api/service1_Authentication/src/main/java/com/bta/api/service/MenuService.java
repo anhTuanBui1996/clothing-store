@@ -25,7 +25,6 @@ public class MenuService implements CRUDService<Menu, MenuDto> {
     public Menu applyChangesFromDto(MenuDto dto) {
         Optional<Menu> foundMenu = menuRepository.findById(dto.getId());
         Menu menu = foundMenu.orElseGet(Menu::new);
-        menu.setMenuCode(dto.getMenuCode());
         menu.setMenuName(dto.getMenuName());
         menu.setDescription(dto.getDescription());
         return menu;

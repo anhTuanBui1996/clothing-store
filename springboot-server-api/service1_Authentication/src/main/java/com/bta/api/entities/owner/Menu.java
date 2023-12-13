@@ -21,8 +21,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Menu extends BaseEntity<MenuDto> {
 
-    @NaturalId
-    private String menuCode;
     private String menuName;
     private String description;
 
@@ -33,7 +31,6 @@ public class Menu extends BaseEntity<MenuDto> {
     public MenuDto toDto() {
 		MenuDto menuDto = new MenuDto();
 		menuDto.setId(id);
-		menuDto.setMenuCode(menuCode);
 		menuDto.setMenuName(menuName);
 		menuDto.setDescription(description);
         return menuDto;

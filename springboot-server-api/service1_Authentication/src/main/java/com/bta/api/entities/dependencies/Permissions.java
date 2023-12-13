@@ -21,7 +21,7 @@ public class Permissions {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("roleId")
     @JoinColumn(name = "role")
-    private Roles roles;
+    private Roles role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("menuId")

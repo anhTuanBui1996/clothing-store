@@ -20,8 +20,7 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SellIcon from "@mui/icons-material/Sell";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import { usePathname } from "next/navigation";
 
 type RouteItemProps = {
@@ -52,6 +51,7 @@ const routesArr = [
       { path: "/role", icon: <AdminPanelSettingsIcon />, text: "Role" },
       { path: "/user", icon: <ContactsIcon />, text: "User" },
       { path: "/menu", icon: <MenuBookIcon />, text: "Menu" },
+      { path: "/permission", icon: <AccessibilityNewIcon />, text: "Permission" },
       { path: "/order", icon: <SellIcon />, text: "Order" },
     ],
   },

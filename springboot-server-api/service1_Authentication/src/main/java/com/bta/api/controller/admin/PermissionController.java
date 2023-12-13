@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/admin/permission")
 public class PermissionController {
 
@@ -19,12 +20,12 @@ public class PermissionController {
     PermissionService permissionService;
 
     @GetMapping(path = "/")
-    public List<PermissionView> getAllPermissionView() {
+    public Collection<PermissionView> getAllPermissionView() {
         return permissionService.getAll();
     }
 
     @GetMapping(path = "/{roleId}")
-    public ResponseEntity<List<PermissionView>> getPermissionViewOfRole(@PathVariable(name = "roleId") UUID id) {
+    public ResponseEntity<Collection<PermissionView>> getPermissionViewOfRole(@PathVariable(name = "roleId") UUID id) {
         return ResponseEntity.ok(permissionService.getByRole(id));
     }
 

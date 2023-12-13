@@ -19,12 +19,6 @@ public class RoleService implements CRUDService<Roles, RolesDto> {
     @Autowired
     RoleRepository roleRepository;
 
-    @Autowired
-    MenuRepository menuRepository;
-
-    @Autowired
-    PermissionRepository permissionRepository;
-
     @Override
     public Roles applyChangesFromDto(RolesDto dto) {
         Optional<Roles> foundRole = roleRepository.findById(dto.getId());

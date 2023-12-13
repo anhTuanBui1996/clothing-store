@@ -23,7 +23,7 @@ export function RenderCellForReferenceSelect({
 }: {
   params: GridRenderCellParams;
   sourceSchema: GridColDef[];
-  dataSource: (token: string, options?: any) => Promise<any>;
+  dataSource: (id: string, token: string) => Promise<any>;
   uploadMethod?: (token: string, options?: any) => Promise<any>;
 }): React.ReactNode {
   const [_isMounted, setMounted] = React.useState(true);
@@ -38,7 +38,7 @@ export function RenderCellForReferenceSelect({
 
   React.useEffect(() => {
     if (token) {
-      dataSource(token, id)
+      dataSource(id.toString(), token)
         .then((data) => {
           _isMounted && setSource(data || []);
         })
