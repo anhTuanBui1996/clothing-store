@@ -458,12 +458,12 @@ export default function EditToolbar(props: EditToolbarProps) {
               <SaveIcon />
             </Button>
           </Tooltip>
-          <Tooltip title="Add record">
+          {createPromise && <Tooltip title="Add record">
             <Button color="success" onClick={handleAddRecords}>
               <AddBoxIcon />
             </Button>
-          </Tooltip>
-          {selectedRows.length > 0 && (
+          </Tooltip>}
+          {(deleteAllPromise || deletePromise) && selectedRows.length > 0 && (
             <Tooltip title="Delete records">
               <Button color="error" onClick={handleDeleteRecords}>
                 <DeleteIcon />

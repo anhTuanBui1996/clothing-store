@@ -36,6 +36,12 @@ function useAdminService(token?: string) {
   const deleteExistingUser = async (id: string) => await deleteUser(id, token);
   const deleteAllUsers = async (ids: string[]) => await deleteUsers(ids, token);
 
+  const getAllPermission = async () => findAllPermission(token);
+  const getPermissionsOfRole = async (id: string) =>
+    findPermissionOfRole(id, token);
+  const updateAllPermissions = async (permissions: Permission[]) =>
+    updatePermissions(permissions, token);
+
   return {
     getAllMenu,
     getMenuById,
@@ -60,6 +66,10 @@ function useAdminService(token?: string) {
     updateAllUsers,
     deleteExistingUser,
     deleteAllUsers,
+
+    getAllPermission,
+    getPermissionsOfRole,
+    updateAllPermissions,
   };
 }
 
@@ -494,12 +504,12 @@ export type Permission = {
   canView: boolean;
 };
 
-export async function getPermissionOfRole(token: string, id?: string) {
+export async function findAllPermission(token: string) {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/permissions/${id}`,
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/permission/`,
       {
         method: "GET",
         mode: "cors",
@@ -514,12 +524,35 @@ export async function getPermissionOfRole(token: string, id?: string) {
   }
 }
 
-export async function setPermissions(token: string, permissions: Permission[]) {
+export async function findPermissionOfRole(id: string, token: string) {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/permissions`,
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/permission/${id}`,
+      {
+        method: "GET",
+        mode: "cors",
+        credentials: "include",
+        cache: "no-store",
+        headers,
+      }
+    );
+    return await result.json();
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+export async function updatePermissions(
+  permissions: Permission[],
+  token: string
+) {
+  try {
+    const headers = new Headers(baseHeaders);
+    headers.append("Authorization", `Bearer ${token}`);
+    const result = await fetch(
+      `${process.env.AUTH_SERVICE_ORIGIN}/admin/permission/`,
       {
         method: "PUT",
         mode: "cors",

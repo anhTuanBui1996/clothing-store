@@ -24,7 +24,7 @@ export function RenderCellForReferenceSelect({
   params: GridRenderCellParams;
   sourceSchema: GridColDef[];
   dataSource: (token: string, options?: any) => Promise<any>;
-  uploadMethod: (token: string, options?: any) => Promise<any>;
+  uploadMethod?: (token: string, options?: any) => Promise<any>;
 }): React.ReactNode {
   const [_isMounted, setMounted] = React.useState(true);
 
@@ -40,7 +40,7 @@ export function RenderCellForReferenceSelect({
     if (token) {
       dataSource(token, id)
         .then((data) => {
-          _isMounted && setSource(data);
+          _isMounted && setSource(data || []);
         })
         .catch((ex) => console.error(ex));
     } else {
@@ -48,7 +48,7 @@ export function RenderCellForReferenceSelect({
     }
     return () => setMounted(false);
   });
-
+ 
   const handleOpenEditor = () => {
     setOpenEditor(true);
     api.startRowEditMode({ id, fieldToFocus: colDef.field });
@@ -155,26 +155,8 @@ export function ReferenceSelectEditor({
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
-        columns={[
-          { field: "row", headerName: "Row" },
-          { field: "value", headerName: "Value" },
-          { field: "value1", headerName: "Value" },
-          { field: "value2", headerName: "Value" },
-          { field: "value3", headerName: "Value" },
-          { field: "value4", headerName: "Value" },
-        ]}
-        rows={[
-          { id: 0, row: 1, value: "Test value" },
-          { id: 1, row: 2, value: "Test value" },
-          { id: 2, row: 3, value: "Test value" },
-          { id: 3, row: 4, value: "Test value" },
-          { id: 4, row: 5, value: "Test value" },
-          { id: 5, row: 6, value: "Test value" },
-          { id: 6, row: 7, value: "Test value" },
-          { id: 7, row: 8, value: "Test value" },
-          { id: 8, row: 9, value: "Test value" },
-          { id: 9, row: 10, value: "Test value" },
-        ]}
+        columns={schema}
+        rows={source}
         checkboxSelection
         rowSelectionModel={gridRowSelectionModel}
         onRowSelectionModelChange={handleRowSelectionModelChange}
@@ -212,26 +194,8 @@ export function ReferenceSelectViewer({
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
-        columns={[
-          { field: "row", headerName: "Row" },
-          { field: "value", headerName: "Value" },
-          { field: "value1", headerName: "Value" },
-          { field: "value2", headerName: "Value" },
-          { field: "value3", headerName: "Value" },
-          { field: "value4", headerName: "Value" },
-        ]}
-        rows={[
-          { id: 0, row: 1, value: "Test value" },
-          { id: 1, row: 2, value: "Test value" },
-          { id: 2, row: 3, value: "Test value" },
-          { id: 3, row: 4, value: "Test value" },
-          { id: 4, row: 5, value: "Test value" },
-          { id: 5, row: 6, value: "Test value" },
-          { id: 6, row: 7, value: "Test value" },
-          { id: 7, row: 8, value: "Test value" },
-          { id: 8, row: 9, value: "Test value" },
-          { id: 9, row: 10, value: "Test value" },
-        ]}
+        columns={schema}
+        rows={source}
         disableRowSelectionOnClick
       />
     </Dialog>

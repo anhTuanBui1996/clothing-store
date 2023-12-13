@@ -6,10 +6,10 @@ import {
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
 import {
-  getPermissionOfRole,
-  setPermissions,
+  findPermissionOfRole,
+  updatePermissions,
 } from "../../../_utils/serverActions/AdminService";
-import { gridCols as permissionsGridCols } from "./Permissions";
+import { gridColsForRoleView as permissionsGridCols } from "./Permissions";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
@@ -37,15 +37,14 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     align: "right",
     type: "referenceSelect:n",
     width: 150,
-    editable: true,
+    editable: false,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
     ) =>
       RenderCellForReferenceSelect({
         params,
         sourceSchema: permissionsGridCols,
-        dataSource: getPermissionOfRole,
-        uploadMethod: setPermissions,
+        dataSource: findPermissionOfRole,
       }),
     renderEditCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -53,8 +52,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
       RenderCellForReferenceSelect({
         params,
         sourceSchema: permissionsGridCols,
-        dataSource: getPermissionOfRole,
-        uploadMethod: setPermissions,
+        dataSource: findPermissionOfRole,
       }),
   },
 ]);

@@ -103,6 +103,8 @@ export default function DataTableEditor({
                 createdBy: false,
                 lastModifiedDate: false,
                 lastModifiedBy: false,
+                roleId: false,
+                menuId: false,
               },
             },
           }}
