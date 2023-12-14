@@ -1,11 +1,8 @@
 package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entities.owner.Roles;
-import com.bta.api.entities.views.PermissionView;
-import com.bta.api.models.dto.RolesDto;
-import com.bta.api.repository.MenuRepository;
-import com.bta.api.repository.PermissionRepository;
+import com.bta.api.entities.Roles;
+import com.bta.api.models.dto.admin.RolesDto;
 import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

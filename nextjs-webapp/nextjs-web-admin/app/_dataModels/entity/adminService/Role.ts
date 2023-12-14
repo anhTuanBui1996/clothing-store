@@ -22,12 +22,14 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     field: "roleName",
     headerName: "Role Name",
     type: "string",
+    width: 300,
     editable: true,
   },
   {
     field: "description",
     headerName: "Description",
     type: "string",
+    width: 400,
     editable: true,
   },
   {

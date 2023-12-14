@@ -1,20 +1,15 @@
 package com.bta.api.controller;
 
-import com.bta.api.entities.owner.Users;
-import com.bta.api.models.dto.ChangeUserPasswordDto;
-import com.bta.api.models.dto.LoginUserDto;
-import com.bta.api.models.dto.RegisterUserDto;
-import com.bta.api.models.dto.UsersDto;
-import com.bta.api.models.implement.UserDetailsImpl;
+import com.bta.api.models.dto.auth.ChangeUserPasswordDto;
+import com.bta.api.models.dto.auth.LoginUserDto;
+import com.bta.api.models.dto.auth.RegisterUserDto;
+import com.bta.api.models.dto.admin.UsersDto;
 import com.bta.api.service.CredentialsService;
 import com.bta.api.service.JwtTokenService;
 import jakarta.persistence.EntityExistsException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,11 +23,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")

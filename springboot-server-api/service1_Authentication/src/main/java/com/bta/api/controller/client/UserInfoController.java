@@ -1,6 +1,6 @@
 package com.bta.api.controller.client;
 
-import com.bta.api.models.dto.UsersDto;
+import com.bta.api.models.dto.admin.UsersDto;
 import com.bta.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

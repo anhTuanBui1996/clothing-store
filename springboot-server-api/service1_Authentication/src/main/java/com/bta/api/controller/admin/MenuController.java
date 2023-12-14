@@ -1,6 +1,6 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.models.dto.MenuDto;
+import com.bta.api.models.dto.admin.MenuDto;
 import com.bta.api.service.MenuService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

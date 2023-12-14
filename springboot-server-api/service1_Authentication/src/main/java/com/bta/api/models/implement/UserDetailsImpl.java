@@ -1,11 +1,13 @@
 package com.bta.api.models.implement;
 
-import com.bta.api.entities.owner.Users;
+import com.bta.api.entities.Users;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Builder
 public class UserDetailsImpl implements UserDetails {
@@ -18,7 +20,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return dbUsers.getAuthorities().stream().map(AuthorityImpl::new).toList();
+        List<AuthorityImpl> authorities = new ArrayList<>(dbUsers.getAuthorities()
+                .stream().map(AuthorityImpl::new).toList());
+        if (dbUsers.isAdmin()) {
+            authorities.add(new AuthorityImpl("ADMIN"));
+        }
+        return authorities;
     }
 
     @Override
@@ -33,22 +40,22 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return dbUsers.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return dbUsers.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return dbUsers.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return dbUsers.isEnabled();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.bta.api.repository;
 
-import com.bta.api.entities.owner.Users;
+import com.bta.api.entities.Users;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

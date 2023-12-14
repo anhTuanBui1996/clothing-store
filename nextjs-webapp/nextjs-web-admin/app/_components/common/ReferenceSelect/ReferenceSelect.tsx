@@ -40,7 +40,10 @@ export function RenderCellForReferenceSelect({
     if (token) {
       dataSource(id.toString(), token)
         .then((data) => {
-          _isMounted && setSource(data || []);
+          _isMounted &&
+            setSource(
+              data.map((o: any, i: number) => ({ ...o, lineNo: i + 1 })) || []
+            );
         })
         .catch((ex) => console.error(ex));
     } else {
@@ -48,7 +51,7 @@ export function RenderCellForReferenceSelect({
     }
     return () => setMounted(false);
   });
- 
+
   const handleOpenEditor = () => {
     setOpenEditor(true);
     api.startRowEditMode({ id, fieldToFocus: colDef.field });
@@ -194,7 +197,7 @@ export function ReferenceSelectViewer({
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
-        columns={schema}
+        columns={schema.map((col) => ({ ...col, editable: false }))}
         rows={source}
         disableRowSelectionOnClick
       />

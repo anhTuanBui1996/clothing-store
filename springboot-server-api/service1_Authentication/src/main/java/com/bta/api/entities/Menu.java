@@ -1,16 +1,14 @@
-package com.bta.api.entities.owner;
+package com.bta.api.entities;
 
 import java.util.Set;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.entities.dependencies.Permissions;
-import com.bta.api.models.dto.MenuDto;
+import com.bta.api.models.dto.admin.MenuDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity

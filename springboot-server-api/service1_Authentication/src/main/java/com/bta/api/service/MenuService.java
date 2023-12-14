@@ -1,8 +1,8 @@
 package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entities.owner.Menu;
-import com.bta.api.models.dto.MenuDto;
+import com.bta.api.entities.Menu;
+import com.bta.api.models.dto.admin.MenuDto;
 import com.bta.api.repository.MenuRepository;
 import com.bta.api.repository.PermissionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class MenuService implements CRUDService<Menu, MenuDto> {

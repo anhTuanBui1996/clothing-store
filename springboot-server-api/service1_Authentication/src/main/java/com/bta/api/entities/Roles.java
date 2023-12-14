@@ -1,10 +1,10 @@
-package com.bta.api.entities.owner;
+package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.entities.dependencies.Permissions;
-import com.bta.api.models.dto.RolesDto;
+import com.bta.api.models.dto.admin.RolesDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -20,6 +20,7 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
 
+    @NaturalId
     private String roleCode;
     private String roleName;
     private String description;

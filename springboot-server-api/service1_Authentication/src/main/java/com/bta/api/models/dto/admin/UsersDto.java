@@ -1,4 +1,4 @@
-package com.bta.api.models.dto;
+package com.bta.api.models.dto.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +15,24 @@ public class UsersDto {
 	private UUID id;
 
 	private String username;
+	private String password;
+	private boolean isAdmin;
+
 	private String email;
 	private String firstName;
 	private String lastName;
 	private boolean isMale;
 	private Date dob;
+	private String citizenId;
+	private String phoneNumber;
 
 	private String authorities;
 
+	public String getPassword() {
+		return null;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

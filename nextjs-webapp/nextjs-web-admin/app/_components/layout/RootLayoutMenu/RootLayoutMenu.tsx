@@ -132,6 +132,7 @@ export default function RootLayoutMenu({
                   width={250}
                   height={256}
                   style={{ width: "40px", height: "40px" }}
+                  priority
                 />{" "}
                 <Typography variant="h6" noWrap component="div" marginLeft={2}>
                   BTAWebApp

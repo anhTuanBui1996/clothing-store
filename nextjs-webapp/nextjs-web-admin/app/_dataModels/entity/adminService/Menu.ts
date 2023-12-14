@@ -8,22 +8,17 @@ import { GridColDef } from "@mui/x-data-grid";
  */
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
-    field: "menuCode",
-    headerName: "Menu Code",
-    type: "string",
-    editable: true,
-  },
-  {
     field: "menuName",
     headerName: "Menu Name",
     type: "string",
+    width: 200,
     editable: true,
   },
   {
     field: "description",
     headerName: "Description",
     type: "string",
-    width: 350,
+    width: 400,
     editable: true,
   },
 ]);

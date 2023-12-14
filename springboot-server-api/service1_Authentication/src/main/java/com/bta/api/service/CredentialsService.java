@@ -1,10 +1,10 @@
 package com.bta.api.service;
 
-import com.bta.api.entities.owner.Roles;
-import com.bta.api.entities.owner.Users;
-import com.bta.api.models.dto.ChangeUserPasswordDto;
-import com.bta.api.models.dto.RegisterUserDto;
-import com.bta.api.models.dto.UsersDto;
+import com.bta.api.entities.Roles;
+import com.bta.api.entities.Users;
+import com.bta.api.models.dto.auth.ChangeUserPasswordDto;
+import com.bta.api.models.dto.auth.RegisterUserDto;
+import com.bta.api.models.dto.admin.UsersDto;
 import com.bta.api.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;

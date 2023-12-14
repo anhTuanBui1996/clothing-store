@@ -1,13 +1,12 @@
-package com.bta.api.entities.owner;
+package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.models.dto.UsersDto;
+import com.bta.api.models.dto.admin.UsersDto;
 import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +32,7 @@ public class Users extends BaseEntity<UsersDto> {
     @Column(unique = true)
     private String username;
     private String password;
+    private boolean isAdmin;
 
     private String email;
     private String firstName;
@@ -62,17 +62,17 @@ public class Users extends BaseEntity<UsersDto> {
         return userDto;
     }
 
-    public Set<Roles> getAuthoritiesFromDto(String authorities) {
-        return Arrays.stream(authorities.split(","))
+    public void setAuthoritiesFromDto(String authorities) {
+        this.authorities = Arrays.stream(authorities.split(","))
                 .map(s -> roleRepository
                         .findByRoleCode(s)
                         .orElseThrow(() -> new EntityNotFoundException("Role not found: roleCode=" + s)))
                 .collect(Collectors.toSet());
     }
 
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
 
 }

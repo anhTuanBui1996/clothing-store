@@ -1,28 +1,25 @@
 package com.bta.api.service;
 
-import com.bta.api.base.CRUDService;
+import com.bta.api.entities.Menu;
+import com.bta.api.entities.Permissions;
+import com.bta.api.entities.Roles;
 import com.bta.api.entities.composites.RoleMenuKey;
-import com.bta.api.entities.dependencies.Permissions;
-import com.bta.api.entities.views.PermissionView;
-import com.bta.api.models.dto.PermissionsDto;
+import com.bta.api.models.dto.admin.PermissionsDto;
 import com.bta.api.repository.MenuRepository;
 import com.bta.api.repository.PermissionRepository;
-import com.bta.api.repository.PermissionViewRepository;
 import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class PermissionService {
-
-    @Autowired
-    PermissionViewRepository permissionViewRepository;
 
     @Autowired
     PermissionRepository permissionRepository;
@@ -33,12 +30,43 @@ public class PermissionService {
     @Autowired
     RoleRepository roleRepository;
 
-    public Collection<PermissionView> getAll() {
-        return permissionViewRepository.findAllPermissions();
+    public List<PermissionsDto> getAll() {
+        List<PermissionsDto> permissionsDtos = new ArrayList<>();
+        roleRepository.findAll().iterator().forEachRemaining(roles -> {
+            permissionsDtos.addAll(getByRole(roles.getId()));
+        });
+        return permissionsDtos;
     }
 
-    public Collection<PermissionView> getByRole(UUID roleId) {
-        return permissionViewRepository.findPermissionsByRoleId(roleId.toString()).stream().toList();
+    public List<PermissionsDto> getByRole(UUID roleId) {
+        Optional<Roles> foundRoles = roleRepository.findById(roleId);
+        List<PermissionsDto> permissionsDtos = new ArrayList<>();
+        foundRoles.ifPresent(roles -> permissionRepository.findByRole(roles).forEach(permissions -> {
+            permissionsDtos.add(permissions.toDto());
+        }));
+
+        for (Menu menu : menuRepository.findAll()) {
+            AtomicBoolean isExisted = new AtomicBoolean(false);
+            for (PermissionsDto permissionsDto : permissionsDtos) {
+                if (permissionsDto.getMenuId().equals(menu.getId())) {
+                    isExisted.set(true);
+                    break;
+                }
+            }
+            if (!isExisted.get()) {
+                PermissionsDto dto = new PermissionsDto();
+                dto.setRoleId(roleId);
+                foundRoles.ifPresent(roles -> {
+                    dto.setRoleCode(roles.getRoleCode());
+                    dto.setRoleName(roles.getRoleName());
+                });
+                dto.setMenuId(menu.getId());
+                dto.setMenuName(menu.getMenuName());
+                permissionsDtos.add(dto);
+            }
+        }
+
+        return permissionsDtos;
     }
 
     public PermissionsDto save(PermissionsDto dto) {

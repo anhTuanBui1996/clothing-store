@@ -111,7 +111,9 @@ export default function DataTableEditor({
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
           processRowUpdate={processRowUpdate}
-          checkboxSelection
+          checkboxSelection={
+            deleteAllPromise !== undefined && deletePromise !== undefined
+          }
           rowSelectionModel={gridRowSelectionModel}
           onRowSelectionModelChange={handleRowSelectionModelChange}
           disableRowSelectionOnClick

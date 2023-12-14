@@ -1,7 +1,6 @@
-package com.bta.api.entities.dependencies;
+package com.bta.api.entities;
 
 import com.bta.api.entities.composites.ProviderUserKey;
-import com.bta.api.entities.owner.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
