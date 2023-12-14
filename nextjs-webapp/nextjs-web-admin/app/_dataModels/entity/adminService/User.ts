@@ -1,6 +1,13 @@
 import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
-import { GridColDef } from "@mui/x-data-grid";
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
+import { gridCols as gridColsForRole } from "./Role";
+import { findAllRole } from "@/app/_utils/serverActions/AdminService";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
@@ -9,7 +16,13 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "boolean",
     editable: true,
   },
-  { field: "email", headerName: "Can Create", type: "string", editable: true },
+  { field: "email", headerName: "Email", type: "string", editable: true },
+  {
+    field: "phoneNumber",
+    headerName: "Phone Number",
+    type: "string",
+    editable: true,
+  },
   {
     field: "firstName",
     headerName: "First Name",
@@ -43,7 +56,21 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "referenceSelect:1",
     width: 150,
     editable: true,
-    renderCell: RenderCellForReferenceSelect,
-    renderEditCell: RenderCellForReferenceSelect,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) =>
+      RenderCellForReferenceSelect({
+        params,
+        sourceSchema: gridColsForRole,
+        dataSource: findAllRole,
+      }),
+    renderEditCell: (
+      params: GridRenderEditCellParams<any, any, any, GridTreeNodeWithRender>
+    ) =>
+      RenderCellForReferenceSelect({
+        params,
+        sourceSchema: gridColsForRole,
+        dataSource: findAllRole,
+      }),
   },
 ]);
