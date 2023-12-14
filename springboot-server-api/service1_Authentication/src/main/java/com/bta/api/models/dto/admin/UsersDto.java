@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -26,6 +27,7 @@ public class UsersDto {
 	private String citizenId;
 	private String phoneNumber;
 
+	private Set<UUID> roles;
 	private String authorities;
 
 	public String getPassword() {

@@ -3,6 +3,7 @@ package com.bta.api.service;
 import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Users;
 import com.bta.api.models.dto.admin.UsersDto;
+import com.bta.api.repository.RoleRepository;
 import com.bta.api.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements CRUDService<Users, UsersDto> {
@@ -19,10 +21,13 @@ public class UserService implements CRUDService<Users, UsersDto> {
     UserRepository usersRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
-    public Users applyChangesFromDto(UsersDto dto) {
+    public Users applyChangesFromDto(UsersDto dto) throws EntityNotFoundException {
         Optional<Users> foundUsers = usersRepository.findById(dto.getId());
         Users users = foundUsers.orElseGet(Users::new);
         users.setUsername(dto.getUsername());
@@ -37,6 +42,8 @@ public class UserService implements CRUDService<Users, UsersDto> {
         users.setLastName(dto.getLastName());
         users.setCitizenId(dto.getCitizenId());
         users.setPhoneNumber(dto.getPhoneNumber());
+        users.setRoles(dto.getRoles().stream().map(uuid -> roleRepository.findById(uuid).orElseThrow(() ->
+                new EntityNotFoundException("Role not found: id=" + uuid))).collect(Collectors.toSet()));
         users.setAuthoritiesFromDto(dto.getAuthorities());
         return users;
     }

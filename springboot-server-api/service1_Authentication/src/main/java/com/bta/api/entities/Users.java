@@ -43,10 +43,10 @@ public class Users extends BaseEntity<UsersDto> {
     private String phoneNumber;
 
     @ManyToMany
-    @JoinTable(name = "Authorities",
+    @JoinTable(name = "authorities",
             joinColumns = @JoinColumn(name = "user"),
             inverseJoinColumns = @JoinColumn(name = "role"))
-    private Set<Roles> authorities;
+    private Set<Roles> roles;
 
     @Override
     public UsersDto toDto() {
@@ -57,13 +57,14 @@ public class Users extends BaseEntity<UsersDto> {
         userDto.setDob(dob);
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
+        userDto.setRoles(roles.stream().map(BaseEntity::getId).collect(Collectors.toSet()));
         userDto.setAuthorities(String.join(",",
-                authorities.stream().map(Roles::getRoleCode).toList()));
+                roles.stream().map(Roles::getRoleCode).toList()));
         return userDto;
     }
 
     public void setAuthoritiesFromDto(String authorities) {
-        this.authorities = Arrays.stream(authorities.split(","))
+        this.roles = Arrays.stream(authorities.split(","))
                 .map(s -> roleRepository
                         .findByRoleCode(s)
                         .orElseThrow(() -> new EntityNotFoundException("Role not found: roleCode=" + s)))
