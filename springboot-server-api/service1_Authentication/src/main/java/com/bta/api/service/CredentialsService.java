@@ -60,7 +60,7 @@ public class CredentialsService {
                 .isMale(dto.isMale())
                 .citizenId(dto.getCitizenId())
                 .phoneNumber(dto.getPhoneNumber())
-                .authorities(Set.of(Roles.builder()
+                .roles(Set.of(Roles.builder()
                         .roleCode("CLIENT")
                         .roleName("Client user")
                         .description("For client user in Web-client")

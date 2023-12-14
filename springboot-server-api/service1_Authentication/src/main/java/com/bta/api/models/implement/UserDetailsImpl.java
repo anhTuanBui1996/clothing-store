@@ -20,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<AuthorityImpl> authorities = new ArrayList<>(dbUsers.getAuthorities()
+        List<AuthorityImpl> authorities = new ArrayList<>(dbUsers.getRoles()
                 .stream().map(AuthorityImpl::new).toList());
         if (dbUsers.isAdmin()) {
             authorities.add(new AuthorityImpl("ADMIN"));

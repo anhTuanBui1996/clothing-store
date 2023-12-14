@@ -31,7 +31,7 @@ public class UserService implements CRUDService<Users, UsersDto> {
         Optional<Users> foundUsers = usersRepository.findById(dto.getId());
         Users users = foundUsers.orElseGet(Users::new);
         users.setUsername(dto.getUsername());
-        if (!dto.getPassword().isBlank() && dto.getPassword() != null) {
+        if (!dto.getPassword().isBlank()) {
             users.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         users.setAdmin(dto.isAdmin());

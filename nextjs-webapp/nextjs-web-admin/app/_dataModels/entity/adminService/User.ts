@@ -6,7 +6,7 @@ import {
   GridRenderEditCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-import { gridCols as gridColsForRole } from "./Role";
+import { gridCols as gridColsOfRole } from "./Role";
 import { findAllRole } from "@/app/_utils/serverActions/AdminService";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
@@ -49,8 +49,8 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     editable: true,
   },
   {
-    field: "role",
-    headerName: "Role",
+    field: "roles",
+    headerName: "Roles",
     headerAlign: "left",
     align: "right",
     type: "referenceSelect:1",
@@ -61,7 +61,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     ) =>
       RenderCellForReferenceSelect({
         params,
-        sourceSchema: gridColsForRole,
+        sourceSchema: gridColsOfRole,
         dataSource: findAllRole,
       }),
     renderEditCell: (
@@ -69,7 +69,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     ) =>
       RenderCellForReferenceSelect({
         params,
-        sourceSchema: gridColsForRole,
+        sourceSchema: gridColsOfRole,
         dataSource: findAllRole,
       }),
   },

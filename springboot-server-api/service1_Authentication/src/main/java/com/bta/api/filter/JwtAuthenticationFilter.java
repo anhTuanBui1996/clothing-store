@@ -1,6 +1,7 @@
 package com.bta.api.filter;
 
 import com.bta.api.entities.Users;
+import com.bta.api.models.implement.UserDetailsImpl;
 import com.bta.api.service.JwtTokenService;
 import com.bta.api.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -61,9 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 try {
                     Users databaseUser = userService.getUserByUsername(username);
                     if (databaseUser != null) {
+                        UserDetailsImpl userDetailsFromDb = new UserDetailsImpl(databaseUser);
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
-                                        databaseUser, databaseUser.getPassword(), databaseUser.getAuthorities());
+                                        userDetailsFromDb, userDetailsFromDb.getPassword(), userDetailsFromDb.getAuthorities());
                         authentication.setDetails(databaseUser);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
 

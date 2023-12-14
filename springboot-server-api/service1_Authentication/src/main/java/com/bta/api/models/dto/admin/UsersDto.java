@@ -30,11 +30,4 @@ public class UsersDto {
 	private Set<UUID> roles;
 	private String authorities;
 
-	public String getPassword() {
-		return null;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 }

@@ -28,7 +28,7 @@ public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Permissions> permissions;
 
-    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<Users> users;
 
     @Override

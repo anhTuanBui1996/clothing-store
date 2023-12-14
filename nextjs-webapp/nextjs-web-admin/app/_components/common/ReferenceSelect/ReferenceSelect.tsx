@@ -29,6 +29,7 @@ export function RenderCellForReferenceSelect({
   const [_isMounted, setMounted] = React.useState(true);
 
   const { isEditable, colDef, api, id } = params;
+  console.log(params)
 
   const [openEditor, setOpenEditor] = React.useState(false);
   const [openViewer, setOpenViewer] = React.useState(false);
