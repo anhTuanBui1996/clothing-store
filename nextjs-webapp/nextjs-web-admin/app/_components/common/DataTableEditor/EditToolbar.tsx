@@ -167,7 +167,7 @@ export default function EditToolbar(props: EditToolbarProps) {
   const [saveChangesDisabled, setSaveChangesDisabled] = useState(false);
   useEffect(() => {
     if (
-      rows.filter((row) => row.isUpdated).length > 0 ||
+      rows.filter((row) => row._isUpdated).length > 0 ||
       deletedRows.size > 0
     ) {
       setSaveChangesDisabled(false);
@@ -222,7 +222,7 @@ export default function EditToolbar(props: EditToolbarProps) {
   //#region Save changes Button
   const handleSaveChanges = () => {
     if (
-      rows.filter((row) => row.isUpdated).length > 0 ||
+      rows.filter((row) => row._isUpdated).length > 0 ||
       deletedRows.size > 0
     ) {
       handleOpenDialog(
@@ -270,7 +270,7 @@ export default function EditToolbar(props: EditToolbarProps) {
               setDeletedActionStatus("fail");
             });
       }
-      const updatedRows = rows.filter((row) => row.isUpdated);
+      const updatedRows = rows.filter((row) => row._isUpdated);
       if (updatedRows.length > 0) {
         setUpdatedActionStatus("processing");
         updateAllPromise &&
@@ -334,9 +334,9 @@ export default function EditToolbar(props: EditToolbarProps) {
         createdBy: "ANHBT",
         lastModifiedDate: new Date(),
         lastModifiedBy: "ANHBT",
-        lineNo: oldRows.length + index + 1,
-        isAdded: true,
-        isUpdated: true,
+        _lineNo: oldRows.length + index + 1,
+        _isAdded: true,
+        _isUpdated: true,
       })),
     ]);
     setRowModesModel((oldModel) => {
@@ -359,7 +359,7 @@ export default function EditToolbar(props: EditToolbarProps) {
     for (let i = 0; i < selectedRows.length; i++) {
       let id: string = selectedRows[i];
 
-      if (!rows.find((row) => row.id === id)?.isAdded) {
+      if (!rows.find((row) => row.id === id)?._isAdded) {
         isFoundOriginalRow = true;
         break;
       }
@@ -388,7 +388,7 @@ export default function EditToolbar(props: EditToolbarProps) {
         oldRows.filter((row) => !selectedRows.includes(row.id))
       );
       selectedRows.forEach((id) => {
-        if (!rows.find((row) => row.id === id)?.isAdded) {
+        if (!rows.find((row) => row.id === id)?._isAdded) {
           setDeletedRows(deletedRows.add(id));
         }
       });

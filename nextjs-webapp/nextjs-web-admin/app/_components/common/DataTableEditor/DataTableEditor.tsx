@@ -38,9 +38,9 @@ export default function DataTableEditor({
     () =>
       initialRows.map((row, index) => ({
         ...row,
-        lineNo: index + 1,
-        isUpdated: false,
-        isAdded: false,
+        _lineNo: index + 1,
+        _isUpdated: false,
+        _isAdded: false,
       })),
     []
   );
@@ -61,7 +61,7 @@ export default function DataTableEditor({
     } else {
       isUpdated = !(JSON.stringify(oldRow) === JSON.stringify(newRow));
     }
-    const updatedRow = { ...newRow, isNew: false, isUpdated };
+    const updatedRow = { ...newRow, _isNew: false, _isUpdated: isUpdated };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
