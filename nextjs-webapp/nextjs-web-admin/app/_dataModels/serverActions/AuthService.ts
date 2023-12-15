@@ -1,6 +1,6 @@
 "use server";
 
-export async function getAuthentication(token?: string) {
+export async function checkAuthentication(token?: string) {
   try {
     const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/validate/`, {
       method: "GET",

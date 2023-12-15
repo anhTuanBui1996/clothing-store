@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAuthentication } from "./app/_dataModels/serverActions/AuthService";
+import { checkAuthentication } from "./app/_dataModels/serverActions/AuthService";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   try {
     const url = request.nextUrl;
     const tokenFromCookies = request.cookies.get("jwt")?.value;
-    const result = await getAuthentication(tokenFromCookies || "");
+    const result = await checkAuthentication(tokenFromCookies || "");
     if (result === 200) {
       const response = NextResponse.next();
       return response;

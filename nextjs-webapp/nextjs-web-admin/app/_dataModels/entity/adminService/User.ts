@@ -14,8 +14,9 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
   {
     field: "isAdmin",
     headerName: "Is Admin",
+    headerAlign: "left",
     type: "boolean",
-    width: 100,
+    width: 120,
     editable: true,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -52,8 +53,9 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
   {
     field: "isMale",
     headerName: "Is Male",
+    headerAlign: "left",
     type: "boolean",
-    width: 100,
+    width: 120,
     editable: true,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -86,6 +88,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     ) =>
       RenderCellForReferenceSelect({
         params,
+        displayField: "roleCode",
         sourceSchema: gridColsOfRole,
         dataSource: findAllRole,
       }),
@@ -94,6 +97,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     ) =>
       RenderCellForReferenceSelect({
         params,
+        displayField: "roleCode",
         sourceSchema: gridColsOfRole,
         dataSource: findAllRole,
       }),

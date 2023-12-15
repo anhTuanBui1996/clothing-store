@@ -11,7 +11,13 @@ import { Box, Button, ButtonGroup, Dialog, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import React from "react";
+import React, {
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { GridApiCommunity, GridStateColDef } from "@mui/x-data-grid/internals";
 import { CookiesContext } from "../../../layout/CookiesProvider/CookiesProvider";
 
@@ -19,34 +25,51 @@ export function RenderCellForReferenceSelect({
   params,
   sourceSchema,
   dataSource,
+  displayField,
   isManyToManyRef,
   uploadMethod,
 }: {
   params: GridRenderCellParams;
   sourceSchema: GridColDef[];
   dataSource: (token: string, option?: any) => Promise<any>;
+  displayField?: string;
   isManyToManyRef?: boolean;
   uploadMethod?: (token: string, options?: any) => Promise<any>;
-}): React.ReactNode {
-  const [_isMounted, setMounted] = React.useState(true);
+}): ReactNode {
+  const [_isMounted, setMounted] = useState(true);
 
-  const { isEditable, colDef, api, id } = params;
+  const { isEditable, colDef, api, id, cellMode, value } = params;
 
-  const [openEditor, setOpenEditor] = React.useState(false);
-  const [openViewer, setOpenViewer] = React.useState(false);
-  const [source, setSource] = React.useState([]);
-  const cookies = React.useContext(CookiesContext);
+  const [openEditor, setOpenEditor] = useState(false);
+  const [openViewer, setOpenViewer] = useState(false);
+  const [source, setSource] = useState([]);
+  const cookies = useContext(CookiesContext);
   const token = cookies.find((c) => c.name === "jwt")?.value;
-  const [displayValue, setDisplayValue] = React.useState(undefined);
+  const [displayValue, setDisplayValue] = useState<string>("");
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (value && displayField) {
+      const joinedDisplayValue = value.map((id: string) => {
+        let foundRow = source.find((r: any) => r.id === id);
+        if (foundRow) {
+          return foundRow[displayField];
+        } else {
+          return "";
+        }
+      });
+      setDisplayValue(joinedDisplayValue);
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (token) {
       dataSource(token, isManyToManyRef ? id : undefined)
         .then((data) => {
-          _isMounted &&
+          if (_isMounted) {
             setSource(
               data.map((o: any, i: number) => ({ ...o, _lineNo: i + 1 })) || []
             );
+          }
         })
         .catch((ex) => console.error(ex));
     } else {
@@ -57,11 +80,15 @@ export function RenderCellForReferenceSelect({
 
   const handleOpenEditor = () => {
     setOpenEditor(true);
-    api.startRowEditMode({ id, fieldToFocus: colDef.field });
+    if (cellMode === "view") {
+      api.startRowEditMode({ id, fieldToFocus: colDef.field });
+    }
   };
   const handleCloseEditor = () => {
     setOpenEditor(false);
-    api.stopRowEditMode({ id, field: colDef.field });
+    if (cellMode === "edit") {
+      api.stopRowEditMode({ id, field: colDef.field });
+    }
   };
   const handleOpenViewer = () => setOpenViewer(true);
   const handleCloseViewer = () => setOpenViewer(false);
@@ -73,6 +100,7 @@ export function RenderCellForReferenceSelect({
       alignItems={"center"}
       gap={1}
     >
+      {displayValue}
       <ButtonGroup variant="text">
         <Tooltip title="View">
           <Button color="info" onClick={handleOpenViewer}>
@@ -89,18 +117,21 @@ export function RenderCellForReferenceSelect({
       </ButtonGroup>
       <ReferenceSelectEditor
         idSelected={id}
+        setDisplayValueCell={setDisplayValue}
         open={openEditor}
         onClose={handleCloseEditor}
         colDef={colDef}
         cellApi={api}
         schema={sourceSchema}
         source={source}
+        currentValue={value}
       />
       <ReferenceSelectViewer
         open={openViewer}
         onClose={handleCloseViewer}
         schema={sourceSchema}
         source={source}
+        currentValue={value}
       />
     </Box>
   );
@@ -108,6 +139,7 @@ export function RenderCellForReferenceSelect({
 
 export function ReferenceSelectEditor({
   idSelected,
+  currentValue,
   open,
   onClose,
   colDef,
@@ -116,6 +148,8 @@ export function ReferenceSelectEditor({
   source,
 }: {
   idSelected: GridRowId;
+  currentValue: any[];
+  setDisplayValueCell: (v: string) => void;
   open: boolean;
   onClose: () => void;
   colDef: GridStateColDef;
@@ -124,7 +158,7 @@ export function ReferenceSelectEditor({
   source: any[];
 }) {
   // 1 is single, n is multiple selection
-  const isMultiple = React.useMemo(() => {
+  const isMultiple = useMemo(() => {
     switch (colDef.type?.at(colDef.type?.length - 1)) {
       case "1":
         return false;
@@ -133,7 +167,7 @@ export function ReferenceSelectEditor({
     }
   }, [colDef.type]);
   const [gridRowSelectionModel, setGridRowSelectionModel] =
-    React.useState<GridInputRowSelectionModel>([]);
+    useState<GridInputRowSelectionModel>([]);
   const handleRowSelectionModelChange = (
     rowSelectionModel: GridRowSelectionModel,
     _details: GridCallbackDetails<any>
@@ -147,6 +181,14 @@ export function ReferenceSelectEditor({
     );
   };
 
+  useEffect(() => {
+    if (currentValue) {
+      setGridRowSelectionModel(currentValue);
+    } else {
+      setGridRowSelectionModel([]);
+    }
+  }, [currentValue]);
+
   const handleOkButtonClicked = () => {
     cellApi.setEditCellValue({
       id: idSelected,
@@ -156,8 +198,17 @@ export function ReferenceSelectEditor({
     onClose();
   };
 
+  const handleOnCloseEditor = () => {
+    if (currentValue) {
+      setGridRowSelectionModel(currentValue);
+    } else {
+      setGridRowSelectionModel([]);
+    }
+    onClose();
+  };
+
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onClose={handleOnCloseEditor}>
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
@@ -166,6 +217,7 @@ export function ReferenceSelectEditor({
         checkboxSelection
         rowSelectionModel={gridRowSelectionModel}
         onRowSelectionModelChange={handleRowSelectionModelChange}
+        autoHeight
       />
       <Box display="flex" justifyContent="space-between" gap={1}>
         <Button fullWidth onClick={handleOkButtonClicked}>
@@ -176,7 +228,7 @@ export function ReferenceSelectEditor({
             <RefreshIcon />
           </Button>
         </Tooltip>
-        <Button fullWidth onClick={onClose}>
+        <Button fullWidth onClick={handleOnCloseEditor}>
           Cancel
         </Button>
       </Box>
@@ -187,22 +239,32 @@ export function ReferenceSelectEditor({
 export function ReferenceSelectViewer({
   open,
   onClose,
+  currentValue,
   schema,
   source,
 }: {
   open: boolean;
   onClose: () => void;
+  currentValue: any[];
   schema: GridColDef[];
   source: any[];
 }) {
+  const selectedIds = useMemo(() => {
+    if (currentValue) {
+      return source.filter((r) => currentValue.includes(r.id));
+    } else {
+      return [];
+    }
+  }, [currentValue]);
   return (
     <Dialog open={open} onClose={onClose}>
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
         columns={schema.map((col) => ({ ...col, editable: false }))}
-        rows={source}
+        rows={selectedIds}
         disableRowSelectionOnClick
+        autoHeight
       />
     </Dialog>
   );

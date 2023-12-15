@@ -27,7 +27,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   LoginInfo,
-  getAuthentication,
+  checkAuthentication,
   signInWithCredentials,
 } from "@/app/_dataModels/serverActions/AuthService";
 import { FcGoogle } from "react-icons/fc";
@@ -52,7 +52,7 @@ export default function Login() {
   const { setUserInfo } = useContext(SessionContext);
 
   useEffect(() => {
-    getAuthentication(jwtValue)
+    checkAuthentication(jwtValue)
       .then((status) => {
         if (status === 200) {
           router.replace("/", { scroll: false });

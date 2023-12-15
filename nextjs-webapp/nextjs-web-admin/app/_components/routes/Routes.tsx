@@ -43,15 +43,20 @@ const routesArr = [
     ],
   },
   {
+    text: "Authentication Management",
+    itemLinks: [
+      { path: "/role", icon: <AdminPanelSettingsIcon />, text: "Role" },
+      { path: "/user", icon: <ContactsIcon />, text: "User" },
+      { path: "/menu", icon: <MenuBookIcon />, text: "Menu" },
+      { path: "/permission", icon: <AccessibilityNewIcon />, text: "Permission" },
+    ],
+  },
+  {
     text: "Data Management",
     itemLinks: [
       { path: "/product", icon: <ShoppingBagIcon />, text: "Product" },
       { path: "/brand", icon: <Diversity3Icon />, text: "Brand" },
       { path: "/category", icon: <CategoryIcon />, text: "Category" },
-      { path: "/role", icon: <AdminPanelSettingsIcon />, text: "Role" },
-      { path: "/user", icon: <ContactsIcon />, text: "User" },
-      { path: "/menu", icon: <MenuBookIcon />, text: "Menu" },
-      { path: "/permission", icon: <AccessibilityNewIcon />, text: "Permission" },
       { path: "/order", icon: <SellIcon />, text: "Order" },
     ],
   },
