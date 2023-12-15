@@ -2,6 +2,7 @@ package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.models.dto.admin.UsersDto;
+import com.bta.api.models.dto.auth.UserInfoDto;
 import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.*;
 import lombok.*;
@@ -61,6 +62,17 @@ public class Users extends BaseEntity<UsersDto> {
         userDto.setAuthorities(String.join(",",
                 roles.stream().map(Roles::getRoleCode).toList()));
         return userDto;
+    }
+
+    public UserInfoDto toUserInfoDto() {
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setAdmin(isAdmin);
+        userInfoDto.setEmail(email);
+        userInfoDto.setFirstName(firstName);
+        userInfoDto.setLastName(lastName);
+        userInfoDto.setAuthorities(String.join(",",
+                roles.stream().map(Roles::getRoleCode).toList()));
+        return userInfoDto;
     }
 
     public void setAuthoritiesFromDto(String authorities) {

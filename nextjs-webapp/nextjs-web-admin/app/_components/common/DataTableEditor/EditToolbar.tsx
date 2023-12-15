@@ -199,7 +199,7 @@ export default function EditToolbar(props: EditToolbarProps) {
             setRows((oldRows) =>
               obj.map((v: any, i: number) => ({
                 ...v,
-                lineNo: i + 1,
+                _lineNo: i + 1,
               }))
             );
           })
@@ -376,7 +376,7 @@ export default function EditToolbar(props: EditToolbarProps) {
       setRows((oldRows) =>
         oldRows
           .filter((row) => !selectedRows.includes(row.id))
-          .map((row, index) => ({ ...row, lineNo: index + 1 }))
+          .map((row, index) => ({ ...row, _lineNo: index + 1 }))
       );
     }
   };

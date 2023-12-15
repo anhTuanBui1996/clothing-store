@@ -2,7 +2,7 @@ import { GridColDef } from "@mui/x-data-grid";
 
 export const gridDefaults: GridColDef[] = [
   {
-    field: "lineNo",
+    field: "_lineNo",
     hideable: true,
     sortable: false,
     headerName: "#",

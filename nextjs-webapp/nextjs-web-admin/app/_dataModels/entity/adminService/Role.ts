@@ -1,4 +1,4 @@
-import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
+import { RenderCellForReferenceSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/ReferenceSelect";
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import {
   GridColDef,
@@ -8,7 +8,7 @@ import {
 import {
   findPermissionOfRole,
   updatePermissions,
-} from "../../../_utils/serverActions/AdminService";
+} from "../../serverActions/AdminService";
 import { gridColsForRoleView as permissionsGridCols } from "./Permissions";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
@@ -47,6 +47,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
         params,
         sourceSchema: permissionsGridCols,
         dataSource: findPermissionOfRole,
+        isManyToManyRef: true,
       }),
     renderEditCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -55,6 +56,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
         params,
         sourceSchema: permissionsGridCols,
         dataSource: findPermissionOfRole,
+        isManyToManyRef: true,
       }),
   },
 ]);

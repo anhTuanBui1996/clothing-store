@@ -17,6 +17,9 @@ import { usePathname } from "next/navigation";
 import { unprotectedRoutes } from "@/app/_utils/constants";
 import { CookiesContext } from "../CookiesProvider/CookiesProvider";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { SessionContext, UserInfo } from "../SessionContext/SessionContext";
+import { SnackbarProvider } from "notistack";
+import { getCurrentUserInfo } from "@/app/_dataModels/serverActions/AuthService";
 
 const drawerWidth = 240;
 
@@ -81,6 +84,35 @@ export default function RootLayoutMenu({
   const [isInUnprotectedRoutes, setInUnprotectedRoutes] =
     React.useState<boolean>(true);
 
+  const [userInfo, setUserInfo] = React.useState<UserInfo | undefined>(
+    undefined
+  );
+  const [jwt, setJwt] = React.useState<string | undefined>(undefined);
+  React.useEffect(() => {
+    setJwt(cookieArray.find((t) => t.name === "jwt")?.value);
+  }, [cookieArray]);
+  React.useEffect(() => {
+    if (jwt) {
+      getCurrentUserInfo(jwt)
+        .then((resp) => {
+          if (resp?.status === 200) {
+            setUserInfo &&
+              setUserInfo({
+                isAdmin: resp?.content?.admin || false,
+                email: resp?.content?.email || undefined,
+                firstName: resp?.content?.firstName || undefined,
+                lastName: resp?.content?.lastName || undefined,
+                isMale: resp?.content?.male || undefined,
+                roles: resp?.content?.roles || undefined,
+              });
+          } else {
+            console.warn("Can't get the current User Info");
+          }
+        })
+        .catch((ex) => console.error(ex));
+    }
+  }, [jwt]);
+
   React.useEffect(() => {
     if (unprotectedRoutes.includes(route)) {
       setInUnprotectedRoutes(true);
@@ -99,62 +131,74 @@ export default function RootLayoutMenu({
 
   return (
     <CookiesContext.Provider value={cookieArray}>
-      {isInUnprotectedRoutes ? (
-        <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
-          {children}
-        </Box>
-      ) : (
-        <>
-          <CssBaseline />
-          <TopHeaderBar
-            isDrawerOpened={open}
-            handleDrawerOpen={handleDrawerOpen}
-          />
-          <Drawer
-            className="animate__animated animate__slideInLeft"
-            variant="permanent"
-            elevation={20}
-            open={open}
-            sx={{
-              flexGrow: 0,
-              boxShadow:
-                "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
-            }}
-          >
-            <DrawerHeader>
-              <Link
-                href={"/"}
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <Image
-                  alt="logo"
-                  src={`/images/retina-logo1.png`}
-                  width={250}
-                  height={256}
-                  style={{ width: "40px", height: "40px" }}
-                  priority
-                />{" "}
-                <Typography variant="h6" noWrap component="div" marginLeft={2}>
-                  BTAWebApp
-                </Typography>
-              </Link>
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === "rtl" ? (
-                  <ChevronRightIcon />
-                ) : (
-                  <ChevronLeftIcon />
-                )}
-              </IconButton>
-            </DrawerHeader>
-            <Divider />
-            <Routes isDrawerOpened={open} />
-          </Drawer>
+      <SessionContext.Provider
+        value={{
+          userInfo,
+          setUserInfo,
+        }}
+      >
+        {isInUnprotectedRoutes ? (
           <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
-            <DrawerHeader />
             {children}
           </Box>
-        </>
-      )}
+        ) : (
+          <>
+            <CssBaseline />
+            <TopHeaderBar
+              isDrawerOpened={open}
+              handleDrawerOpen={handleDrawerOpen}
+            />
+            <Drawer
+              className="animate__animated animate__slideInLeft"
+              variant="permanent"
+              elevation={20}
+              open={open}
+              sx={{
+                flexGrow: 0,
+                boxShadow:
+                  "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
+              }}
+            >
+              <DrawerHeader>
+                <Link
+                  href={"/"}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Image
+                    alt="logo"
+                    src={`/images/retina-logo1.png`}
+                    width={250}
+                    height={256}
+                    style={{ width: "40px", height: "40px" }}
+                    priority
+                  />{" "}
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    marginLeft={2}
+                  >
+                    BTAWebApp
+                  </Typography>
+                </Link>
+                <IconButton onClick={handleDrawerClose}>
+                  {theme.direction === "rtl" ? (
+                    <ChevronRightIcon />
+                  ) : (
+                    <ChevronLeftIcon />
+                  )}
+                </IconButton>
+              </DrawerHeader>
+              <Divider />
+              <Routes isDrawerOpened={open} />
+            </Drawer>
+            <Box component="main" sx={{ minWidth: "1px", flexGrow: 1 }}>
+              <DrawerHeader />
+              <SnackbarProvider>{children}</SnackbarProvider>
+            </Box>
+          </>
+        )}
+      </SessionContext.Provider>
     </CookiesContext.Provider>
   );
 }

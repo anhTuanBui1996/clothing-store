@@ -4,8 +4,10 @@ import com.bta.api.models.dto.auth.ChangeUserPasswordDto;
 import com.bta.api.models.dto.auth.LoginUserDto;
 import com.bta.api.models.dto.auth.RegisterUserDto;
 import com.bta.api.models.dto.admin.UsersDto;
+import com.bta.api.models.dto.auth.UserInfoDto;
 import com.bta.api.service.CredentialsService;
 import com.bta.api.service.JwtTokenService;
+import com.bta.api.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +37,9 @@ public class AuthenticationController {
     JwtTokenService jwtTokenService;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     AuthenticationManager authenticationManager;
 
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
@@ -52,7 +57,9 @@ public class AuthenticationController {
             securityContextRepository.saveContext(context, request, response);
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtTokenService.generateToken(authentication.getName());
-                return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+                UserInfoDto userInfoDto = userService.getUserInfo(authentication.getName());
+                userInfoDto.setJwtToken(jwtToken);
+                return ResponseEntity.status(HttpStatus.OK).body(userInfoDto);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }

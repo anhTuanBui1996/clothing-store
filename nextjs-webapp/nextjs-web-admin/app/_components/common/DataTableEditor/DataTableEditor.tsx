@@ -13,7 +13,6 @@ import {
 import { GridInputRowSelectionModel } from "@mui/x-data-grid";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
 import EditToolbar from "./EditToolbar";
-import { SnackbarProvider } from "notistack";
 
 export default function DataTableEditor({
   initialRows,
@@ -78,7 +77,6 @@ export default function DataTableEditor({
   };
 
   return (
-    <SnackbarProvider>
       <Box
         sx={{
           boxShadow:
@@ -150,6 +148,5 @@ export default function DataTableEditor({
           }}
         />
       </Box>
-    </SnackbarProvider>
   );
 }

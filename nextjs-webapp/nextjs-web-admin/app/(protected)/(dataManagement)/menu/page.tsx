@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { gridCols } from "@/app/_dataModels/entity/adminService/Menu";
 import { GridValidRowModel } from "@mui/x-data-grid";
-import useAdminService from "@/app/_utils/serverActions/AdminService";
+import useAdminService from "@/app/_dataModels/serverActions/AdminService";
 import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
 
 export default function Page() {

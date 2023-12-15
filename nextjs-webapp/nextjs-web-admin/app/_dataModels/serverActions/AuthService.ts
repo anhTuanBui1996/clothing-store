@@ -2,7 +2,7 @@
 
 export async function getAuthentication(token?: string) {
   try {
-    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/admin`, {
+    const result = await fetch(`${process.env.AUTH_SERVICE_ORIGIN}/validate/`, {
       method: "GET",
       mode: "cors",
       credentials: "include",
@@ -17,6 +17,32 @@ export async function getAuthentication(token?: string) {
       },
     });
     return result.status;
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+export async function getCurrentUserInfo(token?: string) {
+  try {
+    const result = await fetch(
+      `${process.env.AUTH_SERVICE_ORIGIN}/validate/userInfo`,
+      {
+        method: "GET",
+        mode: "cors",
+        credentials: "include",
+        headers: {
+          Accept: "*/*",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Methods": "*",
+          "Access-Control-Allow-Headers": "*",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const bodyJson = await result.json();
+    return { status: result.status, content: bodyJson };
   } catch (ex) {
     console.error(ex);
   }

@@ -29,13 +29,7 @@ public class InMemoryProvider implements AuthenticationProvider {
         defaultUsers.add(User.builder()
                 .username("admin")
                 .password("$2a$10$rkpRCbASS3kF0pHkR76iked5svu2EsXpWy8G7y/Rps9bE09vG3Cvq") //"password"
-                .roles("ADMIN", "CLIENT")
-                .build()
-        );
-        defaultUsers.add(User.builder()
-                .username("client")
-                .password("$2a$10$rkpRCbASS3kF0pHkR76iked5svu2EsXpWy8G7y/Rps9bE09vG3Cvq") //"password"
-                .roles("CLIENT")
+                .roles("ADMIN")
                 .build()
         );
         return new InMemoryUserDetailsManager(defaultUsers);

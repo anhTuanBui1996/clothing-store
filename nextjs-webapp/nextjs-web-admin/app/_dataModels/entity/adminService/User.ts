@@ -1,4 +1,4 @@
-import { RenderCellForReferenceSelect } from "@/app/_components/common/ReferenceSelect/ReferenceSelect";
+import { RenderCellForReferenceSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/ReferenceSelect";
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import {
   GridColDef,
@@ -7,7 +7,8 @@ import {
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
 import { gridCols as gridColsOfRole } from "./Role";
-import { findAllRole } from "@/app/_utils/serverActions/AdminService";
+import { findAllRole } from "@/app/_dataModels/serverActions/AdminService";
+import { BooleanSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/BooleanSelect";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
@@ -16,6 +17,9 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "boolean",
     width: 100,
     editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => BooleanSelect(params),
   },
   {
     field: "email",
@@ -51,6 +55,9 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "boolean",
     width: 100,
     editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => BooleanSelect(params),
   },
   {
     field: "dbo",
@@ -72,7 +79,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerAlign: "left",
     align: "right",
     type: "referenceSelect:n",
-    width: 150,
+    width: 250,
     editable: true,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>

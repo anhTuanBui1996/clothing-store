@@ -29,7 +29,7 @@ import {
   LoginInfo,
   getAuthentication,
   signInWithCredentials,
-} from "@/app/_utils/serverActions/AuthService";
+} from "@/app/_dataModels/serverActions/AuthService";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -38,6 +38,7 @@ import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/Pa
 import { NextFontContext } from "../_components/layout/NextFontProvider/NextFontProvider";
 import { CookiesContext } from "../_components/layout/CookiesProvider/CookiesProvider";
 import { setCookie } from "../_utils/cookieDispatcher";
+import { SessionContext } from "../_components/layout/SessionContext/SessionContext";
 
 export default function Login() {
   const [initialLoaded, setInitialLoaded] = useState(false);
@@ -48,12 +49,15 @@ export default function Login() {
   const jwtValue = cookies.find((c) => c.name === "jwt")?.value;
   const { philosopher } = useContext(NextFontContext);
   const { setLoading } = useContext(PageLoadingContext);
+  const { setUserInfo } = useContext(SessionContext);
 
   useEffect(() => {
     getAuthentication(jwtValue)
       .then((status) => {
         if (status === 200) {
           router.replace("/", { scroll: false });
+        } else {
+          handleOpenSnackbar("error", "Login failed, please try again!");
         }
       })
       .catch((ex) => {
@@ -145,18 +149,51 @@ export default function Login() {
         return;
       }
       signInWithCredentials(user)
-        .then((token) => {
-          if (token) {
+        .then((resp: any) => {
+          if (resp) {
             setValidating(false);
-            const returnPage = searchs.get("returnPage");
-            router.replace(
-              pathname === "/login" ||
-                returnPage === "/login" ||
-                returnPage === null
-                ? `/`
-                : `${returnPage}`,
-              { scroll: false }
-            );
+            const {
+              isAdmin,
+              email,
+              firstName,
+              lastName,
+              isMale,
+              roles,
+              jwtToken,
+            } = JSON.parse(resp);
+            setUserInfo &&
+              setUserInfo({
+                isAdmin,
+                email,
+                firstName,
+                lastName,
+                isMale,
+                roles,
+              });
+            setCookie("jwt", jwtToken, {
+              domain: "localhost",
+              path: "/",
+              httpOnly: true,
+            })
+              .then(() => {
+                const returnPage = searchs.get("returnPage");
+                router.replace(
+                  pathname === "/login" ||
+                    returnPage === "/login" ||
+                    returnPage === null
+                    ? `/`
+                    : `${returnPage}`,
+                  { scroll: false }
+                );
+              })
+              .catch((ex) => {
+                console.error(ex);
+                setValidating(false);
+                handleOpenSnackbar(
+                  "error",
+                  "Some error occured, please try again!"
+                );
+              });
           } else {
             setValidating(false);
             handleOpenSnackbar("error", "Login failed, please try again!");
@@ -164,6 +201,8 @@ export default function Login() {
         })
         .catch((ex) => {
           console.error(ex);
+          setValidating(false);
+          handleOpenSnackbar("error", "Some error occured, please try again!");
         });
     }
   };
@@ -177,15 +216,33 @@ export default function Login() {
     }
     setValidating(true);
     signInWithCredentials(user)
-      .then((token) => {
-        if (token) {
-          setCookie("jwt", token, {
+      .then((resp: any) => {
+        if (resp) {
+          setValidating(false);
+          const {
+            isAdmin,
+            email,
+            firstName,
+            lastName,
+            isMale,
+            roles,
+            jwtToken,
+          } = JSON.parse(resp);
+          setUserInfo &&
+            setUserInfo({
+              isAdmin,
+              email,
+              firstName,
+              lastName,
+              isMale,
+              roles,
+            });
+          setCookie("jwt", jwtToken, {
             domain: "localhost",
             path: "/",
             httpOnly: true,
           })
             .then(() => {
-              setValidating(false);
               const returnPage = searchs.get("returnPage");
               router.replace(
                 pathname === "/login" ||
@@ -196,7 +253,14 @@ export default function Login() {
                 { scroll: false }
               );
             })
-            .catch((ex) => console.error(ex));
+            .catch((ex) => {
+              console.error(ex);
+              setValidating(false);
+              handleOpenSnackbar(
+                "error",
+                "Some error occured, please try again!"
+              );
+            });
         } else {
           setValidating(false);
           handleOpenSnackbar("error", "Login failed, please try again!");
@@ -204,6 +268,8 @@ export default function Login() {
       })
       .catch((ex) => {
         console.error(ex);
+        setValidating(false);
+        handleOpenSnackbar("error", "Some error occured, please try again!");
       });
   };
   //#endregion

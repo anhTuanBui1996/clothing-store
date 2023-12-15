@@ -10,37 +10,37 @@ function useAdminService(token?: string) {
   if (token === undefined) throw new Error("Not jwt available at service!");
 
   const getAllMenu = async () => await findAllMenu(token);
-  const getMenuById = async (id: string) => await findMenuById(id, token);
-  const createNewMenu = async (menu: any) => await createMenu(menu, token);
-  const updateExistingMenu = async (menu: any) => await updateMenu(menu, token);
+  const getMenuById = async (id: string) => await findMenuById(token, id);
+  const createNewMenu = async (menu: any) => await createMenu(token, menu);
+  const updateExistingMenu = async (menu: any) => await updateMenu(token, menu);
   const updateAllMenus = async (menus: any[]) =>
-    await updateMenus(menus, token);
-  const deleteExistingMenu = async (id: string) => await deleteMenu(id, token);
-  const deleteAllMenus = async (ids: string[]) => await deleteMenus(ids, token);
+    await updateMenus(token, menus);
+  const deleteExistingMenu = async (id: string) => await deleteMenu(token, id);
+  const deleteAllMenus = async (ids: string[]) => await deleteMenus(token, ids);
 
   const getAllRole = async () => await findAllRole(token);
-  const getRoleById = async (id: string) => await findRoleById(id, token);
-  const createNewRole = async (role: any) => await createRole(role, token);
-  const updateExistingRole = async (role: any) => await updateRole(role, token);
+  const getRoleById = async (id: string) => await findRoleById(token, id);
+  const createNewRole = async (role: any) => await createRole(token, role);
+  const updateExistingRole = async (role: any) => await updateRole(token, role);
   const updateAllRoles = async (roles: any[]) =>
-    await updateRoles(roles, token);
-  const deleteExistingRole = async (id: string) => await deleteRole(id, token);
-  const deleteAllRoles = async (ids: string[]) => await deleteRoles(ids, token);
+    await updateRoles(token, roles);
+  const deleteExistingRole = async (id: string) => await deleteRole(token, id);
+  const deleteAllRoles = async (ids: string[]) => await deleteRoles(token, ids);
 
   const getAllUser = async () => await findAllUser(token);
-  const getUserById = async (id: string) => await findUserById(id, token);
-  const createNewUser = async (user: any) => await createUser(user, token);
-  const updateExistingUser = async (user: any) => await updateUser(user, token);
+  const getUserById = async (id: string) => await findUserById(token, id);
+  const createNewUser = async (user: any) => await createUser(token, user);
+  const updateExistingUser = async (user: any) => await updateUser(token, user);
   const updateAllUsers = async (users: any[]) =>
-    await updateUsers(users, token);
-  const deleteExistingUser = async (id: string) => await deleteUser(id, token);
-  const deleteAllUsers = async (ids: string[]) => await deleteUsers(ids, token);
+    await updateUsers(token, users);
+  const deleteExistingUser = async (id: string) => await deleteUser(token, id);
+  const deleteAllUsers = async (ids: string[]) => await deleteUsers(token, ids);
 
   const getAllPermission = async () => findAllPermission(token);
   const getPermissionsOfRole = async (id: string) =>
-    findPermissionOfRole(id, token);
+    findPermissionOfRole(token, id);
   const updateAllPermissions = async (permissions: Permission[]) =>
-    updatePermissions(permissions, token);
+    updatePermissions(token, permissions);
 
   return {
     getAllMenu,
@@ -94,7 +94,7 @@ export async function findAllMenu(token: string): Promise<any> {
   }
 }
 
-export async function findMenuById(id: string, token: string): Promise<any> {
+export async function findMenuById(token: string, id: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -114,7 +114,7 @@ export async function findMenuById(id: string, token: string): Promise<any> {
   }
 }
 
-export async function createMenu(menu: any, token: string): Promise<any> {
+export async function createMenu(token: string, menu: any): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -134,7 +134,7 @@ export async function createMenu(menu: any, token: string): Promise<any> {
   }
 }
 
-export async function updateMenu(menu: any, token: string): Promise<any> {
+export async function updateMenu(token: string, menu: any): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -154,7 +154,7 @@ export async function updateMenu(menu: any, token: string): Promise<any> {
   }
 }
 
-export async function updateMenus(menus: any[], token: string): Promise<any> {
+export async function updateMenus(token: string, menus: any[]): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -174,7 +174,7 @@ export async function updateMenus(menus: any[], token: string): Promise<any> {
   }
 }
 
-export async function deleteMenu(id: string, token: string): Promise<any> {
+export async function deleteMenu(token: string, id: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -193,7 +193,7 @@ export async function deleteMenu(id: string, token: string): Promise<any> {
   }
 }
 
-export async function deleteMenus(ids: string[], token: string): Promise<any> {
+export async function deleteMenus(token: string, ids: string[]): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -235,7 +235,7 @@ export async function findAllRole(token: string): Promise<any> {
   }
 }
 
-export async function findRoleById(id: string, token: string): Promise<any> {
+export async function findRoleById(token: string, id: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -255,7 +255,7 @@ export async function findRoleById(id: string, token: string): Promise<any> {
   }
 }
 
-export async function createRole(role: any, token: string): Promise<any> {
+export async function createRole(token: string, role: any): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -275,7 +275,7 @@ export async function createRole(role: any, token: string): Promise<any> {
   }
 }
 
-export async function updateRole(role: any, token: string): Promise<any> {
+export async function updateRole(token: string, role: any): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -295,7 +295,7 @@ export async function updateRole(role: any, token: string): Promise<any> {
   }
 }
 
-export async function updateRoles(roles: any[], token: string): Promise<any> {
+export async function updateRoles(token: string, roles: any[]): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -315,7 +315,7 @@ export async function updateRoles(roles: any[], token: string): Promise<any> {
   }
 }
 
-export async function deleteRole(id: string, token: string): Promise<any> {
+export async function deleteRole(token: string, id: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -334,7 +334,7 @@ export async function deleteRole(id: string, token: string): Promise<any> {
   }
 }
 
-export async function deleteRoles(ids: string[], token: string): Promise<any> {
+export async function deleteRoles(token: string, ids: string[]): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -376,7 +376,7 @@ export async function findAllUser(token: string): Promise<any> {
   }
 }
 
-export async function findUserById(id: string, token: string): Promise<any> {
+export async function findUserById(token: string, id?: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -396,7 +396,7 @@ export async function findUserById(id: string, token: string): Promise<any> {
   }
 }
 
-export async function createUser(user: any, token: string): Promise<any> {
+export async function createUser(token: string, user: any): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -416,7 +416,7 @@ export async function createUser(user: any, token: string): Promise<any> {
   }
 }
 
-export async function updateUser(user: any, token: string): Promise<any> {
+export async function updateUser(token: string, user: any): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -436,7 +436,7 @@ export async function updateUser(user: any, token: string): Promise<any> {
   }
 }
 
-export async function updateUsers(users: any[], token: string): Promise<any> {
+export async function updateUsers(token: string, users: any[]): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -456,7 +456,7 @@ export async function updateUsers(users: any[], token: string): Promise<any> {
   }
 }
 
-export async function deleteUser(id: string, token: string): Promise<any> {
+export async function deleteUser(token: string, id: string): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -475,7 +475,7 @@ export async function deleteUser(id: string, token: string): Promise<any> {
   }
 }
 
-export async function deleteUsers(ids: string[], token: string): Promise<any> {
+export async function deleteUsers(token: string, ids: string[]): Promise<any> {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -524,7 +524,7 @@ export async function findAllPermission(token: string) {
   }
 }
 
-export async function findPermissionOfRole(id: string, token: string) {
+export async function findPermissionOfRole(token: string, id: string) {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -545,8 +545,8 @@ export async function findPermissionOfRole(id: string, token: string) {
 }
 
 export async function updatePermissions(
-  permissions: Permission[],
-  token: string
+  token: string,
+  permissions: Permission[]
 ) {
   try {
     const headers = new Headers(baseHeaders);

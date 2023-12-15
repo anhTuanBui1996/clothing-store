@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { gridCols } from "@/app/_dataModels/entity/adminService/Role";
 import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
-import useAdminService from "@/app/_utils/serverActions/AdminService";
+import useAdminService from "@/app/_dataModels/serverActions/AdminService";
 
 export default function Page() {
   const [_isMounted, setMounted] = React.useState(true);

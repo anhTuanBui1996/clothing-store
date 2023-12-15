@@ -2,7 +2,7 @@
 import DataTableEditor from "@/app/_components/common/DataTableEditor/DataTableEditor";
 import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
 import { gridCols } from "@/app/_dataModels/entity/adminService/Permissions";
-import useAdminService from "@/app/_utils/serverActions/AdminService";
+import useAdminService from "@/app/_dataModels/serverActions/AdminService";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { Typography, Box } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";

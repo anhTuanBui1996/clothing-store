@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAuthentication } from "./app/_utils/serverActions/AuthService";
+import { getAuthentication } from "./app/_dataModels/serverActions/AuthService";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {

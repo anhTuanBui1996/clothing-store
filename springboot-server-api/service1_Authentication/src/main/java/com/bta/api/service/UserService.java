@@ -3,6 +3,7 @@ package com.bta.api.service;
 import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Users;
 import com.bta.api.models.dto.admin.UsersDto;
+import com.bta.api.models.dto.auth.UserInfoDto;
 import com.bta.api.repository.RoleRepository;
 import com.bta.api.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -102,6 +103,16 @@ public class UserService implements CRUDService<Users, UsersDto> {
     public Users getUserByUsername(String username) throws UsernameNotFoundException {
         return usersRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: username=" + username));
+    }
+
+    public UserInfoDto getUserInfo(String username) throws UsernameNotFoundException {
+        if (username.equals("admin")) {
+            return new UserInfoDto(true, "admin@cloth.store.vn", null, "Admin",
+                    true, "ADMIN", null);
+        }
+        return usersRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: username=" + username))
+                .toUserInfoDto();
     }
 
 }

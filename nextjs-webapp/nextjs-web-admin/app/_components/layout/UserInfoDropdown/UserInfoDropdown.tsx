@@ -9,18 +9,20 @@ import {
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import React from "react";
+import React, { useContext, useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "@/app/_utils/serverActions/AuthService";
+import { signOut } from "@/app/_dataModels/serverActions/AuthService";
 import { deleteCookie } from "@/app/_utils/cookieDispatcher";
+import { SessionContext } from "../SessionContext/SessionContext";
 
 export default function UserInfoDropdown() {
   const router = useRouter();
+  const { userInfo } = useContext(SessionContext);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleOpenMenu = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => setAnchorEl(null);
@@ -44,7 +46,7 @@ export default function UserInfoDropdown() {
         aria-expanded={open ? "true" : undefined}
         sx={{ cursor: "pointer" }}
       >
-        H
+        {userInfo?.lastName[0].toLocaleUpperCase()}
       </Avatar>
       <Menu
         id="user-info-mini"

@@ -13,17 +13,19 @@ import InfoIcon from "@mui/icons-material/Info";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import React from "react";
 import { GridApiCommunity, GridStateColDef } from "@mui/x-data-grid/internals";
-import { CookiesContext } from "../../layout/CookiesProvider/CookiesProvider";
+import { CookiesContext } from "../../../layout/CookiesProvider/CookiesProvider";
 
 export function RenderCellForReferenceSelect({
   params,
   sourceSchema,
   dataSource,
+  isManyToManyRef,
   uploadMethod,
 }: {
   params: GridRenderCellParams;
   sourceSchema: GridColDef[];
-  dataSource: (id: string, token: string) => Promise<any>;
+  dataSource: (token: string, option?: any) => Promise<any>;
+  isManyToManyRef?: boolean;
   uploadMethod?: (token: string, options?: any) => Promise<any>;
 }): React.ReactNode {
   const [_isMounted, setMounted] = React.useState(true);
@@ -35,14 +37,15 @@ export function RenderCellForReferenceSelect({
   const [source, setSource] = React.useState([]);
   const cookies = React.useContext(CookiesContext);
   const token = cookies.find((c) => c.name === "jwt")?.value;
+  const [displayValue, setDisplayValue] = React.useState(undefined);
 
   React.useEffect(() => {
     if (token) {
-      dataSource(id.toString(), token)
+      dataSource(token, isManyToManyRef ? id : undefined)
         .then((data) => {
           _isMounted &&
             setSource(
-              data.map((o: any, i: number) => ({ ...o, lineNo: i + 1 })) || []
+              data.map((o: any, i: number) => ({ ...o, _lineNo: i + 1 })) || []
             );
         })
         .catch((ex) => console.error(ex));
@@ -158,7 +161,7 @@ export function ReferenceSelectEditor({
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
-        columns={schema}
+        columns={schema.map((col) => ({ ...col, editable: false }))}
         rows={source}
         checkboxSelection
         rowSelectionModel={gridRowSelectionModel}
