@@ -14,7 +14,7 @@ import TopHeaderBar from "../TopHeaderBar/TopHeaderBar";
 import { CssBaseline, Typography } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { unprotectedRoutes } from "@/app/_utils/constants";
+import { unprotectedRoutes } from "@/app/_utilities/constants";
 import { CookiesContext } from "../CookiesProvider/CookiesProvider";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { SessionContext, UserInfo } from "../SessionContext/SessionContext";
@@ -154,7 +154,10 @@ export default function RootLayoutMenu({
               elevation={20}
               open={open}
               sx={{
+                position: "fixed",
+                zIndex: 1,
                 flexGrow: 0,
+                height: "100%",
                 boxShadow:
                   "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);",
               }}

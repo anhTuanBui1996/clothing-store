@@ -37,7 +37,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { PageLoadingContext } from "../_components/layout/PageLoadingProvider/PageLoadingProvider";
 import { NextFontContext } from "../_components/layout/NextFontProvider/NextFontProvider";
 import { CookiesContext } from "../_components/layout/CookiesProvider/CookiesProvider";
-import { setCookie } from "../_utils/cookieDispatcher";
+import { setCookie } from "../_utilities/cookieDispatcher";
 import { SessionContext } from "../_components/layout/SessionContext/SessionContext";
 
 export default function Login() {

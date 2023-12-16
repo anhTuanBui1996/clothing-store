@@ -1,4 +1,4 @@
-import 'animate.css';
+import "animate.css";
 import React from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -65,7 +65,11 @@ export default function TopHeaderBar({
             <MenuIcon />
           </IconButton>
           {!isDrawerOpened && (
-            <Link href={"/"} style={{ display: "flex", alignItems: "center" }}>
+            <Link
+              href={"/"}
+              className="animate__animated animate__fadeInRight"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <Image
                 alt="logo"
                 src={`/images/retina-logo.png`}

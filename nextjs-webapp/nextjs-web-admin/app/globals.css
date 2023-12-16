@@ -8,6 +8,12 @@
   --background-end-rgb: 245, 245, 245;
 }
 
+.page-content {
+  position: relative;
+  left: 56px;
+  width: calc(100% - 56px);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;

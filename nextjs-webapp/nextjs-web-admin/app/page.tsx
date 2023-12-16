@@ -24,7 +24,7 @@ const Page = () => {
           marginBottom={1}
           fontFamily={"inherit"}
           fontWeight={500}
-          fontSize={50}
+          fontSize={40}
           textAlign={"center"}
           className={philosopher.className}
         >

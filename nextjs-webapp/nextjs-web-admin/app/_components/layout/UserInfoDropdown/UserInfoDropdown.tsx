@@ -12,7 +12,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import React, { useContext, useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "@/app/_dataModels/serverActions/AuthService";
-import { deleteCookie } from "@/app/_utils/cookieDispatcher";
+import { deleteCookie } from "@/app/_utilities/cookieDispatcher";
 import { SessionContext } from "../SessionContext/SessionContext";
 
 export default function UserInfoDropdown() {
