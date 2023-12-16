@@ -103,7 +103,7 @@ export default function RootLayoutMenu({
                 firstName: resp?.content?.firstName || undefined,
                 lastName: resp?.content?.lastName || undefined,
                 isMale: resp?.content?.male || undefined,
-                roles: resp?.content?.roles || undefined,
+                authorities: resp?.content?.roles || undefined,
               });
           } else {
             console.warn("Can't get the current User Info");

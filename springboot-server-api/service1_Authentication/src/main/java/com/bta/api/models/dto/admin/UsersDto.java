@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -27,7 +27,12 @@ public class UsersDto {
 	private String citizenId;
 	private String phoneNumber;
 
-	private Set<UUID> roles;
+	private List<UUID> roles;
 	private String authorities;
+
+	private boolean accountNonExpired;
+	private boolean accountNonLocked;
+	private boolean credentialsNonExpired;
+	private boolean enabled;
 
 }

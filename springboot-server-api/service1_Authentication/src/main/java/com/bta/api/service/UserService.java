@@ -32,7 +32,7 @@ public class UserService implements CRUDService<Users, UsersDto> {
         Optional<Users> foundUsers = usersRepository.findById(dto.getId());
         Users users = foundUsers.orElseGet(Users::new);
         users.setUsername(dto.getUsername());
-        if (!dto.getPassword().isBlank()) {
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             users.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         users.setAdmin(dto.isAdmin());
@@ -44,8 +44,11 @@ public class UserService implements CRUDService<Users, UsersDto> {
         users.setCitizenId(dto.getCitizenId());
         users.setPhoneNumber(dto.getPhoneNumber());
         users.setRoles(dto.getRoles().stream().map(uuid -> roleRepository.findById(uuid).orElseThrow(() ->
-                new EntityNotFoundException("Role not found: id=" + uuid))).collect(Collectors.toSet()));
-        users.setAuthoritiesFromDto(dto.getAuthorities());
+                new EntityNotFoundException("Role not found: id=" + uuid))).collect(Collectors.toList()));
+        users.setAccountNonExpired(dto.isAccountNonExpired());
+        users.setAccountNonLocked(dto.isAccountNonLocked());
+        users.setCredentialsNonExpired(dto.isCredentialsNonExpired());
+        users.setEnabled(dto.isEnabled());
         return users;
     }
 
@@ -108,7 +111,7 @@ public class UserService implements CRUDService<Users, UsersDto> {
     public UserInfoDto getUserInfo(String username) throws UsernameNotFoundException {
         if (username.equals("admin")) {
             return new UserInfoDto(true, "admin@cloth.store.vn", null, "Admin",
-                    true, "ADMIN", null);
+                    true, "ADMIN");
         }
         return usersRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: username=" + username))

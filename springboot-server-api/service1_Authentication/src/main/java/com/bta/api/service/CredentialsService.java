@@ -51,6 +51,7 @@ public class CredentialsService {
 
         }
         Users newUser = Users.builder()
+                .isAdmin(false)
                 .username(newUsername)
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .email(dto.getEmail())
@@ -60,11 +61,10 @@ public class CredentialsService {
                 .isMale(dto.isMale())
                 .citizenId(dto.getCitizenId())
                 .phoneNumber(dto.getPhoneNumber())
-                .roles(Set.of(Roles.builder()
-                        .roleCode("CLIENT")
-                        .roleName("Client user")
-                        .description("For client user in Web-client")
-                        .build()))
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .enabled(true)
                 .build();
         return usersRepository.save(newUser).toDto();
     }

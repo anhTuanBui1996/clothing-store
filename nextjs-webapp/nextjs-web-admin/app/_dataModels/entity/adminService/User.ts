@@ -5,6 +5,7 @@ import {
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridTreeNodeWithRender,
+  GridValueGetterParams,
 } from "@mui/x-data-grid";
 import { gridCols as gridColsOfRole } from "./Role";
 import { findAllRole } from "@/app/_dataModels/serverActions/AdminService";
@@ -12,8 +13,66 @@ import { BooleanSelect } from "@/app/_components/common/DataTableEditor/cellRend
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
-    field: "isAdmin",
+    field: "username",
+    headerName: "Username",
+    type: "string",
+    width: 150,
+    editable: true,
+  },
+  {
+    field: "password",
+    headerName: "Password",
+    type: "string",
+    width: 200,
+    editable: true,
+  },
+  {
+    field: "admin",
     headerName: "Is Admin",
+    headerAlign: "left",
+    type: "boolean",
+    width: 120,
+    editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => BooleanSelect(params),
+  },
+  {
+    field: "accountNonExpired",
+    headerName: "Is Account Non-Expired",
+    headerAlign: "left",
+    type: "boolean",
+    width: 120,
+    editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => BooleanSelect(params),
+  },
+  {
+    field: "accountNonLocked",
+    headerName: "Is Account Non-Locked",
+    headerAlign: "left",
+    type: "boolean",
+    width: 120,
+    editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => BooleanSelect(params),
+  },
+  {
+    field: "credentialsNonExpired",
+    headerName: "Is Credentials Non-Expired",
+    headerAlign: "left",
+    type: "boolean",
+    width: 120,
+    editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => BooleanSelect(params),
+  },
+  {
+    field: "enabled",
+    headerName: "Is Enabled",
     headerAlign: "left",
     type: "boolean",
     width: 120,
@@ -51,7 +110,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     editable: true,
   },
   {
-    field: "isMale",
+    field: "male",
     headerName: "Is Male",
     headerAlign: "left",
     type: "boolean",
@@ -62,11 +121,14 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     ) => BooleanSelect(params),
   },
   {
-    field: "dbo",
+    field: "dob",
     headerName: "Date Of Birth",
     type: "date",
     width: 150,
     editable: true,
+    valueGetter: (
+      params: GridValueGetterParams<any, any, GridTreeNodeWithRender>
+    ) => new Date(params.value),
   },
   {
     field: "citizenId",

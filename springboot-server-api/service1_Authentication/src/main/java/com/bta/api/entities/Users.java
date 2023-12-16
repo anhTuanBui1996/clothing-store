@@ -29,7 +29,7 @@ public class Users extends BaseEntity<UsersDto> {
     @Transient
     RoleRepository roleRepository;
 
-    @NaturalId
+    @NaturalId(mutable = true)
     @Column(unique = true)
     private String username;
     private String password;
@@ -43,24 +43,31 @@ public class Users extends BaseEntity<UsersDto> {
     private String citizenId;
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "authorities",
             joinColumns = @JoinColumn(name = "user"),
             inverseJoinColumns = @JoinColumn(name = "role"))
-    private Set<Roles> roles;
+    private List<Roles> roles;
 
     @Override
     public UsersDto toDto() {
         UsersDto userDto = new UsersDto();
         userDto.setId(id);
+        userDto.setAdmin(isAdmin);
         userDto.setEmail(email);
         userDto.setMale(isMale);
         userDto.setDob(dob);
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
-        userDto.setRoles(roles.stream().map(BaseEntity::getId).collect(Collectors.toSet()));
+        userDto.setCitizenId(citizenId);
+        userDto.setPhoneNumber(phoneNumber);
+        userDto.setRoles(roles.stream().map(BaseEntity::getId).toList());
         userDto.setAuthorities(String.join(",",
                 roles.stream().map(Roles::getRoleCode).toList()));
+        userDto.setAccountNonExpired(isAccountNonExpired());
+        userDto.setAccountNonLocked(isAccountNonLocked());
+        userDto.setCredentialsNonExpired(isCredentialsNonExpired());
+        userDto.setEnabled(isEnabled());
         return userDto;
     }
 
@@ -70,17 +77,10 @@ public class Users extends BaseEntity<UsersDto> {
         userInfoDto.setEmail(email);
         userInfoDto.setFirstName(firstName);
         userInfoDto.setLastName(lastName);
+        userInfoDto.setMale(isMale);
         userInfoDto.setAuthorities(String.join(",",
                 roles.stream().map(Roles::getRoleCode).toList()));
         return userInfoDto;
-    }
-
-    public void setAuthoritiesFromDto(String authorities) {
-        this.roles = Arrays.stream(authorities.split(","))
-                .map(s -> roleRepository
-                        .findByRoleCode(s)
-                        .orElseThrow(() -> new EntityNotFoundException("Role not found: roleCode=" + s)))
-                .collect(Collectors.toSet());
     }
 
     private boolean accountNonExpired;

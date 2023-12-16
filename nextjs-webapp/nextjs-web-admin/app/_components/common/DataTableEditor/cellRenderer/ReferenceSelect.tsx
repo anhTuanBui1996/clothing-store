@@ -48,20 +48,6 @@ export function RenderCellForReferenceSelect({
   const [displayValue, setDisplayValue] = useState<string>("");
 
   useEffect(() => {
-    if (value && displayField) {
-      const joinedDisplayValue = value.map((id: string) => {
-        let foundRow = source.find((r: any) => r.id === id);
-        if (foundRow) {
-          return foundRow[displayField];
-        } else {
-          return "";
-        }
-      });
-      setDisplayValue(joinedDisplayValue);
-    }
-  }, [value]);
-
-  useEffect(() => {
     if (token) {
       dataSource(token, isManyToManyRef ? id : undefined)
         .then((data) => {
@@ -76,7 +62,24 @@ export function RenderCellForReferenceSelect({
       console.warn("No jwt found in cookies at ReferrenceSelect");
     }
     return () => setMounted(false);
-  });
+  }, []);
+
+  useEffect(() => {
+    if (value && displayField) {
+      console.log(value, displayField, source);
+      const joinedDisplayValue = value
+        .map((id: string) => {
+          let foundRow = source.find((r: any) => r.id === id);
+          if (foundRow) {
+            return foundRow[displayField];
+          } else {
+            return "";
+          }
+        })
+        .join(", ");
+      setDisplayValue(joinedDisplayValue);
+    }
+  }, [value, source]);
 
   const handleOpenEditor = () => {
     setOpenEditor(true);
@@ -255,7 +258,7 @@ export function ReferenceSelectViewer({
     } else {
       return [];
     }
-  }, [currentValue]);
+  }, [currentValue, source]);
   return (
     <Dialog open={open} onClose={onClose}>
       <DataGrid

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export type UserInfo =
   | {
@@ -7,7 +7,7 @@ export type UserInfo =
       firstName: string;
       lastName: string;
       isMale: boolean;
-      roles: string;
+      authorities: string;
     }
   | undefined;
 

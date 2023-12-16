@@ -149,28 +149,9 @@ export default function Login() {
         return;
       }
       signInWithCredentials(user)
-        .then((resp: any) => {
+        .then((resp?: string) => {
           if (resp) {
-            setValidating(false);
-            const {
-              isAdmin,
-              email,
-              firstName,
-              lastName,
-              isMale,
-              roles,
-              jwtToken,
-            } = JSON.parse(resp);
-            setUserInfo &&
-              setUserInfo({
-                isAdmin,
-                email,
-                firstName,
-                lastName,
-                isMale,
-                roles,
-              });
-            setCookie("jwt", jwtToken, {
+            setCookie("jwt", resp, {
               domain: "localhost",
               path: "/",
               httpOnly: true,
@@ -216,28 +197,10 @@ export default function Login() {
     }
     setValidating(true);
     signInWithCredentials(user)
-      .then((resp: any) => {
+      .then((resp?: string) => {
         if (resp) {
           setValidating(false);
-          const {
-            isAdmin,
-            email,
-            firstName,
-            lastName,
-            isMale,
-            roles,
-            jwtToken,
-          } = JSON.parse(resp);
-          setUserInfo &&
-            setUserInfo({
-              isAdmin,
-              email,
-              firstName,
-              lastName,
-              isMale,
-              roles,
-            });
-          setCookie("jwt", jwtToken, {
+          setCookie("jwt", resp, {
             domain: "localhost",
             path: "/",
             httpOnly: true,

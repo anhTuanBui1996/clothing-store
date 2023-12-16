@@ -8,6 +8,7 @@ import org.hibernate.annotations.NaturalId;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,16 +21,16 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Roles extends BaseEntity<RolesDto> implements GrantedAuthority {
 
-    @NaturalId
+    @NaturalId(mutable = true)
     private String roleCode;
     private String roleName;
     private String description;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Permissions> permissions;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<Users> users;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    private List<Users> users;
 
     @Override
     public RolesDto toDto() {

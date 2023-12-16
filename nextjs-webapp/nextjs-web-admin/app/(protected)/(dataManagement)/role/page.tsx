@@ -29,6 +29,7 @@ export default function Page() {
   React.useEffect(() => {
     getAllRole()
       .then((res) => {
+        console.log(res)
         _isMounted && setInitialRows(res);
       })
       .catch((err) => {
