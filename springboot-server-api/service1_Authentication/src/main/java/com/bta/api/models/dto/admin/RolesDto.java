@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,5 +19,7 @@ public class RolesDto {
     private String roleCode;
     private String roleName;
     private String description;
+
+    private List<PermissionsDto> permissions;
 
 }

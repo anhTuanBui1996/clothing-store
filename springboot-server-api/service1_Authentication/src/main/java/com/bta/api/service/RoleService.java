@@ -29,7 +29,9 @@ public class RoleService implements CRUDService<Roles, RolesDto> {
     @Override
     public List<RolesDto> getAll() {
         List<RolesDto> rolesDtos = new ArrayList<>();
-        roleRepository.findAll().forEach(role -> rolesDtos.add(role.toDto()));
+        roleRepository.findAll().forEach(role -> {
+            rolesDtos.add(role.toDto());
+        });
         return rolesDtos;
     }
 

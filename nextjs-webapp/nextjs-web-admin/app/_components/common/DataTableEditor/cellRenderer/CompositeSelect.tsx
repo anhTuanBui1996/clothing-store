@@ -21,12 +21,11 @@ import React, {
 import { GridApiCommunity, GridStateColDef } from "@mui/x-data-grid/internals";
 import { CookiesContext } from "../../../layout/CookiesProvider/CookiesProvider";
 
-export function RenderCellForReferenceSelect({
+export function RenderCellForCompositeSelect({
   params,
   sourceSchema,
   dataSource,
   displayField,
-  isManyToManyRef,
   isSourceFilteredInViewer,
   uploadMethod,
 }: {
@@ -34,7 +33,6 @@ export function RenderCellForReferenceSelect({
   sourceSchema: GridColDef[];
   dataSource: (token: string, option?: any) => Promise<any>;
   displayField?: string;
-  isManyToManyRef?: boolean;
   isSourceFilteredInViewer?: boolean;
   /**
    * Used for direct update right after clicking OK button
@@ -57,7 +55,7 @@ export function RenderCellForReferenceSelect({
 
   useEffect(() => {
     if (token) {
-      dataSource(token, isManyToManyRef ? id : undefined)
+      dataSource(token, id)
         .then((data) => {
           if (_isMounted) {
             setSource(
@@ -67,7 +65,7 @@ export function RenderCellForReferenceSelect({
         })
         .catch((ex) => console.error(ex));
     } else {
-      console.warn("No jwt found in cookies at ReferrenceSelect");
+      console.warn("No jwt found in cookies at CompositeSelect");
     }
     return () => setMounted(false);
   }, []);
@@ -125,7 +123,7 @@ export function RenderCellForReferenceSelect({
           </Tooltip>
         )}
       </ButtonGroup>
-      <ReferenceSelectEditor
+      <CompositeSelectEditor
         idSelected={id}
         setDisplayValueCell={setDisplayValue}
         open={openEditor}
@@ -136,7 +134,7 @@ export function RenderCellForReferenceSelect({
         source={source}
         currentValue={value}
       />
-      <ReferenceSelectViewer
+      <CompositeSelectViewer
         open={openViewer}
         onClose={handleCloseViewer}
         schema={sourceSchema}
@@ -148,7 +146,7 @@ export function RenderCellForReferenceSelect({
   );
 }
 
-export function ReferenceSelectEditor({
+export function CompositeSelectEditor({
   idSelected,
   currentValue,
   open,
@@ -223,7 +221,7 @@ export function ReferenceSelectEditor({
       <DataGrid
         showColumnVerticalBorder
         showCellVerticalBorder
-        columns={schema.map((col) => ({ ...col, editable: false }))}
+        columns={schema}
         rows={source}
         checkboxSelection
         rowSelectionModel={gridRowSelectionModel}
@@ -247,7 +245,7 @@ export function ReferenceSelectEditor({
   );
 }
 
-export function ReferenceSelectViewer({
+export function CompositeSelectViewer({
   open,
   onClose,
   currentValue,
@@ -263,7 +261,6 @@ export function ReferenceSelectViewer({
   isSourceFilteredByValue?: boolean;
 }) {
   const selectedIds = useMemo(() => {
-    console.log(currentValue);
     if (currentValue) {
       if (isSourceFilteredByValue) {
         return source.filter((r) => currentValue.includes(r.id));

@@ -10,6 +10,7 @@ import {
   updatePermissions,
 } from "../../serverActions/AdminService";
 import { gridColsForRoleView as permissionsGridCols } from "./Permissions";
+import { RenderCellForCompositeSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/CompositeSelect";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
@@ -43,20 +44,18 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
     ) =>
-      RenderCellForReferenceSelect({
+      RenderCellForCompositeSelect({
         params,
         sourceSchema: permissionsGridCols,
         dataSource: findPermissionOfRole,
-        isManyToManyRef: true,
       }),
     renderEditCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
     ) =>
-      RenderCellForReferenceSelect({
+      RenderCellForCompositeSelect({
         params,
         sourceSchema: permissionsGridCols,
         dataSource: findPermissionOfRole,
-        isManyToManyRef: true,
       }),
   },
 ]);

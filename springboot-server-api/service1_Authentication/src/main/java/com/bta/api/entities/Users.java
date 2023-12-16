@@ -3,14 +3,13 @@ package com.bta.api.entities;
 import com.bta.api.base.BaseEntity;
 import com.bta.api.models.dto.admin.UsersDto;
 import com.bta.api.models.dto.auth.UserInfoDto;
-import com.bta.api.repository.RoleRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,9 +24,6 @@ import java.util.stream.Collectors;
 })
 @EntityListeners(AuditingEntityListener.class)
 public class Users extends BaseEntity<UsersDto> {
-
-    @Transient
-    RoleRepository roleRepository;
 
     @NaturalId(mutable = true)
     @Column(unique = true)
