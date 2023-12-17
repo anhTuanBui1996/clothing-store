@@ -11,12 +11,8 @@ export default function Page() {
   const rows: readonly GridValidRowModel[] = [];
   return (
     <Box className="page-content" p={3}>
-      <Typography
-        marginBottom={4}
-        fontFamily={"inherit"}
-        fontWeight={500}
-      >
-        <Chip label="Brand" size="medium" color="success" />
+      <Typography marginBottom={1} fontFamily={"inherit"} fontWeight={500}>
+        Brand
       </Typography>
       <DataTableEditor columns={columns} initialRows={rows} />
     </Box>

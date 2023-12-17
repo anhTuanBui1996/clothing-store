@@ -35,7 +35,7 @@ public class WebSecurityConfig {
 
     @Bean
     AuthenticationManager authenticationManager() {
-        return new ProviderManager(inMemoryProvider, credentialsProvider);
+        return new ProviderManager(List.of(inMemoryProvider, credentialsProvider));
     }
 
     @Autowired

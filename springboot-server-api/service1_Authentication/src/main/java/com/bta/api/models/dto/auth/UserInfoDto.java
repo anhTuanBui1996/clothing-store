@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class UserInfoDto {
 
     private boolean isAdmin;
-    private String email;
     private String firstName;
     private String lastName;
     private boolean isMale;

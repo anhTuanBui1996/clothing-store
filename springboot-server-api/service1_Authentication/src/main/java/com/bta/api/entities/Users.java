@@ -40,7 +40,7 @@ public class Users extends BaseEntity<UsersDto> {
     private String phoneNumber;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "authorities",
+    @JoinTable(name = "Authorities",
             joinColumns = @JoinColumn(name = "user"),
             inverseJoinColumns = @JoinColumn(name = "role"))
     private List<Roles> roles;
@@ -49,6 +49,7 @@ public class Users extends BaseEntity<UsersDto> {
     public UsersDto toDto() {
         UsersDto userDto = new UsersDto();
         userDto.setId(id);
+        userDto.setUsername(username);
         userDto.setAdmin(isAdmin);
         userDto.setEmail(email);
         userDto.setMale(isMale);
@@ -70,7 +71,6 @@ public class Users extends BaseEntity<UsersDto> {
     public UserInfoDto toUserInfoDto() {
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setAdmin(isAdmin);
-        userInfoDto.setEmail(email);
         userInfoDto.setFirstName(firstName);
         userInfoDto.setLastName(lastName);
         userInfoDto.setMale(isMale);

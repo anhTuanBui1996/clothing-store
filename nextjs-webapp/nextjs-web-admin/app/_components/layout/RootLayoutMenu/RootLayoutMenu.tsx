@@ -99,7 +99,6 @@ export default function RootLayoutMenu({
             setUserInfo &&
               setUserInfo({
                 isAdmin: resp?.content?.admin || false,
-                email: resp?.content?.email || undefined,
                 firstName: resp?.content?.firstName || undefined,
                 lastName: resp?.content?.lastName || undefined,
                 isMale: resp?.content?.male || undefined,

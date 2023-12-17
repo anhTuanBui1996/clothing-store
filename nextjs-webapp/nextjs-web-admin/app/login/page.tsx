@@ -49,27 +49,24 @@ export default function Login() {
   const jwtValue = cookies.find((c) => c.name === "jwt")?.value;
   const { philosopher } = useContext(NextFontContext);
   const { setLoading } = useContext(PageLoadingContext);
-  const { setUserInfo } = useContext(SessionContext);
 
   useEffect(() => {
     checkAuthentication(jwtValue)
       .then((status) => {
         if (status === 200) {
           router.replace("/", { scroll: false });
-        } else {
-          handleOpenSnackbar("error", "Login failed, please try again!");
         }
       })
       .catch((ex) => {
         console.error(ex);
+      })
+      .finally(() => {
         const isSignOut = searchs.has("signout");
         if (!isSignOut) {
-          handleOpenSnackbar("error", "Error orcured, please login again!");
+          handleOpenSnackbar("error", "Login failed, please try again!");
         } else {
           handleOpenSnackbar("info", "Signed Out!");
         }
-      })
-      .finally(() => {
         setInitialLoaded(true);
         setLoading(false);
       });

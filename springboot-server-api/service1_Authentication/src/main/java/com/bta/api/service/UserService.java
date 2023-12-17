@@ -74,9 +74,7 @@ public class UserService implements CRUDService<Users, UsersDto> {
     @Override
     public List<UsersDto> saveCollection(List<UsersDto> dtos) {
         List<Users> users = new ArrayList<>();
-        dtos.forEach((UsersDto dto) -> {
-            users.add(applyChangesFromDto(dto));
-        });
+        dtos.forEach((UsersDto dto) -> users.add(applyChangesFromDto(dto)));
         List<UsersDto> usersDtos = new ArrayList<>();
         usersRepository.saveAll(users).forEach(user -> usersDtos.add(user.toDto()));
         return usersDtos;
@@ -110,7 +108,7 @@ public class UserService implements CRUDService<Users, UsersDto> {
 
     public UserInfoDto getUserInfo(String username) throws UsernameNotFoundException {
         if (username.equals("admin")) {
-            return new UserInfoDto(true, "admin@cloth.store.vn", null, "Admin",
+            return new UserInfoDto(true, null, "Admin",
                     true, "ADMIN");
         }
         return usersRepository.findByUsername(username)

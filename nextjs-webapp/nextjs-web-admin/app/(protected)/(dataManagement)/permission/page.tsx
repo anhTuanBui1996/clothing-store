@@ -34,8 +34,8 @@ export default function Page() {
     <Box className="page-content" p={3}>
       {rows && (
         <>
-          <Typography marginBottom={4} fontFamily={"inherit"} fontWeight={500}>
-            User
+          <Typography marginBottom={1} fontFamily={"inherit"} fontWeight={500}>
+            Permission
           </Typography>
           <DataTableEditor
             columns={columns}

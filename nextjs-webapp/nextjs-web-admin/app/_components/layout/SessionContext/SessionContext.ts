@@ -3,7 +3,6 @@ import React from "react";
 export type UserInfo =
   | {
       isAdmin: boolean;
-      email: string;
       firstName: string;
       lastName: string;
       isMale: boolean;

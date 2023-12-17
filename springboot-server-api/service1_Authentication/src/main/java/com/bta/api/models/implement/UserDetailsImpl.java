@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 public class UserDetailsImpl implements UserDetails {
@@ -20,8 +21,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<AuthorityImpl> authorities = new ArrayList<>(dbUsers.getRoles()
-                .stream().map(AuthorityImpl::new).toList());
+        List<AuthorityImpl> authorities = dbUsers.getRoles()
+                .stream().map(AuthorityImpl::new).collect(Collectors.toList());
         if (dbUsers.isAdmin()) {
             authorities.add(new AuthorityImpl("ADMIN"));
         }

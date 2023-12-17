@@ -37,7 +37,7 @@ public class CredentialsProvider implements AuthenticationProvider {
                 return createSuccessfulAuthentication(authentication, new UserDetailsImpl(foundUser));
             }
         }
-        throw new AuthenticationCredentialsNotFoundException("Incorrect credentials with name=" + name);
+        throw new AuthenticationCredentialsNotFoundException("Incorrect credentials with name=" + name + " and password=" + credential);
     }
 
     private Authentication createSuccessfulAuthentication(final Authentication authentication, final UserDetails user) {

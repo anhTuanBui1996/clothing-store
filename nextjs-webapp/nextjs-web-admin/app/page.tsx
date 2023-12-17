@@ -31,7 +31,7 @@ const Page = () => {
           Welcome to Administrator Pages
         </Typography>
         <Typography
-          marginBottom={4}
+          marginBottom={1}
           fontFamily={"inherit"}
           fontWeight={300}
           textAlign={"center"}
@@ -43,7 +43,7 @@ const Page = () => {
           src="/images/welcome-img.png"
           width={1000}
           height={1000}
-          style={{ width: "768px", height: "auto" }}
+          style={{ width: "auto", height: "auto", minHeight: 0 }}
           priority
           className="mx-auto"
         />
