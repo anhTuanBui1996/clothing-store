@@ -4,10 +4,18 @@ import {
   GridColDef,
   GridInputRowSelectionModel,
   GridRenderCellParams,
+  GridRowClassNameParams,
   GridRowId,
   GridRowSelectionModel,
 } from "@mui/x-data-grid";
-import { Box, Button, ButtonGroup, Dialog, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Dialog,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -105,12 +113,17 @@ export function RenderCellForReferenceSelect({
 
   return (
     <Box
+      width={"100%"}
       display={"flex"}
       justifyContent={"space-between"}
       alignItems={"center"}
       gap={1}
     >
-      {displayValue}
+      <Tooltip title={displayValue}>
+        <Typography overflow={"hidden"} textOverflow={"ellipsis"} fontSize={14}>
+          {displayValue}
+        </Typography>
+      </Tooltip>
       <ButtonGroup variant="text">
         <Tooltip title="View">
           <Button color="info" onClick={handleOpenViewer}>
@@ -263,37 +276,35 @@ export function ReferenceSelectViewer({
   isSourceFilteredByValue?: boolean;
 }) {
   const selectedIds = useMemo(() => {
-    console.log(currentValue);
     if (currentValue) {
       if (isSourceFilteredByValue) {
         return source.filter((r) => currentValue.includes(r.id));
       } else {
-        return source.sort((r) => (currentValue.includes(r.id) ? -1 : 1));
+        return source.toSorted((r) => (currentValue.includes(r.id) ? -1 : 1));
       }
     } else {
       return [];
     }
   }, [currentValue, source, isSourceFilteredByValue]);
 
-  const [gridRowSelectionModel, setGridRowSelectionModel] =
-    useState<GridInputRowSelectionModel>([]);
-
-  useEffect(() => {
-    if (currentValue) {
-      setGridRowSelectionModel(currentValue);
-    } else {
-      setGridRowSelectionModel([]);
-    }
-  }, [currentValue]);
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DataGrid
+        sx={{
+          "& .selected-row-viewer": {
+            backgroundColor: "#e1f5fe",
+            "&:hover": {
+              backgroundColor: "#c8edfd",
+            },
+          },
+        }}
         showColumnVerticalBorder
         showCellVerticalBorder
         columns={schema.map((col) => ({ ...col, editable: false }))}
         rows={selectedIds}
-        rowSelectionModel={gridRowSelectionModel}
+        getRowClassName={(params: GridRowClassNameParams<any>) =>
+          `${currentValue.includes(params.id) ? "selected-row-viewer" : ""}`
+        }
         disableRowSelectionOnClick
         autoHeight
       />

@@ -265,7 +265,7 @@ export function CompositeSelectViewer({
       if (isSourceFilteredByValue) {
         return source.filter((r) => currentValue.includes(r.id));
       } else {
-        return source.sort((r) => (currentValue.includes(r.id) ? -1 : 1));
+        return source.toSorted((r) => (currentValue.includes(r.id) ? -1 : 1));
       }
     } else {
       return [];

@@ -42,7 +42,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerName: "Is Account Non-Expired",
     headerAlign: "left",
     type: "boolean",
-    width: 120,
+    width: 220,
     editable: true,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -53,7 +53,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerName: "Is Account Non-Locked",
     headerAlign: "left",
     type: "boolean",
-    width: 120,
+    width: 220,
     editable: true,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
@@ -64,7 +64,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerName: "Is Credentials Non-Expired",
     headerAlign: "left",
     type: "boolean",
-    width: 120,
+    width: 240,
     editable: true,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>

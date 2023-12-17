@@ -222,8 +222,8 @@ export default function EditToolbar(props: EditToolbarProps) {
   //#region Save changes Button
   const handleSaveChanges = () => {
     if (
-      rows.filter((row) => row._isUpdated).length > 0 ||
-      deletedRows.size > 0
+      !saveChangesDisabled &&
+      (rows.filter((row) => row._isUpdated).length > 0 || deletedRows.size > 0)
     ) {
       handleOpenDialog(
         {
@@ -302,8 +302,8 @@ export default function EditToolbar(props: EditToolbarProps) {
               setUpdatedActionStatus("fail");
             });
       }
-      handleCloseDialog();
     }
+    handleCloseDialog();
   };
   //#endregion
 
