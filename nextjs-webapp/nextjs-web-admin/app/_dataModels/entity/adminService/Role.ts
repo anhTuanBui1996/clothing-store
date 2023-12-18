@@ -38,7 +38,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     headerName: "Permissions",
     headerAlign: "left",
     align: "right",
-    type: "referenceSelect:n",
+    type: "compositeSelect:n",
     width: 150,
     editable: false,
     renderCell: (

@@ -11,14 +11,21 @@ import {
 import { gridCols as gridColsOfRole } from "./Role";
 import { findAllRole } from "@/app/_dataModels/serverActions/AdminService";
 import { BooleanSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/BooleanSelect";
+import { RenderCellForMediaSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/MediaSelect";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
     field: "avatar",
     headerName: "Avatar",
-    type: "media:image",
-    width: 150,
+    type: "mediaSelect",
+    width: 200,
     editable: true,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => RenderCellForMediaSelect({ cellParams: params, mediaType: "image" }),
+    renderEditCell: (
+      params: GridRenderEditCellParams<any, any, any, GridTreeNodeWithRender>
+    ) => RenderCellForMediaSelect({ cellParams: params, mediaType: "image" }),
   },
   {
     field: "username",

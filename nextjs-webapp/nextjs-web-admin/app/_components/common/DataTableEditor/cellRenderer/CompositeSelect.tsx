@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridInputRowSelectionModel,
   GridRenderCellParams,
+  GridRenderEditCellParams,
   GridRowId,
   GridRowSelectionModel,
 } from "@mui/x-data-grid";
@@ -29,7 +30,7 @@ export function RenderCellForCompositeSelect({
   isSourceFilteredInViewer,
   uploadMethod,
 }: {
-  params: GridRenderCellParams;
+  params: GridRenderCellParams | GridRenderEditCellParams;
   sourceSchema: GridColDef[];
   dataSource: (token: string, option?: any) => Promise<any>;
   displayField?: string;

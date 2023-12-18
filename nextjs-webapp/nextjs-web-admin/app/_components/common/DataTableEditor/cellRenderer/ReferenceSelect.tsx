@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridInputRowSelectionModel,
   GridRenderCellParams,
+  GridRenderEditCellParams,
   GridRowClassNameParams,
   GridRowId,
   GridRowSelectionModel,
@@ -38,7 +39,7 @@ export function RenderCellForReferenceSelect({
   isSourceFilteredInViewer,
   uploadMethod,
 }: {
-  params: GridRenderCellParams;
+  params: GridRenderCellParams | GridRenderEditCellParams;
   sourceSchema: GridColDef[];
   dataSource: (token: string, option?: any) => Promise<any>;
   displayField?: string;
