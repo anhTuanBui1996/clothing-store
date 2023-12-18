@@ -19,7 +19,7 @@ public class AuthorityImpl implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return roleCode;
+        return "ROLE_" + roleCode;
     }
 
 }

@@ -41,7 +41,7 @@ export default function DataTableEditor({
         _isUpdated: false,
         _isAdded: false,
       })),
-    []
+    [initialRows]
   );
   const [rows, setRows] = React.useState<GridRowsProp>(mappedRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
@@ -55,12 +55,15 @@ export default function DataTableEditor({
       (row: GridValidRowModel) => row.id === newRow.id
     );
     let isUpdated = false;
+    console.log("initialRow: ", initialRow)
+    console.log("oldRow: ", oldRow)
+    console.log("newRow", newRow)
     if (initialRow) {
       isUpdated = !(JSON.stringify(initialRow) === JSON.stringify(newRow));
     } else {
       isUpdated = !(JSON.stringify(oldRow) === JSON.stringify(newRow));
     }
-    const updatedRow = { ...newRow, _isNew: false, _isUpdated: isUpdated };
+    const updatedRow = { ...newRow, _isUpdated: isUpdated };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
@@ -77,76 +80,76 @@ export default function DataTableEditor({
   };
 
   return (
-      <Box
-        sx={{
-          boxShadow:
-            "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12)",
-          height: 500,
-          width: "100%",
-          "& .textPrimary": {
-            color: "text.primary",
+    <Box
+      sx={{
+        boxShadow:
+          "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12)",
+        height: 500,
+        width: "100%",
+        "& .textPrimary": {
+          color: "text.primary",
+        },
+      }}
+    >
+      <DataGrid
+        showColumnVerticalBorder
+        showCellVerticalBorder
+        rows={rows}
+        columns={columns}
+        editMode="row"
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              createdDate: false,
+              createdBy: false,
+              lastModifiedDate: false,
+              lastModifiedBy: false,
+              roleId: false,
+              menuId: false,
+            },
           },
         }}
-      >
-        <DataGrid
-          showColumnVerticalBorder
-          showCellVerticalBorder
-          rows={rows}
-          columns={columns}
-          editMode="row"
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                createdDate: false,
-                createdBy: false,
-                lastModifiedDate: false,
-                lastModifiedBy: false,
-                roleId: false,
-                menuId: false,
-              },
-            },
-          }}
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          processRowUpdate={processRowUpdate}
-          checkboxSelection={
-            deleteAllPromise !== undefined && deletePromise !== undefined
-          }
-          rowSelectionModel={gridRowSelectionModel}
-          onRowSelectionModelChange={handleRowSelectionModelChange}
-          disableRowSelectionOnClick
-          pageSizeOptions={[{ value: rows.length, label: "Max" }, 25, 50, 100]}
-          slots={{
-            toolbar: EditToolbar,
-          }}
-          slotProps={{
-            toolbar: {
-              initialRows,
-              columns,
-              rows,
-              rowsSelection: gridRowSelectionModel,
-              setRows,
-              setRowModesModel,
-              setRowsSelection: setGridRowSelectionModel,
-              getPromise,
-              createPromise,
-              updatePromise,
-              updateAllPromise,
-              deletePromise,
-              deleteAllPromise,
-            },
-          }}
-          sx={{
-            backgroundColor: "Background",
-            overflowX: "auto",
-            overflowY: "clip",
-            position: "relative",
-            "& .MuiDataGrid-main": {
-              marginTop: "5px",
-              borderTop: "1px solid #e0e0e0",
-            },
-          }}
-        />
-      </Box>
+        rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
+        processRowUpdate={processRowUpdate}
+        checkboxSelection={
+          deleteAllPromise !== undefined && deletePromise !== undefined
+        }
+        rowSelectionModel={gridRowSelectionModel}
+        onRowSelectionModelChange={handleRowSelectionModelChange}
+        disableRowSelectionOnClick
+        pageSizeOptions={[{ value: rows.length, label: "Max" }, 25, 50, 100]}
+        slots={{
+          toolbar: EditToolbar,
+        }}
+        slotProps={{
+          toolbar: {
+            initialRows,
+            columns,
+            rows,
+            rowsSelection: gridRowSelectionModel,
+            setRows,
+            setRowModesModel,
+            setRowsSelection: setGridRowSelectionModel,
+            getPromise,
+            createPromise,
+            updatePromise,
+            updateAllPromise,
+            deletePromise,
+            deleteAllPromise,
+          },
+        }}
+        sx={{
+          backgroundColor: "Background",
+          overflowX: "auto",
+          overflowY: "clip",
+          position: "relative",
+          "& .MuiDataGrid-main": {
+            marginTop: "5px",
+            borderTop: "1px solid #e0e0e0",
+          },
+        }}
+      />
+    </Box>
   );
 }

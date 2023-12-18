@@ -6,12 +6,20 @@ import {
   GridRenderEditCellParams,
   GridTreeNodeWithRender,
   GridValueGetterParams,
+  GridValueSetterParams,
 } from "@mui/x-data-grid";
 import { gridCols as gridColsOfRole } from "./Role";
 import { findAllRole } from "@/app/_dataModels/serverActions/AdminService";
 import { BooleanSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/BooleanSelect";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
+  {
+    field: "avatar",
+    headerName: "Avatar",
+    type: "media:image",
+    width: 150,
+    editable: true,
+  },
   {
     field: "username",
     headerName: "Username",
@@ -126,6 +134,10 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "date",
     width: 150,
     editable: true,
+    valueSetter: (params: GridValueSetterParams<any, any>) => ({
+      ...params.row,
+      dob: params.value.toString(),
+    }),
     valueGetter: (
       params: GridValueGetterParams<any, any, GridTreeNodeWithRender>
     ) => new Date(params.value),
