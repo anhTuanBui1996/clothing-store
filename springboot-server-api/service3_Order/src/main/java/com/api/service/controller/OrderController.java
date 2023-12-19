@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.service.OrderService;
-import com.api.service.entity.Order;
+import com.api.service.entities.Order;
 
 @RestController
 public class OrderController {
