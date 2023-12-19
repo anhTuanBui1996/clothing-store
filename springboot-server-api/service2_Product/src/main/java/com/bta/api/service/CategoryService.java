@@ -1,58 +1,84 @@
 package com.bta.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Category;
+import com.bta.api.models.dto.admin.CategoryDto;
+import com.bta.api.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bta.api.repository.CategoryRepository;
 
 @Service
-public class CategoryService {
+public class CategoryService implements CRUDService<Category, CategoryDto> {
+
 	@Autowired
 	CategoryRepository categoryRepository;
 
-	public boolean createCategory(Category category) {
-		if (category.getCategoryId() != null || category == null) {
-			return false;
-		}
-		categoryRepository.save(category);
-		return true;
+	@Autowired
+	ProductRepository productRepository;
+
+	@Override
+	public List<CategoryDto> getAll() {
+		List<CategoryDto> categoryDtos = new ArrayList<>();
+		categoryRepository.findAll().forEach(category -> categoryDtos.add(category.toDto()));
+		return categoryDtos;
 	}
 
-	public List<Category> getAllCategory() {
-		List<Category> categorys = new ArrayList<>();
-		categoryRepository.findAll().forEach(category -> categorys.add(category));
-		return categorys;
+	@Override
+	public CategoryDto getById(UUID id) {
+		return categoryRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Category not found: id=" + id))
+				.toDto();
 	}
 
-	public Category getCategoryById(Long id) {
-		if (id == null) {
-			return null;
-		}
-		Optional<Category> res = categoryRepository.findById(id);
-		if (res.isEmpty()) {
-			return null;
-		}
-		return res.get();
+	@Override
+	public CategoryDto save(CategoryDto dto) {
+		return categoryRepository.save(applyChangesFromDto(dto)).toDto();
 	}
 
-	public boolean updateCategory(Long id, Category category) {
-		if (!categoryRepository.existsById(id) || id == null || category == null) {
-			return false;
-		}
-		categoryRepository.save(category);
-		return true;
+	@Override
+	public List<CategoryDto> saveCollection(List<CategoryDto> dtos) {
+		List<Category> categories = new ArrayList<>();
+		dtos.forEach(categoryDto -> categories.add(applyChangesFromDto(categoryDto)));
+		List<CategoryDto> categoryDtos = new ArrayList<>();
+		categories.forEach(category -> categoryDtos.add(category.toDto()));
+		return categoryDtos;
 	}
 
-	public boolean deleteCategory(Long id) {
-		if (!categoryRepository.existsById(id) || id == null) {
-			return false;
+	@Override
+	public boolean delete(UUID id) {
+		if (!categoryRepository.existsById(id)) {
+			throw new EntityNotFoundException("Category not found: id=" + id);
 		}
 		categoryRepository.deleteById(id);
 		return true;
+	}
+
+	@Override
+	public List<UUID> deleteCollection(Set<UUID> ids) {
+		List<UUID> result = new ArrayList<>(ids);
+		result.forEach(uuid -> {
+			if (!categoryRepository.existsById(uuid)) {
+				result.remove(uuid);
+			}
+		});
+		categoryRepository.deleteAllById(ids);
+		return result;
+	}
+
+	@Override
+	public Category applyChangesFromDto(CategoryDto dto) {
+		Optional<Category> foundCategory = categoryRepository.findById(dto.getId());
+		Category category = foundCategory.orElseGet(Category::new);
+		category.setCategoryName(dto.getCategoryName());
+		category.setProducts(dto.getProducts().stream().map(uuid -> productRepository.findById(uuid)
+				.orElseThrow(() -> new EntityNotFoundException("Category not found: id=" + uuid)))
+				.collect(Collectors.toList()));
+		return category;
 	}
 }

@@ -19,7 +19,7 @@ import { CookiesContext } from "../CookiesProvider/CookiesProvider";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { SessionContext, UserInfo } from "../SessionContext/SessionContext";
 import { SnackbarProvider } from "notistack";
-import { getCurrentUserInfo } from "@/app/_dataModels/serverActions/AuthService";
+import { getCurrentUserInfo } from "@/app/_hooks/serverActions/AuthService";
 
 const drawerWidth = 240;
 
@@ -103,6 +103,7 @@ export default function RootLayoutMenu({
                 lastName: resp?.content?.lastName || undefined,
                 isMale: resp?.content?.male || undefined,
                 authorities: resp?.content?.roles || undefined,
+                avatar: resp?.content.avatar || undefined,
               });
           } else {
             console.warn("Can't get the current User Info");

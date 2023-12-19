@@ -3,9 +3,9 @@ import React, { useContext } from "react";
 import DataTableEditor from "@/app/_components/common/DataTableEditor/DataTableEditor";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
-import { gridCols } from "@/app/_dataModels/entity/adminService/Menu";
+import { gridCols } from "@/app/_dataModels/entity/authenticationService/Menu";
 import { GridValidRowModel } from "@mui/x-data-grid";
-import useAdminService from "@/app/_dataModels/serverActions/AdminService";
+import useAdminService from "@/app/_hooks/serverActions/AdminService";
 import { CookiesContext } from "@/app/_components/layout/CookiesProvider/CookiesProvider";
 
 export default function Page() {

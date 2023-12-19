@@ -86,7 +86,7 @@ export default function Routes({
             subheader={
               isDrawerOpened && (
                 <ListSubheader
-                  sx={{ fontWeight: 700 }}
+                  sx={{ fontWeight: 900 }}
                   component="div"
                   id="nested-list-subheader"
                 >

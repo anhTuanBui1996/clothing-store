@@ -1,85 +1,89 @@
 package com.bta.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.bta.api.base.CRUDService;
+import com.bta.api.entities.Product;
+import com.bta.api.models.dto.admin.ProductDto;
+import com.bta.api.repository.BrandRepository;
+import com.bta.api.repository.CategoryRepository;
+import com.bta.api.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bta.api.entities.Product;
-import com.bta.api.exception.ProductServiceCustomException;
-import com.bta.api.repository.ProductRepository;
+import java.util.*;
 
 @Service
-public class ProductService {
+public class ProductService implements CRUDService<Product, ProductDto> {
+
 	@Autowired
 	ProductRepository productRepository;
 
-	public boolean createProduct(Product product) {
-		if (product.getProductId() != null || product == null) {
-			return false;
-		}
-		productRepository.save(product);
-		return true;
+	@Autowired
+	CategoryRepository categoryRepository;
+
+	@Autowired
+	BrandRepository brandRepository;
+
+	@Override
+	public List<ProductDto> getAll() {
+		List<ProductDto> productDtos = new ArrayList<>();
+		productRepository.findAll().forEach(product -> productDtos.add(product.toDto()));
+		return productDtos;
 	}
 
-	public boolean createProducts(List<Product> products) {
-		if (products.contains(null) || products == null) {
-			return false;
-		}
-		productRepository.saveAll(products);
-		return true;
+	@Override
+	public ProductDto getById(UUID id) {
+		return productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found: id=" + id))
+				.toDto();
 	}
 
-	public List<Product> getAllProduct() {
+	@Override
+	public ProductDto save(ProductDto dto) {
+		return productRepository.save(applyChangesFromDto(dto)).toDto();
+	}
+
+	@Override
+	public List<ProductDto> saveCollection(List<ProductDto> dtos) {
 		List<Product> products = new ArrayList<>();
-		productRepository.findAll().forEach(product -> products.add(product));
-		return products;
+		dtos.forEach(productDto -> products.add(applyChangesFromDto(productDto)));
+		List<ProductDto> productDtos = new ArrayList<>();
+		productRepository.saveAll(products).forEach(product -> productDtos.add(product.toDto()));
+		return productDtos;
 	}
 
-	public Product getProductById(Long id) {
-		if (id == null) {
-			return null;
-		}
-		Product res = productRepository.findById(id).orElseThrow(
-				() -> new ProductServiceCustomException("Product with given Id not found", "PRODUCT_NOT_FOUND"));
-		return res;
-	}
-
-	public List<Product> getAllProductByBrandAndCategory(Long brandId, Long categoryId) {
-		List<Product> products = new ArrayList<>();
-		productRepository.findByBrandAndCategory(brandId, categoryId).forEach(product -> products.add(product));
-		return products;
-	}
-
-	public boolean updateProduct(Long id, Product product) {
-		if (!productRepository.existsById(id) || id == null || product == null) {
-			return false;
-		}
-		productRepository.save(product);
-		return true;
-	}
-
-	public boolean deleteProduct(Long id) {
-		if (!productRepository.existsById(id) || id == null) {
-			return false;
+	@Override
+	public boolean delete(UUID id) {
+		if (!productRepository.existsById(id)) {
+			throw new EntityNotFoundException("Product not found: id=" + id);
 		}
 		productRepository.deleteById(id);
 		return true;
 	}
 
-	public void reduceQuantity(Long id, long quantity) {
-		Product product = productRepository.findById(id).orElseThrow(
-				() -> new ProductServiceCustomException("Product with given Id not found", "PRODUCT_NOT_FOUND"));
-		if (product != null) {
-			Product foundProduct = product;
-			long currentQuantity = foundProduct.getQuantity();
-			if (currentQuantity >= quantity) {
-				foundProduct.setQuantity(currentQuantity - quantity);
-				productRepository.save(foundProduct);
-			} else {
-				throw new ProductServiceCustomException("Product does not have sufficient Quantity",
-						"INSUFFICIENT_QUANTITY");
+	@Override
+	public List<UUID> deleteCollection(Set<UUID> ids) {
+		List<UUID> result = new ArrayList<>(ids);
+		result.forEach(uuid -> {
+			if (!productRepository.existsById(uuid)) {
+				result.remove(uuid);
 			}
-		}
+		});
+		productRepository.deleteAllById(ids);
+		return result;
+	}
+
+	@Override
+	public Product applyChangesFromDto(ProductDto dto) {
+		Optional<Product> foundProduct = productRepository.findById(dto.getId());
+		Product product = foundProduct.orElseGet(Product::new);
+		product.setName(dto.getName());
+		product.setQuantity(dto.getQuantity());
+		product.setPrice(dto.getPrice());
+		product.setCategory(categoryRepository.findById(dto.getCategory())
+				.orElseThrow(() -> new EntityNotFoundException("Category not found: id=" + dto.getCategory())));
+		product.setBrand(brandRepository.findById(dto.getBrand())
+				.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + dto.getBrand())));
+		return product;
 	}
 }

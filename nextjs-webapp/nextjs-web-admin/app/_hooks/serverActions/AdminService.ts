@@ -39,7 +39,7 @@ function useAdminService(token?: string) {
   const getAllPermission = async () => findAllPermission(token);
   const getPermissionsOfRole = async (id: string) =>
     findPermissionOfRole(token, id);
-  const updateAllPermissions = async (permissions: Permission[]) =>
+  const updateAllPermissions = async (permissions: any[]) =>
     updatePermissions(token, permissions);
 
   return {
@@ -497,12 +497,6 @@ export async function deleteUsers(token: string, ids: string[]): Promise<any> {
 //#endregion
 
 //#region "Permission"
-export type Permission = {
-  roleId: string;
-  menuId: string;
-  canModified: boolean;
-  canView: boolean;
-};
 
 export async function findAllPermission(token: string) {
   try {
@@ -544,10 +538,7 @@ export async function findPermissionOfRole(token: string, id: string) {
   }
 }
 
-export async function updatePermissions(
-  token: string,
-  permissions: Permission[]
-) {
+export async function updatePermissions(token: string, permissions: any[]) {
   try {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
@@ -557,6 +548,28 @@ export async function updatePermissions(
         method: "PUT",
         mode: "cors",
         body: JSON.stringify(permissions),
+        credentials: "include",
+        cache: "no-store",
+        headers,
+      }
+    );
+    return await result.json();
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+//#endregion
+
+//#region "Product"
+export async function findAllProduct(token: string) {
+  try {
+    const headers = new Headers(baseHeaders);
+    headers.append("Authorization", `Bearer ${token}`);
+    const result = await fetch(
+      `${process.env.PRODUCT_SERVICE_ORIGIN}/admin/product/`,
+      {
+        method: "GET",
+        mode: "cors",
         credentials: "include",
         cache: "no-store",
         headers,

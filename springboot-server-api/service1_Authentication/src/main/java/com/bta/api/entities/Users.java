@@ -38,6 +38,7 @@ public class Users extends BaseEntity<UsersDto> {
     private Date dob;
     private String citizenId;
     private String phoneNumber;
+    private String avatar;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Authorities",
@@ -51,6 +52,7 @@ public class Users extends BaseEntity<UsersDto> {
         userDto.setId(id);
         userDto.setUsername(username);
         userDto.setAdmin(isAdmin);
+
         userDto.setEmail(email);
         userDto.setMale(isMale);
         userDto.setDob(dob);
@@ -61,6 +63,8 @@ public class Users extends BaseEntity<UsersDto> {
         userDto.setRoles(roles.stream().map(BaseEntity::getId).toList());
         userDto.setAuthorities(String.join(",",
                 roles.stream().map(Roles::getRoleCode).toList()));
+        userDto.setAvatar(avatar);
+
         userDto.setAccountNonExpired(isAccountNonExpired());
         userDto.setAccountNonLocked(isAccountNonLocked());
         userDto.setCredentialsNonExpired(isCredentialsNonExpired());
@@ -76,6 +80,7 @@ public class Users extends BaseEntity<UsersDto> {
         userInfoDto.setMale(isMale);
         userInfoDto.setAuthorities(String.join(",",
                 roles.stream().map(Roles::getRoleCode).toList()));
+        userInfoDto.setAvatar(avatar);
         return userInfoDto;
     }
 

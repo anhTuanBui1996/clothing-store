@@ -8,7 +8,7 @@ import {
 import {
   findPermissionOfRole,
   updatePermissions,
-} from "../../serverActions/AdminService";
+} from "../../../_hooks/serverActions/AdminService";
 import { gridColsForRoleView as permissionsGridCols } from "./Permissions";
 import { RenderCellForCompositeSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/CompositeSelect";
 

@@ -55,9 +55,6 @@ export default function DataTableEditor({
       (row: GridValidRowModel) => row.id === newRow.id
     );
     let isUpdated = false;
-    console.log("initialRow: ", initialRow)
-    console.log("oldRow: ", oldRow)
-    console.log("newRow", newRow)
     if (initialRow) {
       isUpdated = !(JSON.stringify(initialRow) === JSON.stringify(newRow));
     } else {

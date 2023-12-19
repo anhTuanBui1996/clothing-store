@@ -1,6 +1,7 @@
 package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
+import com.bta.api.models.dto.admin.ProductDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product extends BaseEntity {
+public class Product extends BaseEntity<ProductDto> {
 
 	private String name;
 	private long quantity;
@@ -28,4 +29,15 @@ public class Product extends BaseEntity {
 	@JoinColumn(name = "brand", nullable = false)
 	private Brand brand;
 
+	@Override
+	public ProductDto toDto() {
+		ProductDto dto = new ProductDto();
+		dto.setId(id);
+		dto.setName(name);
+		dto.setQuantity(quantity);
+		dto.setPrice(price);
+		dto.setCategory(category.getId());
+		dto.setBrand(brand.getId());
+		return null;
+	}
 }

@@ -14,5 +14,6 @@ public class UserInfoDto {
     private String lastName;
     private boolean isMale;
     private String authorities;
+    private String avatar;
 
 }

@@ -1,4 +1,5 @@
 import { RenderCellForReferenceSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/ReferenceSelect";
+import { RenderCellForMediaSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/MediaSelect";
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
 import {
   GridColDef,
@@ -9,9 +10,9 @@ import {
   GridValueSetterParams,
 } from "@mui/x-data-grid";
 import { gridCols as gridColsOfRole } from "./Role";
-import { findAllRole } from "@/app/_dataModels/serverActions/AdminService";
+import { findAllRole } from "@/app/_hooks/serverActions/AdminService";
 import { BooleanSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/BooleanSelect";
-import { RenderCellForMediaSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/MediaSelect";
+import { convertToServiceDateString } from "@/app/_utilities/dateUtils";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
@@ -143,7 +144,7 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     editable: true,
     valueSetter: (params: GridValueSetterParams<any, any>) => ({
       ...params.row,
-      dob: params.value.toString(),
+      dob: convertToServiceDateString(params.value),
     }),
     valueGetter: (
       params: GridValueGetterParams<any, any, GridTreeNodeWithRender>

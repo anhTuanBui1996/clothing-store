@@ -1,6 +1,7 @@
 package com.bta.api.base;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,28 +18,24 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseEntity {
+public abstract class BaseEntity<D> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	@UuidGenerator(style = UuidGenerator.Style.AUTO)
-	@Column(nullable = false, updatable = false)
+	@UuidGenerator
 	protected UUID id;
 
 	@CreatedDate
-	@Column(nullable = false)
 	protected Date createdDate;
 
 	@CreatedBy
-	@Column(nullable = false)
 	protected String createdBy;
 
 	@LastModifiedDate
-	@Column(nullable = false)
 	protected Date lastModifiedDate;
 
 	@LastModifiedBy
-	@Column(nullable = false)
 	protected String lastModifiedBy;
+
+	public abstract D toDto();
 
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { checkAuthentication } from "./app/_dataModels/serverActions/AuthService";
+import { checkAuthentication } from "./app/_hooks/serverActions/AuthService";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -42,6 +42,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!_next/static|_next/image|favicon.ico|images|login).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|images|login).*)",
   ],
 };

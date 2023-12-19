@@ -7,6 +7,7 @@ export type UserInfo =
       lastName: string;
       isMale: boolean;
       authorities: string;
+      avatar: string;
     }
   | undefined;
 

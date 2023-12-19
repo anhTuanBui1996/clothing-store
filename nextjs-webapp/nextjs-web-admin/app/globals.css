@@ -23,13 +23,15 @@
 }
 
 @media (min-width: 0px) {
-  .not-found-page, .page-content {
+  .not-found-page,
+  .page-content {
     height: calc(100vh - 48px);
   }
 }
 
 @media (min-width: 600px) {
-  .not-found-page, .page-content {
+  .not-found-page,
+  .page-content {
     height: calc(100vh - 64px);
   }
 }

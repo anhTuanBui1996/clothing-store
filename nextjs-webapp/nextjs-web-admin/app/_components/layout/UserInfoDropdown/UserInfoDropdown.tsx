@@ -5,19 +5,22 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React, { useContext, useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "@/app/_dataModels/serverActions/AuthService";
+import { signOut } from "@/app/_hooks/serverActions/AuthService";
 import { deleteCookie } from "@/app/_utilities/cookieDispatcher";
 import { SessionContext } from "../SessionContext/SessionContext";
+import { NextFontContext } from "../NextFontProvider/NextFontProvider";
 
 export default function UserInfoDropdown() {
   const router = useRouter();
   const { userInfo } = useContext(SessionContext);
+  const { philosopher } = useContext(NextFontContext);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -45,6 +48,7 @@ export default function UserInfoDropdown() {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         sx={{ cursor: "pointer" }}
+        src={userInfo?.avatar}
       >
         {userInfo?.lastName[0].toLocaleUpperCase()}
       </Avatar>
@@ -60,6 +64,14 @@ export default function UserInfoDropdown() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
+        <Typography
+          px={3}
+          py={1}
+          fontWeight={"500"}
+          className={philosopher.className}
+          fontSize={20}
+          sx={{ cursor: "default" }}
+        >{`Welcome, ${userInfo?.lastName}`}</Typography>
         <MenuItem>
           <ListItemIcon>
             <AccountBoxIcon />

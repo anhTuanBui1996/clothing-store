@@ -26,6 +26,7 @@ public class UsersDto {
 	private Date dob;
 	private String citizenId;
 	private String phoneNumber;
+	private String avatar;
 
 	private List<UUID> roles;
 	private String authorities;

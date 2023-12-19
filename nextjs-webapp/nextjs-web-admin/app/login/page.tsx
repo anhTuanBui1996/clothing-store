@@ -29,7 +29,7 @@ import {
   LoginInfo,
   checkAuthentication,
   signInWithCredentials,
-} from "@/app/_dataModels/serverActions/AuthService";
+} from "@/app/_hooks/serverActions/AuthService";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import VisibilityIcon from "@mui/icons-material/Visibility";
