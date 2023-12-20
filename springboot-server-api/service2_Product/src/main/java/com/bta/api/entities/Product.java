@@ -38,6 +38,6 @@ public class Product extends BaseEntity<ProductDto> {
 		dto.setPrice(price);
 		dto.setCategory(category.getId());
 		dto.setBrand(brand.getId());
-		return null;
+		return dto;
 	}
 }

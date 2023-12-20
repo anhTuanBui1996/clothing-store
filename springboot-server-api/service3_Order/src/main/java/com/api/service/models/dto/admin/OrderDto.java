@@ -14,7 +14,7 @@ public class OrderDto {
 
     private UUID id;
 
-    private UUID userMake;
+    private String userMakeFullName;
     private Date orderDate;
     private Date completedDate;
     private Date predictCompletedDate;
