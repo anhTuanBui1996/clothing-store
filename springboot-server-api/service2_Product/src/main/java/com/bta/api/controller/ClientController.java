@@ -66,8 +66,9 @@ public class ClientController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<ProductDto>> getAllProduct(@RequestParam UUID brandId, @RequestParam UUID categoryId) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getAll());
+    public ResponseEntity<List<ProductDto>> getProductsByBrandAndCategory(@RequestParam UUID brandId,
+                                                                          @RequestParam UUID categoryId) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getAllByBrandAndCategory(brandId, categoryId));
     }
 
 }

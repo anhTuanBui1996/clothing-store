@@ -2,6 +2,7 @@ package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Brand;
+import com.bta.api.entities.Category;
 import com.bta.api.entities.Product;
 import com.bta.api.models.dto.admin.ProductDto;
 import com.bta.api.repository.BrandRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements CRUDService<Product, ProductDto> {
@@ -91,7 +93,11 @@ public class ProductService implements CRUDService<Product, ProductDto> {
 	public List<ProductDto> getAllByBrandAndCategory(UUID brandId, UUID categoryId) {
 		Brand brand = brandRepository.findById(brandId)
 				.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + brandId));
-		return productRepository.findByBrandAndCategory();
+		Category category  =  categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new EntityNotFoundException("Category not found id=" + categoryId));
+		return productRepository.findByBrandAndCategory(brand, category)
+				.stream().map(Product::toDto)
+				.collect(Collectors.toList());
 	}
 
 }

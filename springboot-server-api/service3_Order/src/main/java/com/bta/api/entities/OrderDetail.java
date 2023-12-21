@@ -20,6 +20,9 @@ public class OrderDetail extends BaseEntity<OrderDetailDto> {
 	@EmbeddedId
 	private OrderDetailKey id;
 
+	@Transient
+	RestTemplate restTemplate;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("order")
 	private Order order;
@@ -34,8 +37,6 @@ public class OrderDetail extends BaseEntity<OrderDetailDto> {
 	private String description;
 	private OrderDetailStatus status;
 
-	@Transient
-	RestTemplate restTemplate;
 
 	@Override
 	public OrderDetailDto toDto() {
