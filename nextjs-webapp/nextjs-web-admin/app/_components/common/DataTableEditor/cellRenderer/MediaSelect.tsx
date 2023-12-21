@@ -7,7 +7,7 @@ import {
   GridRenderEditCellParams,
 } from "@mui/x-data-grid";
 import { CldImage, CldUploadWidget, CldVideoPlayer } from "next-cloudinary";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export function RenderCellForMediaSelect({
   cellParams,
