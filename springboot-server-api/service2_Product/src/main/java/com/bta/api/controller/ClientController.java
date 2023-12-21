@@ -10,14 +10,13 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping(path = "/product")
 public class ClientController {
 
     @Autowired
@@ -67,7 +66,7 @@ public class ClientController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<ProductDto>> getAllProduct() {
+    public ResponseEntity<List<ProductDto>> getAllProduct(@RequestParam UUID brandId, @RequestParam UUID categoryId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getAll());
     }
 

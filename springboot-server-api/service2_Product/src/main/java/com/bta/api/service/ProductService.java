@@ -1,6 +1,7 @@
 package com.bta.api.service;
 
 import com.bta.api.base.CRUDService;
+import com.bta.api.entities.Brand;
 import com.bta.api.entities.Product;
 import com.bta.api.models.dto.admin.ProductDto;
 import com.bta.api.repository.BrandRepository;
@@ -86,4 +87,11 @@ public class ProductService implements CRUDService<Product, ProductDto> {
 				.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + dto.getBrand())));
 		return product;
 	}
+
+	public List<ProductDto> getAllByBrandAndCategory(UUID brandId, UUID categoryId) {
+		Brand brand = brandRepository.findById(brandId)
+				.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + brandId));
+		return productRepository.findByBrandAndCategory();
+	}
+
 }
