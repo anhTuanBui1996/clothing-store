@@ -1,4 +1,4 @@
-package com.bta.api.models.dto.auth;
+package com.bta.api.models.dto.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

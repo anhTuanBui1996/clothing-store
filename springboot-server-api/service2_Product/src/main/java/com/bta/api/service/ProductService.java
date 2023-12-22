@@ -91,13 +91,27 @@ public class ProductService implements CRUDService<Product, ProductDto> {
 	}
 
 	public List<ProductDto> getAllByBrandAndCategory(UUID brandId, UUID categoryId) {
-		Brand brand = brandRepository.findById(brandId)
-				.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + brandId));
-		Category category  =  categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new EntityNotFoundException("Category not found id=" + categoryId));
-		return productRepository.findByBrandAndCategory(brand, category)
-				.stream().map(Product::toDto)
-				.collect(Collectors.toList());
+		if (brandId != null && categoryId != null) {
+			Brand brand = brandRepository.findById(brandId)
+					.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + brandId));
+			Category category  =  categoryRepository.findById(categoryId)
+					.orElseThrow(() -> new EntityNotFoundException("Category not found id=" + categoryId));
+			return productRepository.findByBrandAndCategory(brand, category)
+					.stream().map(Product::toDto)
+					.collect(Collectors.toList());
+		} else if (brandId != null) {
+			Brand brand = brandRepository.findById(brandId)
+					.orElseThrow(() -> new EntityNotFoundException("Brand not found: id=" + brandId));
+			return productRepository.findByBrand(brand)
+					.stream().map(Product::toDto)
+					.collect(Collectors.toList());
+		} else {
+			Category category  =  categoryRepository.findById(categoryId)
+					.orElseThrow(() -> new EntityNotFoundException("Category not found id=" + categoryId));
+			return productRepository.findByCategory(category)
+					.stream().map(Product::toDto)
+					.collect(Collectors.toList());
+		}
 	}
 
 }

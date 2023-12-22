@@ -3,6 +3,7 @@ package com.bta.api.entities;
 import com.bta.api.base.BaseEntity;
 import com.bta.api.entities.composite.OrderDetailKey;
 
+import com.bta.api.entities.enums.OrderDetailStatus;
 import com.bta.api.models.dto.admin.OrderDetailDto;
 import com.bta.api.models.dto.services.Product;
 import jakarta.persistence.*;
@@ -35,6 +36,8 @@ public class OrderDetail extends BaseEntity<OrderDetailDto> {
 
 	private int quantity;
 	private String description;
+
+	@Enumerated(EnumType.STRING)
 	private OrderDetailStatus status;
 
 
@@ -47,7 +50,7 @@ public class OrderDetail extends BaseEntity<OrderDetailDto> {
 		dto.setProductName(product().getName());
 		dto.setQuantity(quantity);
 		dto.setDescription(description);
-		dto.setStatusName(status.getStatusName());
+		dto.setStatus(status);
 		return dto;
 	}
 }

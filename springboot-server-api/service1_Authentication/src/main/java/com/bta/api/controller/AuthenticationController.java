@@ -1,9 +1,9 @@
 package com.bta.api.controller;
 
 import com.bta.api.models.dto.admin.UsersDto;
-import com.bta.api.models.dto.auth.ChangeUserPasswordDto;
-import com.bta.api.models.dto.auth.LoginUserDto;
-import com.bta.api.models.dto.auth.RegisterUserDto;
+import com.bta.api.models.dto.client.ChangeUserPasswordDto;
+import com.bta.api.models.dto.client.LoginUserDto;
+import com.bta.api.models.dto.client.RegisterUserDto;
 import com.bta.api.service.CredentialsService;
 import com.bta.api.service.JwtTokenService;
 import jakarta.persistence.EntityExistsException;

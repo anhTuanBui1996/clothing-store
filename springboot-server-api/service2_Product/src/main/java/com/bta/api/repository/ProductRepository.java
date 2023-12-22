@@ -14,4 +14,8 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
 
 	public List<Product> findByBrandAndCategory(Brand brand, Category category);
 
+	public List<Product> findByBrand(Brand brand);
+
+	public List<Product> findByCategory(Category category);
+
 }

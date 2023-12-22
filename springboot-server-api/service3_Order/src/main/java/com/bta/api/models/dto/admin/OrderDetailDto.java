@@ -1,5 +1,6 @@
 package com.bta.api.models.dto.admin;
 
+import com.bta.api.entities.enums.OrderDetailStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,6 @@ public class OrderDetailDto {
 
     private int quantity;
     private String description;
-    private String statusName;
+    private OrderDetailStatus status;
 
 }

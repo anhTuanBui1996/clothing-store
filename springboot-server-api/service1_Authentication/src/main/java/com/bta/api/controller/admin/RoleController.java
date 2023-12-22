@@ -22,39 +22,39 @@ public class RoleController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<RolesDto> getRole(@PathVariable(name = "id") UUID id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(roleService.getById(id));
+            return ResponseEntity.ok(roleService.getById(id));
         } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping(path = "/")
     public ResponseEntity<List<RolesDto>> getAllRole() {
-        return ResponseEntity.status(HttpStatus.OK).body(roleService.getAll());
+        return ResponseEntity.ok(roleService.getAll());
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<RolesDto> saveRole(@PathVariable(name = "id") UUID id, @RequestBody RolesDto dto) {
         dto.setId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(roleService.save(dto));
+        return ResponseEntity.ok(roleService.save(dto));
     }
 
     @PutMapping(path = "/")
     public ResponseEntity<List<RolesDto>> saveAllRole(@RequestBody List<RolesDto> dtos) {
-        return ResponseEntity.status(HttpStatus.OK).body(roleService.saveCollection(dtos));
+        return ResponseEntity.ok(roleService.saveCollection(dtos));
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Boolean> deleteRole(@PathVariable(name = "id") UUID id) {
         if (roleService.delete(id)) {
-            return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(path = "/")
     public ResponseEntity<List<UUID>> deleteAllRole(@RequestBody Set<UUID> ids) {
-        return ResponseEntity.status(HttpStatus.OK).body(roleService.deleteCollection(ids));
+        return ResponseEntity.ok(roleService.deleteCollection(ids));
     }
 
 }

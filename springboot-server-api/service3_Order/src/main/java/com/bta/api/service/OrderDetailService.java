@@ -6,15 +6,14 @@ import com.bta.api.entities.Order;
 import com.bta.api.entities.OrderDetail;
 import com.bta.api.entities.composite.OrderDetailKey;
 import com.bta.api.models.dto.admin.OrderDetailDto;
+import com.bta.api.models.dto.admin.OrderDto;
 import com.bta.api.repository.OrderDetailRepository;
 import com.bta.api.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class OrderDetailService {
 
@@ -22,32 +21,31 @@ public class OrderDetailService {
     OrderRepository orderRepository;
 
     @Autowired
-    OrderDetailService orderDetailService;
-
-    @Autowired
     OrderDetailRepository orderDetailRepository;
 
-    public OrderDetailDto getCollectionByOrderId(UUID orderId) {
-        if (!orderRepository.existsById(orderId)) {
-            throw new EntityNotFoundException("Role not found: id=" + orderId);
-        }
-        return orderDetailService.getCollectionByOrderId(orderId);
-    }
-    
-    public OrderDetailDto save(OrderDetailDto dto) {
-        return null;
+    public List<OrderDetailDto> getCollectionByOrderId(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found: id=" + orderId));
+        return orderDetailRepository.findByOrder(order).stream().map(OrderDetail::toDto).collect(Collectors.toList());
     }
     
     public List<OrderDetailDto> saveCollection(List<OrderDetailDto> dtos) {
-        return null;
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        dtos.forEach(orderDetailDto -> orderDetails.add(applyChangesFromDto(orderDetailDto)));
+        List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
+        orderDetails.forEach(orderDetail -> orderDetailDtos.add(orderDetail.toDto()));
+        return orderDetailDtos;
     }
 
-    public boolean delete(UUID id) {
-        return false;
-    }
-
-    public List<UUID> deleteCollection(Set<UUID> ids) {
-        return null;
+    public List<OrderDetailKey> deleteCollection(List<OrderDetailKey> ids) {
+        List<OrderDetailKey> result = new ArrayList<>(ids);
+        result.forEach((OrderDetailKey id) -> {
+            if (!orderDetailRepository.existsById(id)) {
+                result.remove(id);
+            }
+        });
+        orderDetailRepository.deleteAllById(ids);
+        return result;
     }
 
     public OrderDetail applyChangesFromDto(OrderDetailDto dto) {
@@ -55,8 +53,10 @@ public class OrderDetailService {
         OrderDetail orderDetail = foundOrderDetail.orElseGet(OrderDetail::new);
         Order order = orderRepository.findById(dto.getOrderId()).orElseGet(Order::new);
         orderDetail.setOrder(order);
-        orderDetail.setStatus(dto.getStatusName());
-        return null;
+        orderDetail.setQuantity(dto.getQuantity());
+        orderDetail.setDescription(dto.getDescription());
+        orderDetail.setStatus(dto.getStatus());
+        return orderDetail;
     }
 
 }

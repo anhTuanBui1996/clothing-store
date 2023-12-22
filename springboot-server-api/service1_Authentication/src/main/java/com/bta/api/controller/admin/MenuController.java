@@ -22,39 +22,39 @@ public class MenuController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable UUID id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(menuService.getById(id));
+            return ResponseEntity.ok(menuService.getById(id));
         } catch (EntityNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping(path = "/")
     public ResponseEntity<List<MenuDto>> getAllMenu() {
-        return ResponseEntity.status(HttpStatus.OK).body(menuService.getAll());
+        return ResponseEntity.ok(menuService.getAll());
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<MenuDto> saveMenu(@PathVariable UUID id, @RequestBody MenuDto dto) {
         dto.setId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(menuService.save(dto));
+        return ResponseEntity.ok(menuService.save(dto));
     }
 
     @PutMapping(path = "/")
     public ResponseEntity<List<MenuDto>> saveAllMenu(@RequestBody List<MenuDto> dtos) {
-        return ResponseEntity.status(HttpStatus.OK).body(menuService.saveCollection(dtos));
+        return ResponseEntity.ok(menuService.saveCollection(dtos));
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteMenu(@PathVariable UUID id) {
         if (menuService.delete(id)) {
-            return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(path = "/")
     public ResponseEntity<List<UUID>> deleteAllMenu(@RequestBody Set<UUID> ids) {
-        return ResponseEntity.status(HttpStatus.OK).body(menuService.deleteCollection(ids));
+        return ResponseEntity.ok(menuService.deleteCollection(ids));
     }
 
 }

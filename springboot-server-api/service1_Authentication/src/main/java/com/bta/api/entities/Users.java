@@ -2,7 +2,7 @@ package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.models.dto.admin.UsersDto;
-import com.bta.api.models.dto.auth.UserInfoDto;
+import com.bta.api.models.dto.client.UserInfoDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;

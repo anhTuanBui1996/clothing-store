@@ -3,7 +3,7 @@ package com.bta.api.service;
 import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Users;
 import com.bta.api.models.dto.admin.UsersDto;
-import com.bta.api.models.dto.auth.UserInfoDto;
+import com.bta.api.models.dto.client.UserInfoDto;
 import com.bta.api.repository.RoleRepository;
 import com.bta.api.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

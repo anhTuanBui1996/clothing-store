@@ -22,38 +22,38 @@ public class UserController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<UsersDto> getUserById(@PathVariable("id") UUID id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getById(id));
+            return ResponseEntity.ok(userService.getById(id));
         } catch (UsernameNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping(path = "/")
     public ResponseEntity<List<UsersDto>> getAllUser() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<UsersDto> saveUser(@PathVariable("id") UUID id, @RequestBody UsersDto dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.save(dto));
+        return ResponseEntity.ok(userService.save(dto));
     }
 
     @PutMapping(path = "/")
     public ResponseEntity<List<UsersDto>> saveAllUser(@RequestBody List<UsersDto> dtos) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.saveCollection(dtos));
+        return ResponseEntity.ok(userService.saveCollection(dtos));
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable("id") UUID id) {
         if (userService.delete(id)) {
-            return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(path = "/")
     public ResponseEntity<List<UUID>> deleteAllUser(@RequestBody Set<UUID> ids) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.deleteCollection(ids));
+        return ResponseEntity.ok(userService.deleteCollection(ids));
     }
 
 }

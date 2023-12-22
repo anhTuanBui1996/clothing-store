@@ -1,9 +1,8 @@
 package com.bta.api.service;
 
-import com.bta.api.entities.Roles;
 import com.bta.api.entities.Users;
-import com.bta.api.models.dto.auth.ChangeUserPasswordDto;
-import com.bta.api.models.dto.auth.RegisterUserDto;
+import com.bta.api.models.dto.client.ChangeUserPasswordDto;
+import com.bta.api.models.dto.client.RegisterUserDto;
 import com.bta.api.models.dto.admin.UsersDto;
 import com.bta.api.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class CredentialsService {
