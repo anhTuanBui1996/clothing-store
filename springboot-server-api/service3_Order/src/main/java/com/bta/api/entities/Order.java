@@ -8,13 +8,12 @@ import java.util.stream.Collectors;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.models.dto.admin.OrderDto;
-import com.bta.api.models.dto.services.User;
+import com.bta.api.models.template.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 @EqualsAndHashCode(callSuper = true)

@@ -1,4 +1,4 @@
-package com.bta.api.models.dto.services;
+package com.bta.api.models.template;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

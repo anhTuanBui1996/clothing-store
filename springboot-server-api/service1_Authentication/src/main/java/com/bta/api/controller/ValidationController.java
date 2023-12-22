@@ -1,5 +1,6 @@
 package com.bta.api.controller;
 
+import com.bta.api.models.dto.client.UserInfoDto;
 import com.bta.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,12 @@ public class ValidationController {
     UserService userService;
 
     @GetMapping("/userInfo")
-    public ResponseEntity<?> getCurrentUserInfo() {
+    public ResponseEntity<UserInfoDto> getCurrentUserInfo() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication.isAuthenticated()) {
                 String username = authentication.getName();
-                return ResponseEntity.status(HttpStatus.OK).body(userService.getUserInfo(username));
+                return ResponseEntity.ok(userService.getUserInfo(username));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }

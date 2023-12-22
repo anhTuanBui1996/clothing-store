@@ -41,7 +41,7 @@ public class AuthenticationController {
     private final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginWithCredentials(@RequestBody LoginUserDto dto, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> loginWithCredentials(@RequestBody LoginUserDto dto, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
                 dto.getUsername(), dto.getPassword());
         try {
@@ -52,12 +52,12 @@ public class AuthenticationController {
             securityContextRepository.saveContext(context, request, response);
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtTokenService.generateToken(authentication.getName());
-                return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+                return ResponseEntity.ok(jwtToken);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
         } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -66,16 +66,16 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         logoutHandler.logout(request, response, authentication);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
     //    For client user
     @PostMapping("/register")
     public ResponseEntity<UsersDto> registerNewUser(@RequestBody RegisterUserDto dto) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(credentialsService.registerNewUser(dto));
+            return ResponseEntity.ok(credentialsService.registerNewUser(dto));
         } catch (EntityExistsException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -83,11 +83,11 @@ public class AuthenticationController {
     public ResponseEntity<?> changeUserPassword(@RequestBody ChangeUserPasswordDto dto) {
         try {
             if (credentialsService.saveUserPassword(dto)) {
-                return ResponseEntity.status(HttpStatus.OK).build();
+                return ResponseEntity.ok().build();
             }
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            return ResponseEntity.badRequest().build();
         } catch (UsernameNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            return ResponseEntity.notFound().build();
         }
     }
 

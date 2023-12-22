@@ -7,10 +7,14 @@ import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Order;
 import com.bta.api.entities.OrderDetail;
 import com.bta.api.models.dto.admin.OrderDto;
+import com.bta.api.models.dto.client.MakeOrderDto;
+import com.bta.api.models.dto.client.OrderInfoDto;
+import com.bta.api.models.template.User;
 import com.bta.api.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class OrderService implements CRUDService<Order, OrderDto> {
@@ -20,6 +24,9 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 
 	@Autowired
 	OrderDetailService orderDetailService;
+
+	@Autowired
+	RestTemplate restTemplate;
 
 	@Override
 	public List<OrderDto> getAll() {
@@ -86,4 +93,15 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 		order.setTotalShipmentPrice(dto.getTotalShipmentPrice());
 		return order;
 	}
+
+	public OrderInfoDto convertMakeOrderDtoToOrderInfoDto(MakeOrderDto dto) {
+		OrderInfoDto infoDto = new OrderInfoDto();
+		infoDto.setId(dto.getId());
+		User user = restTemplate.getForObject("http://AUTHENTICATION_SERVICE/validate/userInfo", User.class);
+		if (user != null) {
+			infoDto.setUserMakeFullName(user.getFirstName() + " " + user.getLastName());
+		}
+		
+	}
+
 }

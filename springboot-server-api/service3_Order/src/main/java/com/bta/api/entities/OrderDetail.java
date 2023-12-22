@@ -5,7 +5,7 @@ import com.bta.api.entities.composite.OrderDetailKey;
 
 import com.bta.api.entities.enums.OrderDetailStatus;
 import com.bta.api.models.dto.admin.OrderDetailDto;
-import com.bta.api.models.dto.services.Product;
+import com.bta.api.models.template.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

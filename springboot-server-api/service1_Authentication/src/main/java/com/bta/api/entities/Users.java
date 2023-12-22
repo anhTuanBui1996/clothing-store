@@ -74,12 +74,10 @@ public class Users extends BaseEntity<UsersDto> {
 
     public UserInfoDto toUserInfoDto() {
         UserInfoDto userInfoDto = new UserInfoDto();
-        userInfoDto.setAdmin(isAdmin);
+        userInfoDto.setId(id);
         userInfoDto.setFirstName(firstName);
         userInfoDto.setLastName(lastName);
         userInfoDto.setMale(isMale);
-        userInfoDto.setAuthorities(String.join(",",
-                roles.stream().map(Roles::getRoleCode).toList()));
         userInfoDto.setAvatar(avatar);
         return userInfoDto;
     }
