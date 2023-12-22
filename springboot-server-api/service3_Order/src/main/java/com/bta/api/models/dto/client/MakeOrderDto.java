@@ -24,5 +24,6 @@ public class MakeOrderDto {
     private long totalShipmentPrice;
 
     private List<OrderDetailDto> details;
+    private UUID promotionId;
 
 }

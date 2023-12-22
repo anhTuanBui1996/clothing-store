@@ -27,5 +27,6 @@ public class OrderDto {
     private String toAddress;
     private long totalProductPrice;
     private long totalShipmentPrice;
+    private UUID promotionId;
 
 }

@@ -1,6 +1,7 @@
 package com.bta.api.models.dto.client;
 
 import com.bta.api.models.dto.admin.OrderDetailDto;
+import com.bta.api.models.dto.admin.PromotionDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,6 @@ public class OrderInfoDto {
     private long totalShipmentPrice;
 
     private List<OrderDetailDto> details;
+    private PromotionDto promotion;
 
 }

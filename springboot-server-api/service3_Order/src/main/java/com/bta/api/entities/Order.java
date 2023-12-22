@@ -62,6 +62,7 @@ public class Order extends BaseEntity<OrderDto> {
         });
         dto.setTotalProductPrice(totalPrice.get());
         dto.setTotalShipmentPrice(totalShipmentPrice);
+        dto.setPromotionId(promotion.getId());
         return dto;
     }
 

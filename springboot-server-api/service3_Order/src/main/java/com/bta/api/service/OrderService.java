@@ -1,16 +1,19 @@
 package com.bta.api.service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Order;
 import com.bta.api.entities.OrderDetail;
+import com.bta.api.entities.Promotion;
 import com.bta.api.models.dto.admin.OrderDto;
 import com.bta.api.models.dto.client.MakeOrderDto;
 import com.bta.api.models.dto.client.OrderInfoDto;
 import com.bta.api.models.template.User;
 import com.bta.api.repository.OrderRepository;
+import com.bta.api.repository.PromotionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 
 	@Autowired
 	OrderDetailService orderDetailService;
+
+	@Autowired
+	PromotionRepository promotionRepository;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -94,14 +100,46 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 		return order;
 	}
 
-	public OrderInfoDto convertMakeOrderDtoToOrderInfoDto(MakeOrderDto dto) {
-		OrderInfoDto infoDto = new OrderInfoDto();
-		infoDto.setId(dto.getId());
+	public OrderInfoDto makeANewOrder(MakeOrderDto dto) {
+		Order order = new Order();
+		OrderInfoDto orderInfoDto = new OrderInfoDto();
+
 		User user = restTemplate.getForObject("http://AUTHENTICATION_SERVICE/validate/userInfo", User.class);
 		if (user != null) {
-			infoDto.setUserMakeFullName(user.getFirstName() + " " + user.getLastName());
+			order.setUserMadeId(user.getId());
+			order.setPredictCompletedDate(dto.getPredictCompletedDate());
+			order.setFromAddress(dto.getFromAddress());
+			order.setToAddress(dto.getToAddress());
+			order.setTotalShipmentPrice(dto.getTotalShipmentPrice());
+			Promotion promotion = promotionRepository.findById(dto.getPromotionId())
+					.orElseThrow(() -> new EntityNotFoundException("Promotion not found: id=" + dto.getPromotionId()));
+			order.setPromotion(promotion);
+			order.setDetails(dto.getDetails().stream()
+					.map(orderDetailDto -> orderDetailService.applyChangesFromDto(orderDetailDto))
+					.collect(Collectors.toList()));
+
+			Order createdOrder = orderRepository.save(order);
+			orderInfoDto.setId(createdOrder.getId());
+			orderInfoDto.setUserMakeFullName(user.getFirstName() + " " + user.getLastName());
+			orderInfoDto.setOrderDate(createdOrder.getCreatedDate());
+			orderInfoDto.setPredictCompletedDate(createdOrder.getPredictCompletedDate());
+			orderInfoDto.setFromAddress(createdOrder.getFromAddress());
+			orderInfoDto.setToAddress(createdOrder.getToAddress());
+			orderInfoDto.setTotalShipmentPrice(createdOrder.getTotalShipmentPrice());
+			orderInfoDto.setDetails(createdOrder.getDetails().stream()
+					.map(OrderDetail::toDto).collect(Collectors.toList()));
+
+			AtomicLong totalProductPrice = new AtomicLong();
+			createdOrder.getDetails().forEach(orderDetail ->
+					totalProductPrice.addAndGet(orderDetail.product().getPrice()));
+			orderInfoDto.setTotalProductPrice(totalProductPrice.get());
+
+			orderInfoDto.setPromotion(createdOrder.getPromotion().toDto());
+			return orderInfoDto;
+		} else {
+			throw new RuntimeException("Can't get current user info to make an order");
 		}
-		
+
 	}
 
 }
