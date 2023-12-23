@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Category;
-import com.bta.api.models.dto.admin.CategoryDto;
+import com.bta.api.models.CategoryDto;
 import com.bta.api.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

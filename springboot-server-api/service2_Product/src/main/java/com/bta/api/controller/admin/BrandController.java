@@ -1,6 +1,6 @@
 package com.bta.api.controller.admin;
 
-import com.bta.api.models.dto.admin.BrandDto;
+import com.bta.api.models.BrandDto;
 import com.bta.api.service.BrandService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

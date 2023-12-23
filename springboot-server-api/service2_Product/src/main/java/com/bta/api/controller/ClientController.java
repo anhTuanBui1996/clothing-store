@@ -1,8 +1,8 @@
 package com.bta.api.controller;
 
-import com.bta.api.models.dto.admin.BrandDto;
-import com.bta.api.models.dto.admin.CategoryDto;
-import com.bta.api.models.dto.admin.ProductDto;
+import com.bta.api.models.BrandDto;
+import com.bta.api.models.CategoryDto;
+import com.bta.api.models.ProductDto;
 import com.bta.api.service.BrandService;
 import com.bta.api.service.CategoryService;
 import com.bta.api.service.ProductService;
@@ -66,9 +66,29 @@ public class ClientController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<ProductDto>> getProductsByBrandAndCategory(@RequestParam UUID brandId,
-                                                                          @RequestParam UUID categoryId) {
+    public ResponseEntity<List<ProductDto>> getProductsByBrandAndCategory(@RequestParam("brandId") UUID brandId,
+                                                                          @RequestParam("categoryId") UUID categoryId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getAllByBrandAndCategory(brandId, categoryId));
+    }
+
+    @GetMapping(path = "/product/reduceInStock")
+    public ResponseEntity<Long> reduceProductQuantityInStock(@RequestParam("productId") UUID productId,
+                                                             @RequestParam("reduceQuantity") long quantity) {
+        try {
+            return ResponseEntity.ok(productService.reduceProductQuantityInStock(productId, quantity));
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(path = "/product/addInStock")
+    public ResponseEntity<Long> addProductQuantityInStock(@RequestParam("productId") UUID productId,
+                                                             @RequestParam("addQuantity") long quantity) {
+        try {
+            return ResponseEntity.ok(productService.addProductQuantityInStock(productId, quantity));
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

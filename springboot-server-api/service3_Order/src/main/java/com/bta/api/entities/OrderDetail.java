@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderDetail extends BaseEntity<OrderDetailDto> {
+public class OrderDetail {
 
 	@EmbeddedId
 	private OrderDetailKey id;
@@ -41,7 +41,6 @@ public class OrderDetail extends BaseEntity<OrderDetailDto> {
 	private OrderDetailStatus status;
 
 
-	@Override
 	public OrderDetailDto toDto() {
 		OrderDetailDto dto = new OrderDetailDto();
 		dto.setOrderId(id.getOrderId());

@@ -113,8 +113,7 @@ public class UserService implements CRUDService<Users, UsersDto> {
     public UserInfoDto getUserInfo(String username) throws UsernameNotFoundException {
         if (username.equals("admin")) {
             return new UserInfoDto(UUID.fromString("04885fc2-2b45-47c0-8841-332155278c77"),
-                    true, null, "Admin",
-                    true, "ADMIN", null);
+                    null, "Admin", true, null);
         }
         return usersRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: username=" + username))

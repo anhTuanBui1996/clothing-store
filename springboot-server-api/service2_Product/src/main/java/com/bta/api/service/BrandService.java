@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.models.dto.admin.BrandDto;
+import com.bta.api.models.BrandDto;
 import com.bta.api.repository.BrandRepository;
 import com.bta.api.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;

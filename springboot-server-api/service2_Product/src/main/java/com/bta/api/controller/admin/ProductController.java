@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.bta.api.models.dto.admin.ProductDto;
+import com.bta.api.models.ProductDto;
 import com.bta.api.service.ProductService;
-import com.bta.api.entities.Product;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

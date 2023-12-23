@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.models.dto.admin.BrandDto;
+import com.bta.api.models.BrandDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

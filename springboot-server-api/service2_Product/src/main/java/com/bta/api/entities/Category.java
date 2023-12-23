@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.models.dto.admin.CategoryDto;
+import com.bta.api.models.CategoryDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

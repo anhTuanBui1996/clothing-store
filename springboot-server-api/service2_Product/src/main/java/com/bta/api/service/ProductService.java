@@ -4,7 +4,7 @@ import com.bta.api.base.CRUDService;
 import com.bta.api.entities.Brand;
 import com.bta.api.entities.Category;
 import com.bta.api.entities.Product;
-import com.bta.api.models.dto.admin.ProductDto;
+import com.bta.api.models.ProductDto;
 import com.bta.api.repository.BrandRepository;
 import com.bta.api.repository.CategoryRepository;
 import com.bta.api.repository.ProductRepository;
@@ -112,6 +112,22 @@ public class ProductService implements CRUDService<Product, ProductDto> {
 					.stream().map(Product::toDto)
 					.collect(Collectors.toList());
 		}
+	}
+
+	public long reduceProductQuantityInStock(UUID productId, Long reduceQuantity) throws EntityNotFoundException {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found: id=" + productId));
+		long reducedQuantity = product.getQuantity() - reduceQuantity;
+		product.setQuantity(reducedQuantity);
+		return productRepository.save(product).getQuantity();
+	}
+
+	public long addProductQuantityInStock(UUID productId, Long addQuantity) throws EntityNotFoundException {
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found: id=" + productId));
+		long addedQuantity = product.getQuantity() + addQuantity;
+		product.setQuantity(addedQuantity);
+		return productRepository.save(product).getQuantity();
 	}
 
 }

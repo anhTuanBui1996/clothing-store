@@ -1,7 +1,7 @@
 package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
-import com.bta.api.models.dto.admin.ProductDto;
+import com.bta.api.models.ProductDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

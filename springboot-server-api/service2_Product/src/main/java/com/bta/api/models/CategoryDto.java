@@ -1,4 +1,4 @@
-package com.bta.api.models.dto.admin;
+package com.bta.api.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +10,11 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BrandDto {
+public class CategoryDto {
 
     private UUID id;
 
-    private String brandName;
-    private String nation;
+    private String categoryName;
 
     private List<UUID> products;
 
