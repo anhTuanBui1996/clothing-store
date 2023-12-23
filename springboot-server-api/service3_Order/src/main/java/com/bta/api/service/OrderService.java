@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.bta.api.base.CRUDService;
-import com.bta.api.entities.Order;
+import com.bta.api.entities.Orders;
 import com.bta.api.entities.OrderDetail;
 import com.bta.api.entities.Promotion;
 import com.bta.api.models.dto.admin.OrderDto;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class OrderService implements CRUDService<Order, OrderDto> {
+public class OrderService implements CRUDService<Orders, OrderDto> {
 
 	@Autowired
     OrderRepository orderRepository;
@@ -55,7 +55,7 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 
 	@Override
 	public List<OrderDto> saveCollection(List<OrderDto> dtos) {
-		List<Order> orders = new ArrayList<>();
+		List<Orders> orders = new ArrayList<>();
 		dtos.forEach(orderDto -> orders.add(applyChangesFromDto(orderDto)));
 		List<OrderDto> orderDtos = new ArrayList<>();
 		orders.forEach(order -> orderDtos.add(order.toDto()));
@@ -84,9 +84,9 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 	}
 
 	@Override
-	public Order applyChangesFromDto(OrderDto dto) {
-		Optional<Order> foundOrder = orderRepository.findById(dto.getId());
-		Order order = foundOrder.orElseGet(Order::new);
+	public Orders applyChangesFromDto(OrderDto dto) {
+		Optional<Orders> foundOrder = orderRepository.findById(dto.getId());
+		Orders order = foundOrder.orElseGet(Orders::new);
 		order.setUserMadeId(dto.getUserMadeId());
 		order.setPredictCompletedDate(dto.getPredictCompletedDate());
 		order.setCompletedDate(dto.getCompletedDate());
@@ -101,7 +101,7 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 	}
 
 	public OrderInfoDto makeANewOrder(MakeOrderDto dto) {
-		Order order = new Order();
+		Orders order = new Orders();
 		OrderInfoDto orderInfoDto = new OrderInfoDto();
 
 		User user = restTemplate.getForObject("http://AUTHENTICATION_SERVICE/validate/userInfo", User.class);
@@ -118,7 +118,7 @@ public class OrderService implements CRUDService<Order, OrderDto> {
 					.map(orderDetailDto -> orderDetailService.applyChangesFromDto(orderDetailDto))
 					.collect(Collectors.toList()));
 
-			Order createdOrder = orderRepository.save(order);
+			Orders createdOrder = orderRepository.save(order);
 			orderInfoDto.setId(createdOrder.getId());
 			orderInfoDto.setUserMakeFullName(user.getFirstName() + " " + user.getLastName());
 			orderInfoDto.setOrderDate(createdOrder.getCreatedDate());

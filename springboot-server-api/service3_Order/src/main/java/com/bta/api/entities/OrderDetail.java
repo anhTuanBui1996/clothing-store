@@ -1,6 +1,5 @@
 package com.bta.api.entities;
 
-import com.bta.api.base.BaseEntity;
 import com.bta.api.entities.composite.OrderDetailKey;
 
 import com.bta.api.entities.enums.OrderDetailStatus;
@@ -26,7 +25,7 @@ public class OrderDetail {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("order")
-	private Order order;
+	private Orders order;
 
 	@Transient
 	public Product product() {

@@ -1,20 +1,19 @@
 package com.bta.api.service;
 
-import com.bta.api.base.BaseEntity;
-import com.bta.api.base.CRUDService;
-import com.bta.api.entities.Order;
+import com.bta.api.entities.Orders;
 import com.bta.api.entities.OrderDetail;
 import com.bta.api.entities.composite.OrderDetailKey;
 import com.bta.api.models.dto.admin.OrderDetailDto;
-import com.bta.api.models.dto.admin.OrderDto;
 import com.bta.api.repository.OrderDetailRepository;
 import com.bta.api.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class OrderDetailService {
 
     @Autowired
@@ -24,7 +23,7 @@ public class OrderDetailService {
     OrderDetailRepository orderDetailRepository;
 
     public List<OrderDetailDto> getCollectionByOrderId(UUID orderId) {
-        Order order = orderRepository.findById(orderId)
+        Orders order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found: id=" + orderId));
         return orderDetailRepository.findByOrder(order).stream().map(OrderDetail::toDto).collect(Collectors.toList());
     }
@@ -51,7 +50,7 @@ public class OrderDetailService {
     public OrderDetail applyChangesFromDto(OrderDetailDto dto) {
         Optional<OrderDetail> foundOrderDetail = orderDetailRepository.findById(new OrderDetailKey(dto.getOrderId(), dto.getProductId()));
         OrderDetail orderDetail = foundOrderDetail.orElseGet(OrderDetail::new);
-        Order order = orderRepository.findById(dto.getOrderId()).orElseGet(Order::new);
+        Orders order = orderRepository.findById(dto.getOrderId()).orElseGet(Orders::new);
         orderDetail.setOrder(order);
         orderDetail.setQuantity(dto.getQuantity());
         orderDetail.setDescription(dto.getDescription());

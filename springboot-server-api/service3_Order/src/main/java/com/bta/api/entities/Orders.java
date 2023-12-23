@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Order extends BaseEntity<OrderDto> {
+public class Orders extends BaseEntity<OrderDto> {
 
     private UUID userMadeId;
 
@@ -31,6 +31,8 @@ public class Order extends BaseEntity<OrderDto> {
     private String toAddress;
     private long totalShipmentPrice;
 
+    @OneToOne
+    @JoinColumn(name = "promotion", referencedColumnName = "id")
     private Promotion promotion;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

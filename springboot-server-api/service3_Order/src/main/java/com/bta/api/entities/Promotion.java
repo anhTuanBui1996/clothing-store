@@ -2,6 +2,7 @@ package com.bta.api.entities;
 
 import com.bta.api.base.BaseEntity;
 import com.bta.api.models.dto.admin.PromotionDto;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Promotion extends BaseEntity<PromotionDto> {
 
     private String name;
