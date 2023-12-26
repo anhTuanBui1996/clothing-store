@@ -31,7 +31,7 @@ public class CredentialsService {
                 .orElseThrow(() -> new EntityExistsException("User already existed: phoneNumber=" + dto.getPhoneNumber()));
         String newUsername = Normalizer.normalize(dto.getLastName().toLowerCase(), Normalizer.Form.NFKC).trim()
                 + String.join("", Arrays.stream(dto.getFirstName().split(" ")).map(s -> String.valueOf(s.charAt(0))).toList()).toUpperCase().trim();
-//        Assign username with new unique index
+        // Assign username with new unique index
         List<Users> foundStartingUsername = usersRepository.findByUsernameStartingWithOrderByUsernameAsc(newUsername);
         int existedUsers = foundStartingUsername.size();
         if (existedUsers > 0) {
