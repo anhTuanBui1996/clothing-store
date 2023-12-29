@@ -1,4 +1,4 @@
-package com.api.gateway;
+package com.bta.gateway;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

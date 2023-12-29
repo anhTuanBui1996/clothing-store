@@ -1,4 +1,4 @@
-package com.api.eureka;
+package com.bta.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
