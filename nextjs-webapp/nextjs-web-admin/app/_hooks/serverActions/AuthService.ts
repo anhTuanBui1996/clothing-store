@@ -56,7 +56,7 @@ export interface LoginInfo {
 export async function signInWithCredentials(loginInfo?: LoginInfo) {
   try {
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/auth/login`,
+      `${process.env.AUTH_SERVICE_ORIGIN}/login`,
       {
         method: "POST",
         mode: "cors",

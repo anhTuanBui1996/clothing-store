@@ -79,7 +79,7 @@ export async function findAllMenu(token: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/`,
       {
         method: "GET",
         mode: "cors",
@@ -99,7 +99,7 @@ export async function findMenuById(token: string, id: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/{${id}}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/{${id}}`,
       {
         method: "GET",
         mode: "cors",
@@ -119,7 +119,7 @@ export async function createMenu(token: string, menu: any): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/`,
       {
         method: "PUT",
         mode: "cors",
@@ -139,7 +139,7 @@ export async function updateMenu(token: string, menu: any): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/${menu.id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/${menu.id}`,
       {
         method: "PUT",
         mode: "cors",
@@ -159,7 +159,7 @@ export async function updateMenus(token: string, menus: any[]): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/`,
       {
         method: "PUT",
         mode: "cors",
@@ -179,7 +179,7 @@ export async function deleteMenu(token: string, id: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/${id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/${id}`,
       {
         method: "DELETE",
         mode: "cors",
@@ -198,7 +198,7 @@ export async function deleteMenus(token: string, ids: string[]): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/menu/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/menu/`,
       {
         method: "DELETE",
         mode: "cors",
@@ -220,7 +220,7 @@ export async function findAllRole(token: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/`,
       {
         method: "GET",
         mode: "cors",
@@ -240,7 +240,7 @@ export async function findRoleById(token: string, id: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/{${id}}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/{${id}}`,
       {
         method: "GET",
         mode: "cors",
@@ -260,7 +260,7 @@ export async function createRole(token: string, role: any): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/`,
       {
         method: "PUT",
         mode: "cors",
@@ -280,7 +280,7 @@ export async function updateRole(token: string, role: any): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/${role.id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/${role.id}`,
       {
         method: "PUT",
         mode: "cors",
@@ -300,7 +300,7 @@ export async function updateRoles(token: string, roles: any[]): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/`,
       {
         method: "PUT",
         mode: "cors",
@@ -320,7 +320,7 @@ export async function deleteRole(token: string, id: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/${id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/${id}`,
       {
         method: "DELETE",
         mode: "cors",
@@ -339,7 +339,7 @@ export async function deleteRoles(token: string, ids: string[]): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/role/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/role/`,
       {
         method: "DELETE",
         mode: "cors",
@@ -361,7 +361,7 @@ export async function findAllUser(token: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/`,
       {
         method: "GET",
         mode: "cors",
@@ -381,7 +381,7 @@ export async function findUserById(token: string, id?: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/{${id}}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/{${id}}`,
       {
         method: "GET",
         mode: "cors",
@@ -401,7 +401,7 @@ export async function createUser(token: string, user: any): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/`,
       {
         method: "PUT",
         mode: "cors",
@@ -421,7 +421,7 @@ export async function updateUser(token: string, user: any): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/${user.id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/${user.id}`,
       {
         method: "PUT",
         mode: "cors",
@@ -441,7 +441,7 @@ export async function updateUsers(token: string, users: any[]): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/`,
       {
         method: "PUT",
         mode: "cors",
@@ -461,7 +461,7 @@ export async function deleteUser(token: string, id: string): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/${id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/${id}`,
       {
         method: "DELETE",
         mode: "cors",
@@ -480,7 +480,7 @@ export async function deleteUsers(token: string, ids: string[]): Promise<any> {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/user/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/user/`,
       {
         method: "DELETE",
         mode: "cors",
@@ -503,7 +503,7 @@ export async function findAllPermission(token: string) {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/permission/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/permission/`,
       {
         method: "GET",
         mode: "cors",
@@ -523,7 +523,7 @@ export async function findPermissionOfRole(token: string, id: string) {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/permission/${id}`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/permission/${id}`,
       {
         method: "GET",
         mode: "cors",
@@ -543,7 +543,7 @@ export async function updatePermissions(token: string, permissions: any[]) {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.AUTH_SERVICE_ORIGIN}/admin/permission/`,
+      `${process.env.MAIN_SERVICE_ORIGIN}/permission/`,
       {
         method: "PUT",
         mode: "cors",
@@ -566,7 +566,7 @@ export async function findAllProduct(token: string) {
     const headers = new Headers(baseHeaders);
     headers.append("Authorization", `Bearer ${token}`);
     const result = await fetch(
-      `${process.env.PRODUCT_SERVICE_ORIGIN}/admin/product/`,
+      `${process.env.PRODUCT_SERVICE_ORIGIN}/product/`,
       {
         method: "GET",
         mode: "cors",

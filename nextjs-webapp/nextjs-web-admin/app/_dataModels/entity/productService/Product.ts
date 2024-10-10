@@ -1,6 +1,9 @@
 import { gridDefaults } from "@/app/_dataModels/core/BaseEntity";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams, GridRenderEditCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { RenderCellForReferenceSelect } from "@/app/_components/common/DataTableEditor/cellRenderer/ReferenceSelect";
+import { gridCols as gridColsOfBrand } from "./Brand";
+import { gridCols as gridColsOfCategory } from "./Category";
+import { getBrands as findAllBrands, getCategories as findAllCategories } from "@/app/_hooks/serverActions/ProductService";
 
 export const gridCols: GridColDef[] = gridDefaults.concat([
   {
@@ -40,8 +43,24 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "referenceSelect:1",
     width: 150,
     editable: true,
-    renderCell: RenderCellForReferenceSelect,
-    renderEditCell: RenderCellForReferenceSelect,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) =>
+      RenderCellForReferenceSelect({
+        params,
+        displayField: "brandName",
+        sourceSchema: gridColsOfBrand,
+        dataSource: findAllBrands,
+      }),
+    renderEditCell: (
+      params: GridRenderEditCellParams<any, any, any, GridTreeNodeWithRender>
+    ) =>
+      RenderCellForReferenceSelect({
+        params,
+        displayField: "brandName",
+        sourceSchema: gridColsOfBrand,
+        dataSource: findAllBrands,
+      }),
   },
   {
     field: "category",
@@ -51,7 +70,23 @@ export const gridCols: GridColDef[] = gridDefaults.concat([
     type: "referenceSelect:n",
     width: 150,
     editable: true,
-    renderCell: RenderCellForReferenceSelect,
-    renderEditCell: RenderCellForReferenceSelect,
+    renderCell: (
+      params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+    ) =>
+      RenderCellForReferenceSelect({
+        params,
+        displayField: "categoryName",
+        sourceSchema: gridColsOfCategory,
+        dataSource: findAllCategories,
+      }),
+    renderEditCell: (
+      params: GridRenderEditCellParams<any, any, any, GridTreeNodeWithRender>
+    ) =>
+      RenderCellForReferenceSelect({
+        params,
+        displayField: "categoryName",
+        sourceSchema: gridColsOfCategory,
+        dataSource: findAllCategories,
+      }),
   },
 ]);
